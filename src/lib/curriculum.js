@@ -13,7 +13,7 @@ export const LEVELS=[
 
 export const THEMES=[
   {id:'survival',title:'Premiers secours linguistiques',icon:'spark',level:'pre-a1',summary:'Hello, please, thank you, pardon, répéter, parler plus lentement.',lessons:['hello','repeat']},
-  {id:'identity',title:'Se présenter',icon:'person',level:'pre-a1',summary:'Nom, âge, pays, épeler, téléphone, adresse.',lessons:['introduce','numbers']},
+  {id:'identity',title:'Se présenter',icon:'person',level:'pre-a1',summary:'Nom, coordonnées et informations personnelles.',lessons:['introduce','contact']},
   {id:'numbers',title:'Nombres, prix & heure',icon:'number',level:'pre-a1',summary:'0–1000, 13/30, prix, téléphone, chambre, quai, heure.',lessons:['numbers']},
   {id:'colors',title:'Couleurs & objets',icon:'palette',level:'pre-a1',summary:'Décrire simplement ce que tu vois et ce que tu cherches.',lessons:['colors']},
   {id:'food',title:'Boire & manger',icon:'cup',level:'pre-a1',summary:'Commander, comprendre une question, demander l’addition.',lessons:['food','restaurant']},
@@ -88,19 +88,6 @@ Object.assign(LESSONS,{
   'social-plans':{title:'Proposer & organiser',level:'a2',minutes:10,theme:'social-a2',goal:'Proposer une activité, accepter ou refuser.',words:['free','meet','available','sounds good','maybe'],examples:['Are you free this evening?','That sounds good to me.']},
   'work-basics':{title:'Travail au quotidien',level:'a2',minutes:11,theme:'work',goal:'Parler simplement de tâches, délais et collègues.',words:['task','deadline','colleague','schedule','finish'],examples:['I need to finish this task today.','The deadline is Friday.']}
 });
-
-THEMES.push(
-  {id:'everyday',title:'Vie quotidienne essentielle',icon:'home',level:'pre-a1',summary:'Famille, besoins, verbes indispensables et demander de l’aide.',lessons:['family-basic','basic-verbs','emergency']},
-  {id:'grammar-a1',title:'Grammaire essentielle A1',icon:'book',level:'a1',summary:'Be/have, articles, questions, présent simple, can et fréquence.',lessons:['be-have','articles','there-is','present-simple','questions-basic','can-cant','frequency']},
-  {id:'everyday-a1',title:'Vie quotidienne A1',icon:'home',level:'a1',summary:'Routine, maison et météo pour tenir les échanges du quotidien.',lessons:['daily-routine','home','weather']},
-  {id:'health',title:'Santé & aide',icon:'warning',level:'a1',summary:'Symptômes simples, médecin, pharmacie et besoin d’aide.',lessons:['health']},
-  {id:'grammar-a2',title:'Grammaire pratique A2',icon:'book',level:'a2',summary:'Passé, futur, présent continu, comparaisons et quantités.',lessons:['past-simple','future-plans','present-continuous','comparatives','quantities']},
-  {id:'travel-a2',title:'Voyage autonome A2',icon:'plane',level:'a2',summary:'Gérer les vrais problèmes de transport et d’hébergement.',lessons:['travel-problems','hotel-problems']},
-  {id:'social-a2',title:'Conversation & politesse A2',icon:'bubble',level:'a2',summary:'Demandes polies, invitations, propositions et organisation.',lessons:['polite-requests','social-plans']}
-);
-THEMES.find(t=>t.id==='identity')?.lessons.push('alphabet','spelling','contact');
-THEMES.find(t=>t.id==='numbers')?.lessons.push('time-basic','days-dates');
-THEMES.find(t=>t.id==='work')?.lessons.unshift('work-basics');
 
 const LESSON_META={
   repeat:{meaning:'Je ne comprends pas.',situation:'Tu n’as pas compris ce que quelqu’un vient de dire et tu veux qu’il répète.'},
@@ -228,7 +215,7 @@ const speechProfile=(id,level)=>{
 };
 const q=(id,level,prompt,choices,correctIndex,skills,audioText,audioMode='feedback',pedagogy={})=>{
   const voice=speechProfile(id,level);
-  return {id:`GEN-${id}`,domain:'general',level,part:null,title:'English',prompt,choices,correctIndex,skills,timeTargetSec:25,explanation:pedagogy.explanation||'',tip:pedagogy.tip||'',choiceExplanations:pedagogy.choiceExplanations||[],audioMode,audioScript:audioText?[{text:audioText,...voice}]:[],transcript:audioText||'',vocabulary:choices.filter(Boolean).slice(0,3)};
+  return {id:`GEN-${id}`,domain:'general',level,part:null,title:'English',prompt,choices,correctIndex,skills,timeTargetSec:25,explanation:pedagogy.explanation||'',tip:pedagogy.tip||'',choiceExplanations:pedagogy.choiceExplanations||[],extraExample:pedagogy.extraExample||'',pronunciation:pedagogy.pronunciation||'',audioMode,audioScript:audioText?[{text:audioText,...voice}]:[],transcript:audioText||'',vocabulary:choices.filter(Boolean).slice(0,3)};
 };
 
 function enrichLessonQuestion(item,lessonId,kind,{answerText,meaning}={}){
@@ -269,48 +256,94 @@ function enrichLessonQuestion(item,lessonId,kind,{answerText,meaning}={}){
   return item;
 }
 
+
+function deterministicOffset(id,size){
+  if(!size)return 0;
+  return [...String(id)].reduce((n,c)=>n+c.charCodeAt(0),0)%size;
+}
+function sentenceDistractors(id,exclude=[],count=3){
+  const L=LESSONS[id],excluded=new Set(exclude.filter(Boolean)),pool=[];
+  for(const [otherId,other] of Object.entries(LESSONS)){
+    if(otherId===id||other.level!==L.level||other.theme===L.theme)continue;
+    for(const sentence of other.examples||[]){
+      if(!sentence||excluded.has(sentence)||pool.some(x=>x.text===sentence))continue;
+      pool.push({text:sentence,reason:`« ${sentence} » est une phrase correcte, mais elle sert plutôt à ${other.goal.toLowerCase()}`});
+    }
+  }
+  if(pool.length<count){
+    for(const [otherId,other] of Object.entries(LESSONS)){
+      if(otherId===id)continue;
+      for(const sentence of other.examples||[]){
+        if(!sentence||excluded.has(sentence)||pool.some(x=>x.text===sentence))continue;
+        pool.push({text:sentence,reason:`« ${sentence} » exprime une autre idée : ${other.goal.toLowerCase()}`});
+      }
+    }
+  }
+  const off=deterministicOffset(id,pool.length);
+  return [...pool.slice(off),...pool.slice(0,off)].slice(0,count);
+}
+function meaningDistractors(id,correct,count=3){
+  const L=LESSONS[id],pool=[];
+  for(const [otherId,meta] of Object.entries(LESSON_META)){
+    if(otherId===id||!meta?.meaning||meta.meaning===correct)continue;
+    const other=LESSONS[otherId];
+    if(!other||other.level!==L.level)continue;
+    if(pool.some(x=>x.text===meta.meaning))continue;
+    pool.push({text:meta.meaning,reason:`« ${meta.meaning} » correspond plutôt à « ${other.words?.[0]||other.title} ».`});
+  }
+  const fallback=[
+    {text:'Une date ou une heure',reason:'Ce n’est pas une expression de date ou d’heure.'},
+    {text:'Un lieu précis',reason:'Ce mot ne désigne pas un lieu dans cette leçon.'},
+    {text:'Une profession',reason:'Ce mot ne désigne pas une profession.'}
+  ];
+  for(const x of fallback)if(x.text!==correct&&!pool.some(y=>y.text===x.text))pool.push(x);
+  const off=deterministicOffset(id,pool.length);
+  return [...pool.slice(off),...pool.slice(0,off)].slice(0,count);
+}
+
 export function lessonQuestions(id){
   const L=LESSONS[id]; if(!L)return[];
-  if(id==='hello'){
-    return [
-      enrichLessonQuestion(q('hello-1','pre-a1','Tu entres dans un café le matin. Quelle réponse est naturelle ?',
-        ['Good morning!','Good night!','See you yesterday.','I am coffee.'],0,['general.survival'],'Good morning!'),'hello','context',{answerText:'Good morning!'}),
-      enrichLessonQuestion(q('hello-2','pre-a1','Quelqu’un te dit « Thank you ». Que peux-tu répondre ?',
-        ["You're welcome.",'Goodbye yesterday.','My name thank you.','Morning please.'],0,['general.survival'],"You're welcome."),'hello','context',{answerText:"You're welcome."}),
-      enrichLessonQuestion(q('hello-3','pre-a1','Tu quittes un hôtel. Quelle phrase convient ?',
-        ['Goodbye, have a nice day!','Hello, I arrive yesterday.','Please morning.','Thank you room.'],0,['general.survival'],'Goodbye, have a nice day!'),'hello','context',{answerText:'Goodbye, have a nice day!'}),
-      enrichLessonQuestion(q('hello-4','pre-a1','Tu veux attirer poliment l’attention de quelqu’un. Que dis-tu ?',
-        ['Excuse me.','Good night.','You please.','I goodbye.'],0,['general.survival'],'Excuse me.'),'hello','context',{answerText:'Excuse me.'})
-    ];
+  const meta=LESSON_META[id]||{},teach=lessonTeaching(id)||fallbackTeaching(L,meta);
+  const base=L.words||[],items=[],tip=teach.tip||'Mémorise la formulation complète plutôt qu’un mot isolé.';
+  const extraExample=(teach.examples||[])[2]||(teach.examples||[])[1]||L.examples?.[2]||L.examples?.[1]||'';
+  const pronunciation=teach.pronunciation||'';
+
+  if(meta.meaning&&base[0]){
+    const ds=meaningDistractors(id,meta.meaning,3);
+    items.push(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[meta.meaning,...ds.map(x=>x.text)],0,[`general.${L.theme}`],base[0],'feedback',{
+      explanation:`« ${base[0]} » signifie ici « ${meta.meaning} ». ${teach.rule}`,
+      tip,extraExample,pronunciation,
+      choiceExplanations:[`Oui : « ${base[0]} » signifie bien « ${meta.meaning} » ici.`,...ds.map(x=>x.reason)]
+    }));
   }
-  const base=L.words,meta=LESSON_META[id]||{},teach=lessonTeaching(id)||fallbackTeaching(L,meta);
-  const items=[];
-  const tip=teach.tip||'Apprends cette expression dans une phrase complète.';
-  const genericWrong=[
-    'Cette formulation ne respecte pas la structure naturelle travaillée dans la leçon.',
-    'Cette proposition emploie un ordre des mots incorrect ou une traduction trop littérale.',
-    'Cette formulation est trop abrupte ou grammaticalement incomplète dans ce contexte.'
-  ];
-  if(meta.meaning)items.push(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[meta.meaning,'Une date ou une heure','Un lieu précis','Une profession'],0,[`general.${L.theme}`],base[0],'feedback',{
-    explanation:`« ${base[0]} » signifie « ${meta.meaning} ». ${teach.rule}`,tip,
-    choiceExplanations:[`C’est le sens attendu ici : « ${meta.meaning} ».`,'Ce n’est pas une expression de date ou d’heure.','Ce mot ne désigne pas un lieu ici.','Ce mot ne désigne pas une profession ici.']
-  }));
-  else items.push(q(`${id}-1`,L.level,`À quoi sert surtout « ${base[0]} » dans cette leçon ?`,[L.goal,'Parler uniquement du passé','Donner une adresse e-mail','Épeler un nom de famille'],0,[`general.${L.theme}`],base[0],'feedback',{
-    explanation:`Cette expression sert ici à ${L.goal.toLowerCase()} ${teach.rule}`,tip
-  }));
-  if(L.examples[0])items.push(q(`${id}-2`,L.level,'Laquelle de ces phrases est correcte et naturelle en anglais ?',[L.examples[0],'I wanting please this.','Me need that now.','Give me.'],0,[`general.${L.theme}`],L.examples[0],'feedback',{
-    explanation:`« ${L.examples[0]} » est la formulation naturelle. ${teach.rule}`,tip,
-    choiceExplanations:[`Cette phrase suit la construction naturelle : ${teach.rule}`,...genericWrong]
-  }));
-  if(base[1])items.push(q(`${id}-3`,L.level,'Écoute puis choisis exactement ce que tu entends.',[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1],'prompt',{
-    explanation:`Tu as entendu « ${base[1]} ». ${teach.pronunciation||''}`,tip,
-    choiceExplanations:[`C’est exactement « ${base[1]} ».`,'Le son entendu ne correspond pas à ce choix.','Le son entendu ne correspond pas à ce choix.','Le son entendu ne correspond pas à ce choix.']
-  }));
-  if(L.examples[1]){
-    const prompt=meta.situation?`${meta.situation} Que peux-tu dire ?`:'Laquelle de ces phrases est correcte et naturelle en anglais ?';
-    items.push(q(`${id}-4`,L.level,prompt,[L.examples[1],'No understand all.','English zero.','Why you say?'],0,[`general.${L.theme}`],L.examples[1],'feedback',{
-      explanation:`Dans ce contexte, « ${L.examples[1]} » est une formulation correcte et naturelle. ${teach.rule}`,tip,
-      choiceExplanations:[`Cette réponse correspond à la situation et respecte l’usage naturel.`,...genericWrong]
+
+  if(L.examples?.[0]){
+    const answer=L.examples[0],ds=sentenceDistractors(id,[answer,L.examples?.[1]],3);
+    items.push(q(`${id}-2`,L.level,`Quelle phrase permet de ${L.goal.charAt(0).toLowerCase()+L.goal.slice(1)}`,[answer,...ds.map(x=>x.text)],0,[`general.${L.theme}`],answer,'feedback',{
+      explanation:`« ${answer} » correspond à l’objectif de la leçon. ${teach.rule}`,
+      tip,extraExample,pronunciation,
+      choiceExplanations:[`Oui : cette phrase permet bien de ${L.goal.toLowerCase()}`,...ds.map(x=>x.reason)]
+    }));
+  }
+
+  if(base[1]){
+    const listeningChoices=[base[1],base[0],base[2]||base.at(-1)||'please',base[3]||'thank you'];
+    const unique=[...new Set(listeningChoices)];
+    while(unique.length<4)unique.push(`option ${unique.length+1}`);
+    items.push(q(`${id}-3`,L.level,'Écoute puis choisis exactement ce que tu entends.',unique.slice(0,4),0,[`general.${L.theme}`],base[1],'prompt',{
+      explanation:`L’audio disait « ${base[1]} ». ${pronunciation}`,
+      tip,extraExample,pronunciation,
+      choiceExplanations:unique.slice(0,4).map((c,i)=>i===0?`Oui : c’est exactement « ${c} » qui est prononcé.`:`Non : l’audio ne prononce pas « ${c} ».`)
+    }));
+  }
+
+  if(L.examples?.[1]){
+    const answer=L.examples[1],scenario=meta.situation||`Tu veux ${L.goal.toLowerCase()}`;
+    const ds=sentenceDistractors(id,[answer,L.examples?.[0]],3);
+    items.push(q(`${id}-4`,L.level,`${scenario} Que peux-tu dire ?`,[answer,...ds.map(x=>x.text)],0,[`general.${L.theme}`],answer,'feedback',{
+      explanation:`Dans cette situation, « ${answer} » est la réponse adaptée. ${teach.rule}`,
+      tip,extraExample,pronunciation,
+      choiceExplanations:[`Oui : cette phrase répond directement à la situation décrite.`,...ds.map(x=>x.reason)]
     }));
   }
   return items;
@@ -349,25 +382,24 @@ export const PLACEMENT_STAGES=[
   ]}
 ];
 
-export function nextLessonId(profile,attempts=[],sessions=[]){
-  const order=[
-    'hello','repeat','introduce','alphabet','spelling','numbers','time','days-dates','colors','family-basic','home-basic','bathroom-basic','food','restaurant','hotel','help','pharmacy',
-    'be-have','present-simple','questions-basic','articles','there-is','routine','frequency','present-continuous','weather','hobbies','directions','transport','taxi','airport-basic','shopping','travel-problems-basic','smalltalk','body-health','doctor-basic',
-    'past-simple','future-plans','comparatives','quantities','modals-basic','polite-requests','invitations','opinions','storytelling-basic','reservation-change','delay-problem','hotel-problem','phone','email','meetings','schedule-work','instructions-work','customers-basic','idioms-common','phrasal-common',
-    'collocations-business','connected-speech','numbers-listening','false-friends'
-  ];
-  const completed=new Set(
-    sessions
-      .filter(s=>s.type?.startsWith('lesson:') && (s.total||0)>0 && ((s.correct||0)/(s.total||1))>=.75)
-      .map(s=>s.type.slice('lesson:'.length))
-  );
-  return order.find(id=>!completed.has(id))||order.at(-1);
+export function visibleLessonIds(){
+  const levels=['pre-a1','a1','a2','b1','b2','c1'];
+  const seen=new Set(),out=[];
+  for(const level of levels)for(const theme of THEMES.filter(t=>t.level===level))for(const id of theme.lessons||[]){
+    if(LESSONS[id]&&!seen.has(id)){seen.add(id);out.push(id)}
+  }
+  return out;
 }
 
+export function nextLessonId(profile,attempts=[],sessions=[]){
+  const order=visibleLessonIds();
+  const completed=new Set(sessions.filter(s=>s.type?.startsWith('lesson:')&&(s.total||0)>0&&((s.correct||0)/(s.total||1))>=.75).map(s=>s.type.slice('lesson:'.length)));
+  return order.find(id=>!completed.has(id))||order.at(-1);
+}
 
 export function allGeneralQuestions(){
   const map=new Map();
   for(const stage of PLACEMENT_STAGES) for(const item of stage.questions) map.set(item.id,item);
-  for(const id of Object.keys(LESSONS)) for(const item of lessonQuestions(id)) map.set(item.id,item);
+  for(const id of visibleLessonIds()) for(const item of lessonQuestions(id)) map.set(item.id,item);
   return [...map.values()];
 }
