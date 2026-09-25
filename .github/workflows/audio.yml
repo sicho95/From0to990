@@ -4,6 +4,8 @@ on:
     branches: [main]
     paths:
       - 'src/lib/curriculum.js'
+      - 'src/lib/curriculum-extra.js'
+      - 'src/lib/curriculum-teaching.js'
       - 'scripts/generate-content.mjs'
       - 'scripts/export-audio-spec.mjs'
       - 'scripts/generate-audio.py'
