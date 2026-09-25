@@ -50,6 +50,29 @@ export const LESSONS={
   'false-friends':{title:'Faux amis',level:'b1',minutes:10,theme:'falsefriends',goal:'Éviter les erreurs typiques des francophones.',words:['actually','eventually','sensible','library','attend'],examples:['Actually, I disagree.','She attended the meeting.']}
 };
 
+const LESSON_META={
+  repeat:{meaning:'Je ne comprends pas.',situation:'Tu n’as pas compris ce que quelqu’un vient de dire et tu veux qu’il répète.'},
+  introduce:{meaning:'Je m’appelle…',situation:'Quelqu’un te demande d’où tu viens.'},
+  numbers:{meaning:'un',situation:'Tu annonces un prix de trente livres.'},
+  colors:{meaning:'rouge',situation:'Tu montres ta clé à quelqu’un.'},
+  food:{meaning:'eau',situation:'Tu commandes de l’eau dans un café.'},
+  restaurant:{meaning:'menu',situation:'Au restaurant, tu veux commander le poulet.'},
+  hotel:{meaning:'réservation',situation:'À l’hôtel, tu veux réserver une chambre pour deux nuits.'},
+  directions:{meaning:'gauche',situation:'Quelqu’un te demande comment aller à la station.'},
+  transport:{meaning:'quai',situation:'À la gare, tu veux connaître l’heure de départ du train.'},
+  shopping:{meaning:'Combien ça coûte ?',situation:'Dans un magasin, tu veux essayer un vêtement.'},
+  smalltalk:{meaning:'météo',situation:'Tu discutes avec quelqu’un de son travail.'},
+  phone:{meaning:'à l’appareil / je vous écoute',situation:'Au téléphone, tu veux laisser un message.'},
+  email:{meaning:'au sujet de / concernant',situation:'Dans un e-mail, tu demandes à quelqu’un de confirmer sa disponibilité.'},
+  meetings:{meaning:'ordre du jour',situation:'En réunion, tu demandes qui prendra en charge une action.'},
+  'idioms-common':{meaning:'très facile',situation:'Tu veux vérifier que tout le monde partage la même compréhension.'},
+  'phrasal-common':{meaning:'aller chercher / récupérer',situation:'Tu veux dire que vous devez découvrir ce qui s’est passé.'},
+  'collocations-business':{meaning:'prendre une décision',situation:'Tu veux demander si l’équipe peut respecter la date limite.'},
+  'connected-speech':{meaning:'forme orale familière de “going to”',situation:'Tu demandes poliment à quelqu’un d’envoyer quelque chose aujourd’hui.'},
+  'numbers-listening':{meaning:'treize',situation:'Tu annonces un prix de trente dollars.'},
+  'false-friends':{meaning:'en fait / en réalité',situation:'Tu veux dire qu’une personne a assisté à une réunion.'}
+};
+
 const speechProfile=(id,level)=>{
   const n=[...String(id)].reduce((a,c)=>a+c.charCodeAt(0),0);
   const advanced=['b1','b2','c1'].includes(level);
@@ -74,12 +97,16 @@ export function lessonQuestions(id){
         ['Excuse me.','Good night.','You please.','I goodbye.'],0,['general.survival'],'Excuse me.')
     ];
   }
-  const base=L.words;
+  const base=L.words,meta=LESSON_META[id]||{};
   const items=[];
-  items.push(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[L.goal,'Une date','Un lieu','Une profession'],0,[`general.${L.theme}`],base[0]));
-  if(L.examples[0])items.push(q(`${id}-2`,L.level,'Choisis la phrase anglaise la plus naturelle.',[L.examples[0],'I wanting please this.','Me need that now.','Give me.'],0,[`general.${L.theme}`],L.examples[0]));
-  if(base[1])items.push(q(`${id}-3`,L.level,'Écoute et choisis ce que tu entends.',[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1],'prompt'));
-  if(L.examples[1])items.push(q(`${id}-4`,L.level,'Quelle phrase convient le mieux dans cette situation ?',[L.examples[1],'No understand all.','English zero.','Why you say?'],0,[`general.${L.theme}`],L.examples[1]));
+  if(meta.meaning)items.push(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[meta.meaning,'Une date ou une heure','Un lieu précis','Une profession'],0,[`general.${L.theme}`],base[0]));
+  else items.push(q(`${id}-1`,L.level,`Dans quelle leçon utilise-t-on surtout « ${base[0]} » ?`,[L.goal,'Parler uniquement du passé','Donner une adresse e-mail','Épeler un nom de famille'],0,[`general.${L.theme}`],base[0]));
+  if(L.examples[0])items.push(q(`${id}-2`,L.level,'Laquelle de ces phrases est correcte et naturelle en anglais ?',[L.examples[0],'I wanting please this.','Me need that now.','Give me.'],0,[`general.${L.theme}`],L.examples[0]));
+  if(base[1])items.push(q(`${id}-3`,L.level,'Écoute puis choisis exactement ce que tu entends.',[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1],'prompt'));
+  if(L.examples[1]){
+    const prompt=meta.situation?`${meta.situation} Que peux-tu dire ?`:'Laquelle de ces phrases est correcte et naturelle en anglais ?';
+    items.push(q(`${id}-4`,L.level,prompt,[L.examples[1],'No understand all.','English zero.','Why you say?'],0,[`general.${L.theme}`],L.examples[1]));
+  }
   return items;
 }
 
