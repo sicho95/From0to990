@@ -2,12 +2,13 @@ import {addAttempt,addSession,saveError,saveSkill,setSetting,setting} from './db
 import {recomputeSkills} from './adaptive.js';
 import {playQuestionAudio,stopAudio} from './audio.js';
 import {svg} from './icons.js';
+import {LESSONS,lessonTeaching} from './curriculum.js';
 
 const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 export async function beginSession(state,{questions,type,title,onFinish,onExit}){
   stopAudio();
-  state.activeSession={id:crypto.randomUUID(),type,title:title||label(type),questions,index:0,answers:[],startedAt:new Date().toISOString(),startedAtMs:Date.now(),questionStartedAtMs:Date.now(),onFinish,onExit};
+  state.activeSession={id:crypto.randomUUID(),type,title:title||label(type),questions,index:0,answers:[],introPending:Boolean(type?.startsWith('lesson:')),startedAt:new Date().toISOString(),startedAtMs:Date.now(),questionStartedAtMs:Date.now(),onFinish,onExit};
   await persist(state.activeSession);
 }
 
@@ -20,11 +21,31 @@ export async function restoreSession(state,handlers={}){
 
 async function persist(s){
   if(!s)return setSetting('activeSession',null);
-  await setSetting('activeSession',{id:s.id,type:s.type,title:s.title,questionIds:s.questions.map(q=>q.id),index:s.index,answers:s.answers,startedAt:s.startedAt,elapsedMs:Date.now()-s.startedAtMs});
+  await setSetting('activeSession',{id:s.id,type:s.type,title:s.title,questionIds:s.questions.map(q=>q.id),index:s.index,answers:s.answers,introPending:Boolean(s.introPending),startedAt:s.startedAt,elapsedMs:Date.now()-s.startedAtMs});
+}
+
+function renderLessonIntro(root,state){
+  const sess=state.activeSession,id=sess.type.slice('lesson:'.length),L=LESSONS[id],teach=lessonTeaching(id);
+  if(!L||!teach){sess.introPending=false;return renderSession(root,state,{onFinish:sess.onFinish,onExit:sess.onExit})}
+  root.innerHTML=`<div class="session-shell lesson-intro-shell"><header class="session-topbar"><button class="round-control" id="session-close" aria-label="Quitter">×</button><div class="session-heading"><small>${E(L.level.toUpperCase())}</small><strong>${E(L.title)}</strong></div></header>
+  <main class="session-main"><article class="lesson-teaching-card">
+    <span class="eyebrow">AVANT DE PRATIQUER</span>
+    <h1>${E(L.title)}</h1>
+    <p class="lesson-goal">${E(L.goal)}</p>
+    <section class="teach-block"><h3>Le principe</h3><p>${E(teach.intro)}</p></section>
+    <section class="teach-block rule"><h3>Règle / construction</h3><p>${E(teach.rule)}</p></section>
+    <div class="teaching-examples">${(L.examples||[]).slice(0,3).map(x=>`<div><strong>${E(x)}</strong></div>`).join('')}</div>
+    <section class="teach-block tip"><h3>Astuce</h3><p>${E(teach.tip)}</p></section>
+    <section class="teach-block pronunciation"><h3>À l’oral</h3><p>${E(teach.pronunciation)}</p></section>
+    <div class="vocab-chips">${(L.words||[]).slice(0,8).map(w=>`<span>${E(w)}</span>`).join('')}</div>
+    <button class="primary-action full" id="start-lesson-practice">Passer à la pratique</button>
+  </article></main></div>`;
+  document.getElementById('session-close').onclick=()=>exit(state);
+  document.getElementById('start-lesson-practice').onclick=async()=>{sess.introPending=false;sess.questionStartedAtMs=Date.now();await persist(sess);renderSession(root,state,{onFinish:sess.onFinish,onExit:sess.onExit})};
 }
 
 export function renderSession(root,state,{onFinish,onExit}){
-  const s=state.activeSession;if(!s)return; s.onFinish=onFinish||s.onFinish;s.onExit=onExit||s.onExit;
+  const s=state.activeSession;if(!s)return; s.onFinish=onFinish||s.onFinish;s.onExit=onExit||s.onExit;if(s.introPending)return renderLessonIntro(root,state);
   const q=s.questions[s.index],progress=Math.round((s.index/s.questions.length)*100),hasAudio=Boolean(q.audioScript?.length||q.audio?.url||q.audioUrl),audioMode=q.audioMode||(q.domain==='general'?'feedback':'prompt'),listening=hasAudio&&audioMode==='prompt';
   root.innerHTML=`<div class="session-shell"><header class="session-topbar"><button class="round-control" id="session-close" aria-label="Quitter">×</button><div class="session-heading"><small>${E(s.title||label(s.type))}</small><strong>${s.index+1} / ${s.questions.length}</strong></div><div class="session-progress"><span style="width:${progress}%"></span></div></header>
   <main class="session-main"><article class="question-panel">
@@ -65,41 +86,56 @@ function answer(root,state,selected){
 }
 
 function renderCorrection(root,state,q,selected,correct,timeMs,persistence=Promise.resolve()){
-  const s=state.activeSession;
+  const sess=state.activeSession;
   const hasAudio=Boolean(q.audioScript?.length||q.audio?.url||q.audioUrl);
   const audioMode=q.audioMode||(q.domain==='general'?'feedback':'prompt');
   const feedbackAudio=hasAudio&&audioMode==='feedback';
-  const selectedWhy=q.choiceExplanations?.[selected]||(!correct?'Cette réponse ne correspond pas au sens, à la grammaire ou au contexte demandé.':'');
-  const correctWhy=q.choiceExplanations?.[q.correctIndex]||q.explanation||'Cette réponse correspond au contexte et à la structure attendue.';
+  const selectedWhy=q.choiceExplanations?.[selected]||'Cette réponse ne correspond pas au sens, à la structure ou au contexte attendu.';
+  const correctWhy=q.explanation||`La bonne réponse est « ${q.choices[q.correctIndex]} ».`;
+  const tip=q.tip||'Observe la structure de la bonne réponse et réutilise-la dans une autre phrase.';
 
-  root.innerHTML=`<div class="session-shell"><header class="session-topbar"><div class="feedback-title ${correct?'good':'bad'}">${correct?'✓ Bonne réponse':'À comprendre'}</div><strong>${s.index+1} / ${s.questions.length}</strong></header>
-  <main class="session-main"><article class="question-panel correction-panel"><h2 class="question-prompt">${E(q.prompt)}</h2><div class="choice-list review">${q.choices.map((c,i)=>`<div class="choice ${i===q.correctIndex?'correct':''} ${i===selected&&i!==q.correctIndex?'wrong':''}"><span>${String.fromCharCode(65+i)}</span><strong>${E(c)}</strong></div>`).join('')}</div>
-  <div class="teaching-feedback">
-    <section><span class="feedback-label">Pourquoi la bonne réponse ?</span><p>${E(q.explanation||correctWhy)}</p></section>
-    ${!correct?`<section class="wrong-reason"><span class="feedback-label">Pourquoi ta réponse ne fonctionne pas ?</span><p>${E(selectedWhy)}</p></section>`:''}
-    ${q.rule?`<section><span class="feedback-label">Règle</span><p>${E(q.rule)}</p></section>`:''}
-    ${q.tip?`<section class="tip-feedback"><span class="feedback-label">Tip</span><p>${E(q.tip)}</p></section>`:''}
-    ${q.extraExample?`<section><span class="feedback-label">Autre exemple</span><p class="example-line">${E(q.extraExample)}</p></section>`:''}
-    ${q.transcript?`<div class="transcript"><small>Bonne formulation</small><p>${E(q.transcript)}</p></div>`:''}
-  </div>
-  <div class="feedback-actions">${hasAudio?`<button class="listen-control compact" id="replay-feedback">${svg('play')}<span>Réécouter</span></button>`:''}<button class="secondary-action compact-next" id="next-now">Continuer</button><small>${correct?'Suite automatique…':'Prends le temps de lire : la suite partira automatiquement.'}</small></div>
+  root.innerHTML=`<div class="session-shell"><header class="session-topbar"><div class="feedback-title ${correct?'good':'bad'}">${correct?'✓ Bien vu':'✦ À comprendre'}</div><strong>${sess.index+1} / ${sess.questions.length}</strong></header>
+  <main class="session-main"><article class="question-panel correction-panel">
+    <h2 class="question-prompt">${E(q.prompt)}</h2>
+    <div class="choice-list review">${q.choices.map((c,i)=>`<div class="choice ${i===q.correctIndex?'correct':''} ${i===selected&&i!==q.correctIndex?'wrong':''}"><span>${String.fromCharCode(65+i)}</span><strong>${E(c)}</strong></div>`).join('')}</div>
+    <div class="explanation teaching-feedback">
+      ${!correct?`<div class="feedback-section wrong-why"><span class="eyebrow">POURQUOI TON CHOIX NE VA PAS</span><p>${E(selectedWhy)}</p></div>`:''}
+      <div class="feedback-section"><span class="eyebrow">POURQUOI CETTE RÉPONSE</span><p>${E(correctWhy)}</p></div>
+      <div class="feedback-section tip-box"><span class="eyebrow">ASTUCE</span><p>${E(tip)}</p></div>
+      ${q.transcript?`<div class="transcript"><small>À entendre / prononcer</small><p>${E(q.transcript)}</p></div>`:''}
+    </div>
+    <div class="feedback-actions">${hasAudio?`<button class="listen-control compact" id="replay-feedback">${svg('play')}<span>Réécouter</span></button>`:''}<button class="feedback-next" id="feedback-next">Suivant</button><small>L’app continue automatiquement si tu ne touches rien.</small></div>
   </article></main></div>`;
 
-  const replay=document.getElementById('replay-feedback');
-  clearTimeout(s.advanceTimer);
+  clearTimeout(sess.advanceTimer);
   let advancing=false;
-  const goNext=async()=>{
-    if(advancing||state.activeSession!==s)return;advancing=true;
-    clearTimeout(s.advanceTimer);stopAudio();
-    if(s.index<s.questions.length-1){s.index++;s.questionStartedAtMs=Date.now();await persist(s);renderSession(root,state,{onFinish:s.onFinish,onExit:s.onExit});}
-    else await finish(root,state);
+  const advanceNow=async()=>{
+    if(advancing||state.activeSession!==sess)return;
+    advancing=true;clearTimeout(sess.advanceTimer);stopAudio();
+    await persistence.catch(()=>{});
+    if(sess.index<sess.questions.length-1){
+      sess.index++;sess.questionStartedAtMs=Date.now();await persist(sess);
+      renderSession(root,state,{onFinish:sess.onFinish,onExit:sess.onExit});
+    }else await finish(root,state);
   };
-  const scheduleAdvance=()=>{clearTimeout(s.advanceTimer);s.advanceTimer=setTimeout(goNext,correct?2600:9000)};
-  if(replay)replay.onclick=async()=>{clearTimeout(s.advanceTimer);replay.disabled=true;try{await playQuestionAudio(q)}catch{}finally{replay.disabled=false}if(state.activeSession===s)scheduleAdvance()};
-  document.getElementById('next-now').onclick=goNext;
+  document.getElementById('feedback-next').onclick=advanceNow;
+
+  const replay=document.getElementById('replay-feedback');
+  const scheduleAdvance=()=>{
+    clearTimeout(sess.advanceTimer);
+    const words=(correctWhy+' '+tip+(correct?'':' '+selectedWhy)).trim().split(/\s+/).length;
+    const wait=Math.max(correct?4200:7000,Math.min(correct?8000:12000,words*170));
+    sess.advanceTimer=setTimeout(advanceNow,wait);
+  };
+
+  if(replay)replay.onclick=async()=>{
+    clearTimeout(sess.advanceTimer);replay.disabled=true;replay.setAttribute('aria-busy','true');
+    try{await playQuestionAudio(q)}catch{}finally{replay.disabled=false;replay.removeAttribute('aria-busy')}
+    if(state.activeSession===sess)scheduleAdvance();
+  };
 
   const audioPromise=feedbackAudio?playQuestionAudio(q).catch(()=>null):Promise.resolve();
-  Promise.allSettled([audioPromise,persistence]).then(()=>{if(state.activeSession===s)scheduleAdvance()});
+  Promise.allSettled([audioPromise,persistence]).then(()=>{if(state.activeSession===sess)scheduleAdvance()});
 }
 
 async function finish(root,state){
