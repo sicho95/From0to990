@@ -40,43 +40,67 @@ export function renderSession(root,state,{onFinish,onExit}){
   if(listening)setTimeout(()=>playQuestionAudio(q).catch(()=>{}),300);
 }
 
-async function answer(root,state,selected){
+function answer(root,state,selected){
   const s=state.activeSession,q=s.questions[s.index],correct=selected===q.correctIndex,timeMs=Date.now()-s.questionStartedAtMs;
   const attempt={id:crypto.randomUUID(),questionId:q.id,sessionId:s.id,part:q.part??null,correct,selected,timeMs,createdAt:new Date().toISOString(),payload_json:{domain:q.domain||'toeic',level:q.level||null}};
-  state.attempts.push(attempt);await addAttempt(attempt);s.answers.push({questionId:q.id,selected,correct,timeMs});
-  if(!correct){const old=state.errors.find(x=>x.questionId===q.id),err={id:old?.id||crypto.randomUUID(),questionId:q.id,count:(old?.count||0)+1,updatedAt:new Date().toISOString(),payload_json:{domain:q.domain||'toeic'}};if(old)Object.assign(old,err);else state.errors.push(err);await saveError(err)}
-  await persist(s);renderCorrection(root,state,q,selected,correct,timeMs);
+  state.attempts.push(attempt);
+  s.answers.push({questionId:q.id,selected,correct,timeMs});
+
+  let errorRecord=null;
+  if(!correct){
+    const old=state.errors.find(x=>x.questionId===q.id);
+    errorRecord={id:old?.id||crypto.randomUUID(),questionId:q.id,count:(old?.count||0)+1,updatedAt:new Date().toISOString(),payload_json:{domain:q.domain||'toeic'}};
+    if(old)Object.assign(old,errorRecord);else state.errors.push(errorRecord);
+  }
+
+  // Important for iOS Safari: render and start feedback audio synchronously
+  // inside the user's tap gesture, before the first await.
+  const persistence=(async()=>{
+    await addAttempt(attempt);
+    if(errorRecord)await saveError(errorRecord);
+    await persist(s);
+  })();
+
+  renderCorrection(root,state,q,selected,correct,timeMs,persistence);
 }
 
-function renderCorrection(root,state,q,selected,correct,timeMs){
+function renderCorrection(root,state,q,selected,correct,timeMs,persistence=Promise.resolve()){
   const s=state.activeSession;
   const hasAudio=Boolean(q.audioScript?.length||q.audio?.url||q.audioUrl);
   const audioMode=q.audioMode||(q.domain==='general'?'feedback':'prompt');
   const feedbackAudio=hasAudio&&audioMode==='feedback';
+
   root.innerHTML=`<div class="session-shell"><header class="session-topbar"><div class="feedback-title ${correct?'good':'bad'}">${correct?'✓ Bonne réponse':'À retenir'}</div><strong>${s.index+1} / ${s.questions.length}</strong></header>
   <main class="session-main"><article class="question-panel correction-panel"><h2 class="question-prompt">${E(q.prompt)}</h2><div class="choice-list review">${q.choices.map((c,i)=>`<div class="choice ${i===q.correctIndex?'correct':''} ${i===selected&&i!==q.correctIndex?'wrong':''}"><span>${String.fromCharCode(65+i)}</span><strong>${E(c)}</strong></div>`).join('')}</div>
   ${!correct?`<div class="explanation"><span class="eyebrow">À RETENIR</span><p>${E(q.explanation||'Revois cette notion puis retrouve-la dans un autre contexte.')}</p>${q.transcript?`<div class="transcript"><small>Bonne formulation</small><p>${E(q.transcript)}</p></div>`:''}</div>`:''}
   <div class="feedback-actions">${hasAudio?`<button class="listen-control compact" id="replay-feedback">${svg('play')}<span>Réécouter</span></button>`:''}<small>${feedbackAudio?'Écoute la bonne formulation…':'Question suivante automatiquement…'}</small></div>
   </article></main></div>`;
-  const replay=document.getElementById('replay-feedback');if(replay)replay.onclick=()=>playQuestionAudio(q).catch(()=>{});
+
+  const replay=document.getElementById('replay-feedback');
+  if(replay)replay.onclick=()=>playQuestionAudio(q).catch(()=>{});
+
   clearTimeout(s.advanceTimer);
-  const advance=()=>{
-    clearTimeout(s.advanceTimer);
+
+  // Start immediately, in the same click/tap call stack. This is required
+  // for reliable autoplay on iOS Safari.
+  const audioPromise=feedbackAudio
+    ? playQuestionAudio(q).catch(()=>null)
+    : Promise.resolve();
+
+  Promise.allSettled([audioPromise,persistence]).then(()=>{
+    if(state.activeSession!==s)return;
+    const wait=correct?500:1400;
     s.advanceTimer=setTimeout(async()=>{
       if(state.activeSession!==s)return;
       stopAudio();
       if(s.index<s.questions.length-1){
-        s.index++;s.questionStartedAtMs=Date.now();await persist(s);
+        s.index++;
+        s.questionStartedAtMs=Date.now();
+        await persist(s);
         renderSession(root,state,{onFinish:s.onFinish,onExit:s.onExit});
       }else await finish(root,state);
-    },correct?650:1600);
-  };
-  if(feedbackAudio){
-    setTimeout(async()=>{
-      try{await playQuestionAudio(q)}catch{}
-      if(state.activeSession===s)advance();
-    },180);
-  }else advance();
+    },wait);
+  });
 }
 
 async function finish(root,state){
