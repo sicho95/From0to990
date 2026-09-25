@@ -9,8 +9,8 @@ PWA local-first de préparation adaptative au TOEIC® Listening & Reading.
 - Offline-first : IndexedDB locale, cache PWA, file d'attente de synchro.
 - Mises à jour automatiques du service worker avec restauration de session.
 - Backend optionnel derrière une API HTTP abstraite (`SyncAdapter`).
-- Première cible backend : @Sites + D1 si l'API cross-origin est exploitable.
-- Fallback CORS possible : Cloudflare Worker personnel.
+- Backend actif : @Sites + D1 à `https://from0to990-api.sicho95.chatgpt.site`.
+- CORS direct validé depuis `https://sicho95.github.io` ; le proxy Cloudflare n'est pas nécessaire.
 - Export/import administrateur complet pour migration future.
 - Contenu pédagogique et audio versionnés séparément du code.
 
@@ -30,7 +30,7 @@ Puis ouvrir <http://localhost:8080>.
 
 Le workflow `.github/workflows/pages.yml` construit `docs/` puis le publie.
 
-URL prévue : `https://sicho95.github.io/From0to990/`
+URL : `https://sicho95.github.io/From0to990/`
 
 ## Architecture
 
