@@ -1,210 +1,31 @@
-const ROUTES = [
-  ['today', 'Aujourd’hui', '⌂'],
-  ['diagnostic', 'Diagnostic', '◎'],
-  ['train', 'S’entraîner', '▶'],
-  ['program', 'Programme', '↗'],
-  ['mock', 'TOEIC blanc', '◈'],
-  ['dashboard', 'Tableau de bord', '▣'],
-  ['errors', 'Mes erreurs', '⚠'],
-  ['vocab', 'Vocabulaire', '✦'],
-  ['resources', 'Ressources', '☍'],
-  ['history', 'Historique', '◷'],
-  ['settings', 'Réglages', '⚙']
-];
-
-import {
-  STORES,
-  getAll,
-  getProfile,
-  saveProfile,
-  addAttempt,
-  addSession,
-  saveSkill,
-  saveError,
-  exportLocalBackup,
-  importLocalBackup,
-  setting,
-  setSetting,
-  snapshot
-} from './lib/db.js';
-import { recomputeSkills, priorities, estimatedScores, SKILL_LABELS, pickAdaptive } from './lib/adaptive.js';
-import { playQuestionAudio, stopAudio, audioCapabilities } from './lib/audio.js';
-import { syncNow, syncStatus, remoteAdminExport } from './lib/sync.js';
-
-const state = {
-  route: 'today',
-  questions: [],
-  profile: null,
-  attempts: [],
-  sessions: [],
-  skills: [],
-  errors: [],
-  currentSession: null,
-  contentMeta: null,
-  version: null,
-  toast: '',
-  sync: { pending: 0, endpoint: '', lastSyncAt: null },
-};
-
-const app = document.getElementById('app');
-
-init().catch(err => {
-  console.error(err);
-  app.innerHTML = `<div class="content"><div class="card"><h2>Erreur au chargement</h2><pre>${escapeHtml(String(err.stack || err))}</pre></div></div>`;
-});
-
-async function init() {
-  state.route = (location.hash.replace('#/', '') || 'today').split('?')[0];
-  await loadContent();
-  await hydrateState();
-  setupEvents();
-  await restoreLiveSession();
-  await registerSW();
-  await refreshSyncStatus();
-  render();
-}
-
-async function loadContent() {
-  const [contentRes, versionRes] = await Promise.all([
-    fetch('./content/content.json'),
-    fetch('./version.json').catch(() => null)
-  ]);
-  const content = await contentRes.json();
-  state.questions = content.questions;
-  state.contentMeta = content.meta;
-  state.version = versionRes ? await versionRes.json() : { appVersion: 'dev', contentVersion: 'dev' };
-}
-
-async function hydrateState() {
-  const [profile, attempts, sessions, skills, errors] = await Promise.all([
-    getProfile(),
-    getAll(STORES.attempts),
-    getAll(STORES.sessions),
-    getAll(STORES.skills),
-    getAll(STORES.errors)
-  ]);
-  state.profile = profile || defaultProfile();
-  if (!profile) await saveProfile(state.profile, { queue: false });
-  state.attempts = attempts.sort((a, b) => String(a.createdAt).localeCompare(String(b.createdAt)));
-  state.sessions = sessions.sort((a, b) => String(b.startedAt).localeCompare(String(a.startedAt)));
-  state.skills = skills.length ? skills : recomputeSkills(state.questions, state.attempts);
-  if (!skills.length) await persistSkills();
-  state.errors = errors.sort((a, b) => (b.count || 0) - (a.count || 0));
-}
-
-function defaultProfile() {
-  return {
-    displayName: 'Damien',
-    targetScore: 990,
-    examDate: '',
-    timePerDay: 20,
-    levelEstimate: 'intermédiaire',
-    lastScore: '',
-    goal: 'Atteindre le score maximal au TOEIC Listening & Reading',
-    onboardingComplete: false,
-    updatedAt: new Date().toISOString()
-  };
-}
-
-function setupEvents() {
-  window.addEventListener('hashchange', () => {
-    state.route = (location.hash.replace('#/', '') || 'today').split('?')[0];
-    render();
-  });
-  window.addEventListener('online', async () => { showToast('Connexion retrouvée — synchronisation…'); await trySync(true); });
-  window.addEventListener('offline', () => { showToast('Mode hors ligne activé'); render(); });
-}
-
-async function registerSW() {
-  if (!('serviceWorker' in navigator)) return;
-  const reg = await navigator.serviceWorker.register('./sw.js');
-  navigator.serviceWorker.addEventListener('controllerchange', async () => {
-    await persistUiState();
-    location.reload();
-  });
-  setInterval(async () => {
-    try { await reg.update(); } catch {}
-  }, 60_000);
-}
-
-async function refreshSyncStatus() {
-  state.sync = await syncStatus();
-}
-
-async function persistSkills() {
-  state.skills = recomputeSkills(state.questions, state.attempts);
-  for (const s of state.skills) await saveSkill({ ...s, updatedAt: new Date().toISOString(), payload: {} }, { queue: false });
-}
-
-function navigate(route) {
-  location.hash = `#/${route}`;
-}
-
-function showToast(msg) {
-  state.toast = msg;
-  render();
-  clearTimeout(showToast._t);
-  showToast._t = setTimeout(() => { state.toast = ''; render(); }, 2800);
-}
-
-function render() {
-  const route = ROUTES.some(([id]) => id === state.route) ? state.route : 'today';
-  state.route = route;
-  app.innerHTML = `
-    <div class="layout">
-      ${renderSidebar(route)}
-      <div class="main">
-        ${renderTopbar(route)}
-        <div class="content">${renderRoute(route)}</div>
-      </div>
-      ${renderMobileNav(route)}
-    </div>
-    <div id="toast-slot">${state.toast ? `<div class="toast">${escapeHtml(state.toast)}</div>` : ''}</div>
-  `;
-  bindPageEvents();
-}
-
-function renderSidebar(route) {
-  const primary = ['today','diagnostic','train','program','mock','dashboard'];
-  const secondary = ['errors','vocab','resources','history','settings'];
-  return `
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-mark">990</div>
-        <div><h1>From0to990</h1><small>Coach TOEIC indépendant</small></div>
-      </div>
-      <div class="nav-section">Travail</div>
-      <nav class="nav">${primary.map(r => navButton(r, route)).join('')}</nav>
-      <div class="nav-section">Suivi & outils</div>
-      <nav class="nav">${secondary.map(r => navButton(r, route)).join('')}</nav>
-      <div class="sidebar-foot">
-        <div class="sync-pill"><span class="dot ${navigator.onLine ? '' : 'offline'}"></span>${navigator.onLine ? 'En ligne' : 'Hors ligne'} · ${state.sync.pending || 0} en attente</div>
-      </div>
-    </aside>`;
-}
-
-function renderMobileNav(route) {
-  const mobile = ['today','train','mock','dashboard','settings'];
-  return `<nav class="mobile-nav">${mobile.map(r => navButton(r, route, true)).join('')}</nav>`;
-}
-
-function navButton(routeId, current, compact=false) {
-  const route = ROUTES.find(([id]) => id === routeId);
-  return `<button data-nav="${routeId}" class="${routeId===current?'active':''}">${compact ? `<span class="icon">${route[2]}</span>` : `<span class="icon">${route[2]}</span><span>${route[1]}</span>`}</button>`;
-}
-
-function renderTopbar(route) {
-  const label = ROUTES.find(([id]) => id === route)?.[1] || 'From0to990';
-  const est = estimatedScores(state.questions, state.attempts);
-  return `
-    <header class="topbar">
-      <div><h2>${escapeHtml(label)}</h2></div>
-      <div class="top-actions">
-        <span class="chip">Score estimé ${est.total}/990</span>
-        <button class="chip" data-action="quick-train">Que travailler maintenant ?</button>
-      </div>
-    </header>`;
-}
-
-function renderRoute(route) {
-  switch (route) {
+import {STORES,getAll,getProfile,saveProfile,addAttempt,addSession,saveSkill,saveError,setting,setSetting,exportLocalBackup,importLocalBackup} from './lib/db.js';
+import {recomputeSkills,pickAdaptive,estimatedScores,priorities,SKILL_LABELS} from './lib/adaptive.js';
+import {playQuestionAudio,stopAudio} from './lib/audio.js';
+import {syncNow,syncStatus,remoteAdminExport} from './lib/sync.js';
+const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const R=[['today','Aujourd’hui'],['diagnostic','Diagnostic'],['train','S’entraîner'],['program','Programme'],['mock','TOEIC blanc'],['dashboard','Tableau de bord'],['errors','Mes erreurs'],['history','Historique'],['settings','Réglages']];
+const S={route:'today',questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},live:null};
+const app=$('#app');
+init().catch(e=>app.innerHTML=`<main class="content"><div class="card"><pre>${esc(e.stack||e)}</pre></div></main>`);
+async function init(){S.route=(location.hash.replace('#/','')||'today');S.questions=(await fetch('./content/content.json').then(r=>r.json())).questions;await hydrate();S.sync=await syncStatus();window.onhashchange=()=>{S.route=location.hash.replace('#/','')||'today';draw()};window.ononline=()=>doSync(1);window.onoffline=draw;if('serviceWorker'in navigator){const r=await navigator.serviceWorker.register('./sw.js');navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());setInterval(()=>r.update().catch(()=>{}),60000)}draw()}
+async function hydrate(){const [p,a,se,sk,er]=await Promise.all([getProfile(),getAll(STORES.attempts),getAll(STORES.sessions),getAll(STORES.skills),getAll(STORES.errors)]);S.profile=p||{displayName:'Damien',targetScore:990,timePerDay:20,examDate:''};if(!p)await saveProfile(S.profile,{queue:false});S.attempts=a;S.sessions=se.sort((a,b)=>String(b.startedAt).localeCompare(String(a.startedAt)));S.skills=sk.length?sk:recomputeSkills(S.questions,a);S.errors=er.sort((a,b)=>(b.count||0)-(a.count||0))}
+const nav=r=>location.hash=`#/${r}`;
+function shell(body){const e=estimatedScores(S.questions,S.attempts);return `<div class="layout"><aside class="sidebar"><div class="brand"><div class="brand-mark">990</div><div><h1>From0to990</h1><small>Coach TOEIC indépendant</small></div></div><nav class="nav">${R.map(x=>`<button data-nav="${x[0]}" class="${x[0]===S.route?'active':''}">${x[1]}</button>`).join('')}</nav><div class="sidebar-foot muted">${navigator.onLine?'En ligne':'Hors ligne'} · ${S.sync.pending||0} à synchroniser</div></aside><div class="main"><header class="topbar"><h2>${R.find(x=>x[0]===S.route)?.[1]||'From0to990'}</h2><div class="top-actions"><span class="chip">${e.total}/990</span><button class="chip" data-act="quick">Que travailler ?</button></div></header><div class="content">${body}</div></div><nav class="mobile-nav">${['today','train','mock','dashboard','settings'].map(x=>`<button data-nav="${x}" class="${x===S.route?'active':''}">${R.find(r=>r[0]===x)[1].split(' ')[0]}</button>`).join('')}</nav></div>`}
+function draw(){if(S.live)return drawQ();const e=estimatedScores(S.questions,S.attempts),p=priorities(S.skills,4);let b='';if(S.route==='today')b=`<section class="hero"><div class="hero-card"><div class="eyebrow">Coaching adaptatif TOEIC</div><h3>Travaille exactement ce qui te fait perdre des points.</h3><p class="muted">Offline-first, adaptatif, responsive iPhone/iPad/laptop.</p><div class="actions"><button class="btn primary" data-act="quick">Séance recommandée</button><button class="btn secondary" data-act="diag">Bilan initial</button></div></div><div class="card"><h3>Score estimé</h3><div class="grid cols-3"><div class="metric">${e.total}</div><div><b>${e.listening}</b><div class="muted">Listening</div></div><div><b>${e.reading}</b><div class="muted">Reading</div></div></div></div></section><div class="grid cols-3">${p.map((x,i)=>`<div class="card priority"><div class="rank">${i+1}</div><div><b>${esc(SKILL_LABELS[x.id]||x.id)}</b><div class="muted">${Math.round((x.accuracy||0)*100)}%</div></div></div>`).join('')||'<div class="card">Lance le diagnostic.</div>'}</div>`;
+else if(S.route==='diagnostic')b=`<div class="card"><h3>Diagnostic des 7 parties</h3><p class="muted">Évalue Listening, Reading, grammaire, vocabulaire, inférences, paraphrases, pièges et vitesse.</p><button class="btn primary" data-act="diag">Lancer</button></div>`;
+else if(S.route==='train')b=`<div class="card"><h3>Entraînement adaptatif</h3><div class="actions"><button class="btn primary" data-act="quick">Recommandé</button>${[10,20,30,45,60].map(n=>`<button class="btn secondary" data-act="timed" data-n="${n}">${n} min</button>`).join('')}</div></div>`;
+else if(S.route==='program')b=`<div class="card"><h3>Programme vers ${S.profile.targetScore||990}</h3><p class="muted">Recalculé après chaque séance selon tes résultats.</p><div class="grid cols-4">${[10,20,30,45].map((n,i)=>`<div class="card"><h4>${n} min</h4><p>${esc(p[i%Math.max(1,p.length)]?SKILL_LABELS[p[i%p.length].id]||p[i%p.length].id:'Diagnostic')}</p><button class="btn primary" data-act="timed" data-n="${n}">Démarrer</button></div>`).join('')}</div></div>`;
+else if(S.route==='mock')b=`<div class="card"><h3>TOEIC blanc</h3><p class="muted">200 questions : 100 Listening + 100 Reading.</p><div class="actions"><button class="btn primary" data-act="mock" data-k="full">Complet</button><button class="btn secondary" data-act="mock" data-k="listening">Listening</button><button class="btn secondary" data-act="mock" data-k="reading">Reading</button></div></div>`;
+else if(S.route==='dashboard')b=`<div class="grid cols-4"><div class="card"><div class="metric">${e.total}</div><div class="muted">/990</div></div><div class="card"><div class="metric">${e.listening}</div><div class="muted">Listening</div></div><div class="card"><div class="metric">${e.reading}</div><div class="muted">Reading</div></div><div class="card"><div class="metric">${S.attempts.length}</div><div class="muted">Questions</div></div></div><div class="card"><h3>Compétences prioritaires</h3>${p.map(x=>`<div class="stack-bar"><div class="row"><span>${esc(SKILL_LABELS[x.id]||x.id)}</span><span>${Math.round((x.accuracy||0)*100)}%</span></div><div class="progress"><span style="width:${Math.round((x.mastery||0)*100)}%"></span></div></div>`).join('')}</div>`;
+else if(S.route==='errors')b=`<div class="card"><h3>Mes erreurs</h3>${S.errors.slice(0,30).map(x=>`<div class="row"><span>${esc(x.questionId)} · ${x.count||1}×</span><button class="btn ghost" data-act="review" data-id="${x.questionId}">Revoir</button></div>`).join('')||'<p class="muted">Aucune erreur.</p>'}</div>`;
+else if(S.route==='history')b=`<div class="card"><h3>Historique</h3>${S.sessions.map(x=>`<div class="row"><span>${new Date(x.startedAt).toLocaleString('fr-FR')} · ${esc(x.type)}</span><b>${x.correct||0}/${x.total||0}</b></div>`).join('')||'<p class="muted">Aucune séance.</p>'}</div>`;
+else b=`<div class="grid cols-2"><div class="card"><h3>Profil</h3><div class="field"><label>Nom</label><input id="name" value="${esc(S.profile.displayName||'')}"></div><div class="field"><label>Objectif</label><input id="target" type="number" value="${S.profile.targetScore||990}"></div><button class="btn primary" data-act="save-profile">Enregistrer</button></div><div class="card"><h3>Synchro</h3><div class="field"><label>API</label><input id="api" value="${esc(S.sync.endpoint||'')}"></div><div class="field"><label>Token admin</label><input id="token" type="password"></div><div class="actions"><button class="btn secondary" data-act="save-api">Sauver</button><button class="btn ghost" data-act="sync">Synchroniser</button><button class="btn ghost" data-act="export">Export local</button></div></div></div>`;
+app.innerHTML=shell(b);bind()}
+function bind(){document.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>nav(b.dataset.nav));document.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>act(b))}
+async function act(b){const a=b.dataset.act;if(a==='quick')start(pickAdaptive(S.questions,S.attempts,S.skills,12),'adaptive');if(a==='diag'){let q=[];for(let p=1;p<=7;p++)q.push(...S.questions.filter(x=>x.part===p).slice(0,4));start(q,'diagnostic')}if(a==='timed')start(pickAdaptive(S.questions,S.attempts,S.skills,Math.max(6,Math.round(+b.dataset.n/2))),'adaptive');if(a==='mock'){const k=b.dataset.k,q=k==='full'?S.questions:S.questions.filter(x=>k==='listening'?x.part<=4:x.part>=5);start(q,'mock-'+k)}if(a==='review'){const q=S.questions.find(x=>x.id===b.dataset.id);if(q)start([q],'review')}if(a==='save-profile'){S.profile=await saveProfile({...S.profile,displayName:$('#name').value,targetScore:+$('#target').value||990});draw()}if(a==='save-api'){await setSetting('apiEndpoint',$('#api').value.trim());if($('#token').value)await setSetting('adminToken',$('#token').value);S.sync=await syncStatus();draw()}if(a==='sync')doSync();if(a==='export')download(new Blob([JSON.stringify(await exportLocalBackup(),null,2)],{type:'application/json'}),'from0to990.json')}
+function start(q,type){stopAudio();S.live={id:crypto.randomUUID(),type,q,i:0,answers:[],startedAt:new Date().toISOString(),t0:Date.now(),qt:Date.now()};drawQ()}
+function drawQ(){const s=S.live,q=s.q[s.i];app.innerHTML=`<main class="content exercise"><div class="question-head"><span class="badge">${esc(s.type)}</span><span>${s.i+1}/${s.q.length} · Part ${q.part}</span></div><div class="card question-card">${q.part<=4?'<button class="btn secondary" id="play">Écouter</button>':''}${q.passage?`<div class="reading-passage">${esc(q.passage)}</div>`:''}<div class="prompt">${esc(q.prompt)}</div><div class="answers">${q.choices.map((c,i)=>`<button class="answer" data-a="${i}">${String.fromCharCode(65+i)}. ${esc(c)}</button>`).join('')}</div></div></main>`;document.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>answer(+b.dataset.a));if($('#play'))$('#play').onclick=()=>playQuestionAudio(q).catch(()=>{})}
+async function answer(sel){const s=S.live,q=s.q[s.i],ok=sel===q.correctIndex,a={id:crypto.randomUUID(),questionId:q.id,sessionId:s.id,part:q.part,correct:ok,selected:sel,timeMs:Date.now()-s.qt,createdAt:new Date().toISOString(),payload_json:{}};S.attempts.push(a);await addAttempt(a);if(!ok){const old=S.errors.find(x=>x.questionId===q.id),er={id:old?.id||crypto.randomUUID(),questionId:q.id,count:(old?.count||0)+1,updatedAt:new Date().toISOString(),payload_json:{}};old?Object.assign(old,er):S.errors.push(er);await saveError(er)}s.answers.push(a);app.innerHTML=`<main class="content exercise"><div class="card"><span class="badge ${ok?'ok':'danger'}">${ok?'Bonne réponse':'À revoir'}</span><h3>${esc(q.explanation)}</h3><div class="answers">${q.choices.map((c,i)=>`<div class="answer ${i===q.correctIndex?'correct':''} ${i===sel&&i!==q.correctIndex?'wrong':''}">${String.fromCharCode(65+i)}. ${esc(c)}</div>`).join('')}</div><div class="spacer"></div><button class="btn primary" id="next">${s.i<s.q.length-1?'Suivant':'Terminer'}</button></div></main>`;$('#next').onclick=async()=>{if(s.i<s.q.length-1){s.i++;s.qt=Date.now();drawQ()}else await finish()}}
+async function finish(){const s=S.live,c=s.answers.filter(x=>x.correct).length,r={id:s.id,type:s.type,startedAt:s.startedAt,endedAt:new Date().toISOString(),total:s.q.length,correct:c,durationSec:Math.round((Date.now()-s.t0)/1000),payload_json:{}};await addSession(r);S.sessions.unshift(r);S.skills=recomputeSkills(S.questions,S.attempts);for(const sk of S.skills)await saveSkill({...sk,updatedAt:new Date().toISOString(),payload_json:{}});S.live=null;await doSync(1);draw()}
+async function doSync(silent=0){try{await syncNow()}catch{}S.sync=await syncStatus();if(!silent)draw()}
+function download(blob,name){const u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000)}
