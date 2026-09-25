@@ -89,7 +89,7 @@ function renderCorrection(root,state,q,selected,correct,timeMs,persistence=Promi
 
   Promise.allSettled([audioPromise,persistence]).then(()=>{
     if(state.activeSession!==s)return;
-    const wait=correct?500:1400;
+    const wait=correct?1800:3400;
     s.advanceTimer=setTimeout(async()=>{
       if(state.activeSession!==s)return;
       stopAudio();
@@ -110,6 +110,14 @@ async function finish(root,state){
   state.skills=recomputeSkills(state.questions,state.attempts);for(const skill of state.skills)await saveSkill({...skill,updatedAt:new Date().toISOString(),payload_json:{}},{queue:true});
   state.activeSession=null;await setSetting('activeSession',null);
   const summary={...record,accuracy:correct/Math.max(1,record.total)};
+
+  // Placement is one continuous diagnostic: no "Continue" between CEFR stages.
+  if(s.type?.startsWith('placement')){
+    root.innerHTML=`<div class="session-shell result-screen"><main class="result-card diagnostic-transition"><div class="result-badge">✓</div><span class="eyebrow">TEST DE NIVEAU</span><h1>${Math.round(summary.accuracy*100)} %</h1><p>Analyse de tes réponses…</p></main></div>`;
+    setTimeout(()=>s.onFinish?.(summary),850);
+    return;
+  }
+
   root.innerHTML=`<div class="session-shell result-screen"><main class="result-card"><div class="result-badge">${correct===record.total?'★':'✓'}</div><span class="eyebrow">SÉANCE TERMINÉE</span><h1>${correct} / ${record.total}</h1><p>${Math.round(summary.accuracy*100)} % de réussite · ${Math.max(1,Math.round(record.durationSec/60))} min</p><button class="primary-action" id="session-done">Continuer</button></main></div>`;
   document.getElementById('session-done').onclick=()=>s.onFinish?.(summary);
 }
