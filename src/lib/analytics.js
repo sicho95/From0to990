@@ -1,20 +1,12 @@
-function dayKey(d){return new Date(d).toISOString().slice(0,10)}
 export function computeStats(state){
- const now=Date.now(),weekAgo=now-7*86400000;
- const week=state.sessions.filter(s=>new Date(s.startedAt).getTime()>=weekAgo);
- const weekMinutes=Math.round(week.reduce((n,s)=>n+(s.durationSec||0),0)/60);
- const sessions=state.sessions.length,lessons=state.sessions.filter(s=>String(s.type).startsWith('lesson:')).length;
- const xp=state.attempts.reduce((n,a)=>n+(a.correct?12:4),0)+lessons*20;
- const vocab=new Set();
- for(const a of state.attempts){const q=state.questions.find(x=>x.id===a.questionId);for(const w of q?.vocabulary||[])vocab.add(String(w).toLowerCase())}
- const days=[...new Set(state.sessions.map(s=>dayKey(s.startedAt)))].sort().reverse();
- let streak=0,cursor=new Date();cursor.setHours(0,0,0,0);
- for(let i=0;i<365;i++){const key=dayKey(cursor);if(days.includes(key)){streak++;cursor.setDate(cursor.getDate()-1)}else if(i===0){cursor.setDate(cursor.getDate()-1)}else break}
- const goal=(state.profile?.timePerDay||20)*5;
- return {weekMinutes,sessions,lessons,xp,words:vocab.size,streak,weekGoalPct:Math.min(100,Math.round(weekMinutes/Math.max(1,goal)*100))};
+  const now=new Date(),monday=new Date(now);monday.setHours(0,0,0,0);monday.setDate(now.getDate()-((now.getDay()+6)%7));
+  const weekSessions=state.sessions.filter(s=>new Date(s.startedAt)>=monday),weekMinutes=Math.round(weekSessions.reduce((n,s)=>n+(s.durationSec||0),0)/60);
+  const lessons=new Set(state.sessions.filter(s=>s.type?.startsWith('lesson:')).map(s=>s.type)),xp=state.attempts.reduce((n,a)=>n+(a.correct?10:3),0)+state.sessions.length*5;
+  const qmap=new Map(state.questions.map(q=>[q.id,q])),words=new Set();for(const a of state.attempts)for(const w of qmap.get(a.questionId)?.vocabulary||[])words.add(String(w).toLowerCase());
+  const days=[...new Set(state.sessions.map(s=>new Date(s.startedAt).toISOString().slice(0,10)))].sort().reverse();let streak=0,cursor=new Date();cursor.setHours(0,0,0,0);if(days[0]&&days[0]!==cursor.toISOString().slice(0,10))cursor.setDate(cursor.getDate()-1);for(const d of days){if(d===cursor.toISOString().slice(0,10)){streak++;cursor.setDate(cursor.getDate()-1)}else if(d<cursor.toISOString().slice(0,10))break}
+  const weekGoal=(state.profile.timePerDay||20)*5;return{weekMinutes,lessons:lessons.size,xp,words:words.size,streak,sessions:state.sessions.length,weekGoalPct:Math.round(weekMinutes/Math.max(1,weekGoal)*100)}
 }
 export function computeGains(state){
- const by=new Map();
- for(const a of [...state.attempts].reverse()){const q=state.questions.find(x=>x.id===a.questionId);for(const id of q?.skills||[]){const x=by.get(id)||{id,first:[],last:[],attempts:0};x.attempts++;if(x.first.length<5)x.first.push(a.correct?1:0);x.last.push(a.correct?1:0);if(x.last.length>5)x.last.shift();by.set(id,x)}}
- return [...by.values()].map(x=>{const av=v=>v.length?v.reduce((a,b)=>a+b,0)/v.length:0;return {...x,delta:Math.max(0,Math.round((av(x.last)-av(x.first))*100))}}).filter(x=>x.attempts>=3&&x.delta>0).sort((a,b)=>b.delta-a.delta).slice(0,6);
+  const qmap=new Map(state.questions.map(q=>[q.id,q])),groups=new Map();for(const a of state.attempts){const q=qmap.get(a.questionId);for(const sk of q?.skills||[]){const arr=groups.get(sk)||[];arr.push(a.correct?1:0);groups.set(sk,arr)}}
+  const gains=[];for(const [id,arr] of groups){if(arr.length<4)continue;const half=Math.min(5,Math.floor(arr.length/2)),recent=arr.slice(-half),before=arr.slice(-half*2,-half);if(!before.length)continue;const ra=recent.reduce((a,b)=>a+b,0)/recent.length,ba=before.reduce((a,b)=>a+b,0)/before.length,delta=Math.round((ra-ba)*100);if(delta>0)gains.push({id,delta,attempts:arr.length})}return gains.sort((a,b)=>b.delta-a.delta).slice(0,5)
 }
