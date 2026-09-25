@@ -26,7 +26,7 @@ async function init(){
 function routeFromHash(){const raw=(location.hash.replace('#/','')||'today').split('/');state.route=raw[0]||'today';state.param=raw[1]||null}
 async function hydrate(){
   const [p,a,s,sk,e]=await Promise.all([getProfile(),getAll(STORES.attempts),getAll(STORES.sessions),getAll(STORES.skills),getAll(STORES.errors)]);
-  state.profile=p||{id:'me',displayName:'',targetScore:990,timePerDay:20,profileSetupComplete:false,placementComplete:false};
+  state.profile=p||{id:'me',displayName:'',targetScore:990,timePerDay:20,profileSetupComplete:false,placementComplete:false};if(state.profile.displayName==='Damien'&&!state.profile.profileSetupComplete){state.profile={...state.profile,displayName:''};await saveProfile(state.profile,{queue:false})}
   state.attempts=a.sort((x,y)=>String(x.createdAt).localeCompare(String(y.createdAt)));state.sessions=s.sort((x,y)=>String(y.startedAt).localeCompare(String(x.startedAt)));state.errors=e.sort((x,y)=>(y.count||0)-(x.count||0));
   state.skills=sk.length?sk:recomputeSkills(state.questions,state.attempts);
   if(!state.profile.cefrLevel){const c=cefrEstimate(state.questions,state.attempts);if(c)state.profile.cefrLevel=c}
@@ -60,7 +60,7 @@ function bind(){
 async function action(el){
   const a=el.dataset.act;
   if(a==='toggle-nav'){localStorage.setItem('navCollapsed',localStorage.getItem('navCollapsed')==='1'?'0':'1');draw();return}
-  if(a==='onboard-test'||a==='onboard-zero'){await saveOnboarding();if(a==='onboard-zero'){state.profile=await saveProfile({...state.profile,cefrLevel:'pre-a1',placementComplete:true});location.hash='#/today';return}return startPlacement(0)}
+  if(a==='onboard-test'||a==='onboard-zero'){if(!await saveOnboarding())return;if(a==='onboard-zero'){state.profile=await saveProfile({...state.profile,cefrLevel:'pre-a1',placementComplete:true});location.hash='#/today';return}return startPlacement(0)}
   if(a==='lesson')return start(lessonQuestions(el.dataset.id),`lesson:${el.dataset.id}`,LESSONS[el.dataset.id]?.title||'Leçon');
   if(a==='quick-general')return start(pickAdaptive(allGeneralQuestions().filter(q=>!q.id.includes('place-')),state.attempts,state.skills,12),'adaptive-general','Entraînement');
   if(a==='timed-general'){const n=Math.max(6,Math.round(Number(el.dataset.min||20)/2));return start(pickAdaptive(allGeneralQuestions().filter(q=>!q.id.includes('place-')),state.attempts,state.skills,n),'adaptive-general',`${el.dataset.min} minutes`)}
@@ -71,7 +71,7 @@ async function action(el){
   if(a==='save-profile'){state.profile=await saveProfile({...state.profile,displayName:document.getElementById('set-name').value.trim(),targetScore:Number(document.getElementById('set-target').value||990),timePerDay:Number(document.getElementById('set-time').value||20)});toast('Profil enregistré');draw();return}
   if(a==='sync')return sync(false);
 }
-async function saveOnboarding(){const name=document.getElementById('on-name').value.trim();if(!name){toast('Saisis un prénom ou un pseudo');throw new Error('Profil incomplet')}state.profile=await saveProfile({...state.profile,displayName:name,targetScore:Number(document.getElementById('on-target').value||990),timePerDay:Number(document.getElementById('on-time').value||20),profileSetupComplete:true})}
+async function saveOnboarding(){const name=document.getElementById('on-name').value.trim();if(!name){toast('Saisis un prénom ou un pseudo');return false}state.profile=await saveProfile({...state.profile,displayName:name,targetScore:Number(document.getElementById('on-target').value||990),timePerDay:Number(document.getElementById('on-time').value||20),profileSetupComplete:true});return true}
 
 async function startPlacement(index){const stage=PLACEMENT_STAGES[index];if(!stage)return;await start(stage.questions,`placement:${index}`,`Test de niveau · ${stage.level.toUpperCase()}`)}
 async function start(questions,type,title){await beginSession(state,{questions,type,title,onFinish:sessionFinished,onExit:draw});renderSession(app,state,{onFinish:sessionFinished,onExit:draw})}
