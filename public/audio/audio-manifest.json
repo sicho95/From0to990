@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "engine": {
+    "name": "Kokoro-82M",
+    "license": "Apache-2.0",
+    "sampleRate": 24000
+  },
+  "files": {}
+}

@@ -29,7 +29,7 @@ export const THEMES=[
 export const LESSONS={
   hello:{title:'Hello!',level:'pre-a1',minutes:6,theme:'survival',goal:'Saluer, remercier et prendre congé.',words:['hello','hi','good morning','please','thank you','sorry','goodbye'],examples:['Hello!','Good morning.','Thank you very much.','Sorry.','Goodbye!']},
   repeat:{title:'Je n’ai pas compris',level:'pre-a1',minutes:6,theme:'survival',goal:'Faire répéter ou ralentir.',words:['I don’t understand','Can you repeat, please?','Could you speak more slowly?','Excuse me'],examples:['I don’t understand.','Can you repeat, please?','Could you speak more slowly?']},
-  introduce:{title:'Je me présente',level:'pre-a1',minutes:8,theme:'identity',goal:'Dire son nom, son pays et demander celui de l’autre.',words:['My name is…','What’s your name?','I’m from France','Where are you from?','How old are you?'],examples:['My name is Damien.','I’m from France.','What’s your name?','Where are you from?']},
+  introduce:{title:'Je me présente',level:'pre-a1',minutes:8,theme:'identity',goal:'Dire son nom, son pays et demander celui de l’autre.',words:['My name is…','What’s your name?','I’m from France','Where are you from?','How old are you?'],examples:['My name is Alex.','I’m from France.','What’s your name?','Where are you from?']},
   numbers:{title:'Nombres essentiels',level:'pre-a1',minutes:10,theme:'numbers',goal:'Comprendre nombres, prix et numéros.',words:['one','two','ten','thirteen','thirty','fifty','hundred','pounds'],examples:['Room thirteen.','Thirty pounds.','It’s thirteen thirty.','Platform twelve.']},
   colors:{title:'Couleurs & objets',level:'pre-a1',minutes:7,theme:'colors',goal:'Identifier une couleur et un objet simple.',words:['red','blue','green','black','white','bag','phone','key'],examples:['It’s a blue bag.','This is my key.','The phone is black.']},
   food:{title:'Je voudrais…',level:'pre-a1',minutes:8,theme:'food',goal:'Demander à boire ou à manger poliment.',words:['water','coffee','tea','bread','I’d like…','Can I have…?'],examples:['I’d like a coffee, please.','Can I have some water?','That’s all, thank you.']},
@@ -39,7 +39,7 @@ export const LESSONS={
   transport:{title:'Train, bus, avion',level:'a1',minutes:10,theme:'travel',goal:'Comprendre horaires, quai, porte et retard.',words:['platform','gate','delay','departure','arrival','ticket'],examples:['Which platform?','What time does the train leave?','The flight is delayed.']},
   shopping:{title:'Faire un achat',level:'a1',minutes:9,theme:'shopping',goal:'Demander prix, taille et payer.',words:['How much is it?','size','cash','card','receipt','try on'],examples:['How much is it?','Can I try this on?','Can I pay by card?']},
   smalltalk:{title:'Small talk',level:'a1',minutes:10,theme:'smalltalk',goal:'Tenir une conversation légère.',words:['weather','weekend','family','hobby','work'],examples:['How was your weekend?','What do you do?','Nice weather today.']},
-  phone:{title:'Au téléphone',level:'a2',minutes:10,theme:'work',goal:'Se présenter, transférer et laisser un message.',words:['speaking','hold on','put you through','leave a message'],examples:['Damien speaking.','Can I leave a message?','I’ll put you through.']},
+  phone:{title:'Au téléphone',level:'a2',minutes:10,theme:'work',goal:'Se présenter, transférer et laisser un message.',words:['speaking','hold on','put you through','leave a message'],examples:['Alex speaking.','Can I leave a message?','I’ll put you through.']},
   email:{title:'E-mails professionnels',level:'a2',minutes:12,theme:'work',goal:'Comprendre et écrire un e-mail simple.',words:['regarding','attached','confirm','available','deadline'],examples:['Please find the document attached.','Could you confirm your availability?']},
   meetings:{title:'Réunions',level:'a2',minutes:12,theme:'work',goal:'Comprendre agenda, action et décision.',words:['agenda','minutes','action item','deadline','decision'],examples:['Let’s move to the next item.','Who will take this action?']},
   'idioms-common':{title:'Idiomes fréquents',level:'a2',minutes:10,theme:'idioms',goal:'Comprendre des expressions courantes en contexte.',words:['a piece of cake','once in a while','on the same page','under the weather'],examples:['The test was a piece of cake.','Let’s make sure we’re on the same page.']},
@@ -50,7 +50,15 @@ export const LESSONS={
   'false-friends':{title:'Faux amis',level:'b1',minutes:10,theme:'falsefriends',goal:'Éviter les erreurs typiques des francophones.',words:['actually','eventually','sensible','library','attend'],examples:['Actually, I disagree.','She attended the meeting.']}
 };
 
-const q=(id,level,prompt,choices,correctIndex,skills,audioText,audioMode='feedback')=>({id:`GEN-${id}`,domain:'general',level,part:null,title:'English',prompt,choices,correctIndex,skills,timeTargetSec:25,explanation:'Révise la phrase en contexte et réessaie-la plus tard.',audioMode,audioScript:audioText?[{text:audioText,locale:'en-GB',gender:'female'}]:[],transcript:audioText||'',vocabulary:choices.filter(Boolean).slice(0,3)});
+const speechProfile=(id,level)=>{
+  const n=[...String(id)].reduce((a,c)=>a+c.charCodeAt(0),0);
+  const advanced=['b1','b2','c1'].includes(level);
+  return {locale:advanced&&n%4===0?'en-US':'en-GB',gender:n%2?'male':'female'};
+};
+const q=(id,level,prompt,choices,correctIndex,skills,audioText,audioMode='feedback')=>{
+  const voice=speechProfile(id,level);
+  return {id:`GEN-${id}`,domain:'general',level,part:null,title:'English',prompt,choices,correctIndex,skills,timeTargetSec:25,explanation:'Révise la phrase en contexte et réessaie-la plus tard.',audioMode,audioScript:audioText?[{text:audioText,...voice}]:[],transcript:audioText||'',vocabulary:choices.filter(Boolean).slice(0,3)};
+};
 
 export function lessonQuestions(id){
   const L=LESSONS[id]; if(!L)return[];

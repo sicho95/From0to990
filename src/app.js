@@ -8,6 +8,7 @@ import {learn,theme,vocab} from './lib/ui-learn.js';
 import {progress} from './lib/ui-progress.js';
 import {beginSession,restoreSession,renderSession} from './lib/session.js';
 import {computeStats,computeGains} from './lib/analytics.js';
+import {initAudioBank} from './lib/audio.js';
 
 const app=document.getElementById('app');
 const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null};
@@ -17,6 +18,7 @@ init().catch(err=>{console.error(err);app.innerHTML=`<main class="fatal"><h1>Fro
 async function init(){
   routeFromHash();
   const content=await fetch('./content/content.json').then(r=>r.json());state.toeicQuestions=content.questions.map(q=>({...q,domain:q.domain||'toeic'}));
+  await initAudioBank();
   state.questions=[...allGeneralQuestions(),...state.toeicQuestions];
   await hydrate();await refreshSync();
   window.addEventListener('hashchange',()=>{routeFromHash();draw()});window.addEventListener('online',()=>sync(true));window.addEventListener('offline',draw);
