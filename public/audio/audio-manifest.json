@@ -47,8 +47,8 @@
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
-    "en-GB|female|Good morning!": {
-      "url": "./audio/generated/ba823bbb46a12406bb2969bc.mp3",
+    "en-GB|female|hello": {
+      "url": "./audio/generated/ac1cb6031e5b7d1e50bee16a.mp3",
       "voice": "bf_alice",
       "accent": "British",
       "locale": "en-GB",
@@ -56,26 +56,26 @@
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
-    "en-GB|male|You're welcome.": {
-      "url": "./audio/generated/2c5e798a5bad3697f814aa45.mp3",
-      "voice": "bm_lewis",
+    "en-GB|male|Hello!": {
+      "url": "./audio/generated/5ea09930d3bf1dd0dd6333a5.mp3",
+      "voice": "bm_george",
       "accent": "British",
       "locale": "en-GB",
       "gender": "male",
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
-    "en-GB|female|Goodbye, have a nice day!": {
-      "url": "./audio/generated/a94ca715a6bc64f0d18a0e72.mp3",
-      "voice": "bf_isabella",
+    "en-GB|female|hi": {
+      "url": "./audio/generated/8ad070fbe8d5aca677f7a6a4.mp3",
+      "voice": "bf_alice",
       "accent": "British",
       "locale": "en-GB",
       "gender": "female",
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
-    "en-GB|male|Excuse me.": {
-      "url": "./audio/generated/b05efc9978d78a7ec5776b05.mp3",
+    "en-GB|male|Good morning.": {
+      "url": "./audio/generated/beb402592067eeb57e57ec89.mp3",
       "voice": "bm_daniel",
       "accent": "British",
       "locale": "en-GB",
@@ -155,6 +155,186 @@
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
+    "en-GB|male|letter": {
+      "url": "./audio/generated/a93faa058b92dbfa1b0a6bea.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|How do you spell that?": {
+      "url": "./audio/generated/e2950342a54c4f322fa35c9c.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|alphabet": {
+      "url": "./audio/generated/b20cdfae88e627543fdbc8f4.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|My first name starts with A.": {
+      "url": "./audio/generated/8cc7877900364d4ec215ac8a.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|spell": {
+      "url": "./audio/generated/9ecc5719f95d46d6114d9101.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|How do you spell your last name?": {
+      "url": "./audio/generated/4a6acd0a7922aa7b0110536d.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|first name": {
+      "url": "./audio/generated/173eac32ffd5ed568db19ba4.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|It’s M-A-R-T-I-N.": {
+      "url": "./audio/generated/b03aa16bc17f2c338e5caa18.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|phone number": {
+      "url": "./audio/generated/d59eef83c1a650a307fdce1b.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|What’s your phone number?": {
+      "url": "./audio/generated/d8b0bb534b65f535b751a841.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|email address": {
+      "url": "./audio/generated/6b4d5cb731e1b744e6751843.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|My email address is alex@example.com.": {
+      "url": "./audio/generated/a42dcc4ef3356f30fde456d3.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|o’clock": {
+      "url": "./audio/generated/09312b8bf0b5107087400613.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|It’s eight o’clock.": {
+      "url": "./audio/generated/bc4f80040b009ed5794ed66f.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|half past": {
+      "url": "./audio/generated/dc7f3d75b3acd13109ad4bf1.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|The train leaves at half past nine.": {
+      "url": "./audio/generated/69681431431a6dda5ca486ae.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Monday": {
+      "url": "./audio/generated/481eb19c2163b276677f90b9.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Today is Monday.": {
+      "url": "./audio/generated/72f89f5873287bf3cb401e55.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Tuesday": {
+      "url": "./audio/generated/45a0e13bd9b7b203c7122b12.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|My booking is for 12 May.": {
+      "url": "./audio/generated/cae40cf0383756d8db44f470.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
     "en-GB|female|one": {
       "url": "./audio/generated/63d03ae65723bdb0546b9a50.mp3",
       "voice": "bf_lily",
@@ -224,6 +404,114 @@
       "accent": "British",
       "locale": "en-GB",
       "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|family": {
+      "url": "./audio/generated/ede46627dd2e152355e905bd.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|This is my family.": {
+      "url": "./audio/generated/1c8ad1871926fe33370f6154.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|mother": {
+      "url": "./audio/generated/ccef80243cad3cdb109779af.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I have two children.": {
+      "url": "./audio/generated/33bfd3bf18d5fc8fec60aa0d.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|room": {
+      "url": "./audio/generated/15a0eb36a883402707150100.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|The kitchen is here.": {
+      "url": "./audio/generated/14c04f5a3833dba7f3a99bea.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|kitchen": {
+      "url": "./audio/generated/494ee857f64a795a47cb754c.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Please close the door.": {
+      "url": "./audio/generated/25b132bf9ddff33af310f73d.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|toilet": {
+      "url": "./audio/generated/cebd72406d713bd3eb7f68d8.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Where is the bathroom?": {
+      "url": "./audio/generated/b26b71842730c61d247cde47.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|bathroom": {
+      "url": "./audio/generated/4050a00a0260e35da9df7501.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I need a towel, please.": {
+      "url": "./audio/generated/c43f0bdd3e9870091fd846b4.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
@@ -308,8 +596,179 @@
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
-    "en-GB|female|room": {
-      "url": "./audio/generated/15a0eb36a883402707150100.mp3",
+    "en-GB|male|I’d like a room for two nights.": {
+      "url": "./audio/generated/5e9cc555f4c76dcad51a0431.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|help": {
+      "url": "./audio/generated/93619c38abe02d5fbc5dfbab.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I need help.": {
+      "url": "./audio/generated/1d33a467a761eeb3b4ab11b5.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|lost": {
+      "url": "./audio/generated/f9e0f226e4121a24165b4f9e.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I’m lost.": {
+      "url": "./audio/generated/4b49643529e2a5be068a3674.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|pharmacy": {
+      "url": "./audio/generated/0969c1e2f9c2e7c4dd19396d.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Where is the nearest pharmacy?": {
+      "url": "./audio/generated/17d04e5859a4b301eab26f18.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|medicine": {
+      "url": "./audio/generated/2f9615c452831f09e73524d5.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I have a headache.": {
+      "url": "./audio/generated/33939f651f9bf245715c54a8.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|be": {
+      "url": "./audio/generated/ff7e54677a60ed3334939edc.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I am tired.": {
+      "url": "./audio/generated/ff475e3a6a9de48abeb09b82.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|have": {
+      "url": "./audio/generated/82086a589cf299f51cd1998c.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|She has a car.": {
+      "url": "./audio/generated/c191e4a68209486f7d9ad999.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|work": {
+      "url": "./audio/generated/73c68bd5db6461047a094482.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I work in Paris.": {
+      "url": "./audio/generated/c908b46234870e16728203d1.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|live": {
+      "url": "./audio/generated/7ebc1f451b159678d6220dd2.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|She works every day.": {
+      "url": "./audio/generated/5b190fd8df1adadd87ec9a07.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|do": {
+      "url": "./audio/generated/347f78a0df32d1a614dad389.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Where do you live?": {
+      "url": "./audio/generated/689efa0658431ad01b9ed480.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|does": {
+      "url": "./audio/generated/7d92b49adce05bc1ed6674d2.mp3",
       "voice": "bf_lily",
       "accent": "British",
       "locale": "en-GB",
@@ -317,9 +776,261 @@
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
-    "en-GB|male|I’d like a room for two nights.": {
-      "url": "./audio/generated/5e9cc555f4c76dcad51a0431.mp3",
+    "en-GB|male|What time does it start?": {
+      "url": "./audio/generated/5e939af58c847353e705c754.mp3",
       "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|a": {
+      "url": "./audio/generated/81e6766d5c4827f818f4e26a.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I need a taxi.": {
+      "url": "./audio/generated/167a20c61b329e66bbebe839.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|an": {
+      "url": "./audio/generated/e44a6b76a67b6ad96a1e2843.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|The station is near the hotel.": {
+      "url": "./audio/generated/c0793c6e73e4e70915415d3d.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|there is": {
+      "url": "./audio/generated/c65ba61e3bf8ab1afac75b14.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|There is a café nearby.": {
+      "url": "./audio/generated/c1d8b465d6b42f5327000258.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|there are": {
+      "url": "./audio/generated/ebb3a7da1bbe8dc8a12a1787.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|There are two rooms upstairs.": {
+      "url": "./audio/generated/92b1585f93c5add8814d596e.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|wake up": {
+      "url": "./audio/generated/7f4b613566fc7fe674502f7d.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I start work at eight.": {
+      "url": "./audio/generated/5d509fbf798d1fa4bc3ab66f.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|start work": {
+      "url": "./audio/generated/f6b4bb7a2ac215608cd65c8a.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I have lunch at noon.": {
+      "url": "./audio/generated/2522d07616bdd7f30622c7cb.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|always": {
+      "url": "./audio/generated/97caa22421fc2c0f8a6a2faf.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I often take the train.": {
+      "url": "./audio/generated/5bc483248cee3854c9a288c8.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|often": {
+      "url": "./audio/generated/6b4c0df8499d9dfb180e813b.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|She never works on Sunday.": {
+      "url": "./audio/generated/b0d5a198f787ac2532360a48.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|am working": {
+      "url": "./audio/generated/1fe338cfc79d730d2ebbd3b3.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I’m waiting for the bus.": {
+      "url": "./audio/generated/f15b244afb8c8135da219859.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|is waiting": {
+      "url": "./audio/generated/6664f7fbccabef4227796516.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|They are leaving now.": {
+      "url": "./audio/generated/08dc9b39c81bf40eb2d24d62.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|sunny": {
+      "url": "./audio/generated/84aa7e981fb57c29de928ef7.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|It’s sunny today.": {
+      "url": "./audio/generated/279b8ad6eee16706652c6105.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|cloudy": {
+      "url": "./audio/generated/ce34a89c6296f37d040dd992.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|It’s going to rain.": {
+      "url": "./audio/generated/79eb43226ef0bfdc1a79b2d1.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|like": {
+      "url": "./audio/generated/02cb308f8c6b4e76c20c4f3f.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I like reading.": {
+      "url": "./audio/generated/fefa7f67cf5292962758024d.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|love": {
+      "url": "./audio/generated/41a23d021d4dfa40b197ff68.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|We enjoy walking.": {
+      "url": "./audio/generated/65a20d975df9adcc2b5df5d4.mp3",
+      "voice": "bm_fable",
       "accent": "British",
       "locale": "en-GB",
       "gender": "male",
@@ -398,6 +1109,114 @@
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
+    "en-GB|female|address": {
+      "url": "./audio/generated/3da3d857828116f5b6ff9405.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Could you take me to this address?": {
+      "url": "./audio/generated/0f38459f3e59d57537dcbd66.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|airport": {
+      "url": "./audio/generated/ee0ded03fdcb3a8b468697c8.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|How long will it take?": {
+      "url": "./audio/generated/3d1b999b73a9b4fe9d62512f.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|passport": {
+      "url": "./audio/generated/e699dc3a7a5b3a8ebf2dcb09.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Where is gate twelve?": {
+      "url": "./audio/generated/8f4d56eca5c9e3de071d639c.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|boarding pass": {
+      "url": "./audio/generated/2b8c92f61420441901bf4f45.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Here is my passport.": {
+      "url": "./audio/generated/5b9ab5413312873ef6052a89.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|lost": {
+      "url": "./audio/generated/9be920c3db9fdad4fc1d09ef.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I can’t find my ticket.": {
+      "url": "./audio/generated/13734d564cd82dea0411fef3.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|missing": {
+      "url": "./audio/generated/5b23af0bf6bfb856ba0253c7.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|My booking is not here.": {
+      "url": "./audio/generated/256037b2af22877cba5eaf5a.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
     "en-GB|female|How much is it?": {
       "url": "./audio/generated/61e57c4e8591bd647653038f.mp3",
       "voice": "bf_lily",
@@ -467,6 +1286,510 @@
       "accent": "British",
       "locale": "en-GB",
       "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|head": {
+      "url": "./audio/generated/b7345c4ddbbcdcc495c05a86.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|My back hurts.": {
+      "url": "./audio/generated/7fae45ab2d8691eacc54edfc.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|stomach": {
+      "url": "./audio/generated/d0252d2e14e7fbcde59a579a.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I have a fever.": {
+      "url": "./audio/generated/56e691a0940b55313730693d.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|hurt": {
+      "url": "./audio/generated/6cc55c8a00e2349c8c244728.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|It started yesterday.": {
+      "url": "./audio/generated/4ebc5c992d7827a701ac8069.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|since": {
+      "url": "./audio/generated/a20224d575a80743aafe3b2a.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I’m allergic to penicillin.": {
+      "url": "./audio/generated/3931656a5fa45ff631656093.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|went": {
+      "url": "./audio/generated/1aaeb27611ffba14730ec858.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I went to London yesterday.": {
+      "url": "./audio/generated/15930d278d7f59a6e0619f6d.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|saw": {
+      "url": "./audio/generated/05bcd38b05e1a551d1fab5b8.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|We had dinner at eight.": {
+      "url": "./audio/generated/94908bf322fd2dcc4410923d.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|going to": {
+      "url": "./audio/generated/4d2336f5263e23380a34a35a.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I’m going to visit London.": {
+      "url": "./audio/generated/8ab79606f5e32c327c91679a.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|will": {
+      "url": "./audio/generated/1ca4324c1a60e1b1625329fa.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I’ll call you tomorrow.": {
+      "url": "./audio/generated/627ffe840525bee24e73a550.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|bigger": {
+      "url": "./audio/generated/24a522acb402ad932caf439c.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|This room is bigger.": {
+      "url": "./audio/generated/e5cb1eaa87aef79a341dce4f.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|smaller": {
+      "url": "./audio/generated/f72e219db98c25b2458dde49.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|The train is cheaper than the taxi.": {
+      "url": "./audio/generated/512f612fd4580f067cc6b279.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|much": {
+      "url": "./audio/generated/02081b87c230e4bae3894063.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|How much time do we have?": {
+      "url": "./audio/generated/675f499fbc924d428acf10a7.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|many": {
+      "url": "./audio/generated/538fd1d3264756e4ab7df084.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|There are many people here.": {
+      "url": "./audio/generated/a662132437c57130a3f772a2.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|can": {
+      "url": "./audio/generated/d4cc1f434c889042489a4c51.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|You should call the hotel.": {
+      "url": "./audio/generated/3370a23ddc1cf8a9fb650363.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|could": {
+      "url": "./audio/generated/de5487f3c797748d826a2f8a.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I have to leave now.": {
+      "url": "./audio/generated/074885b1c52e473dd886e512.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|could": {
+      "url": "./audio/generated/e64462d2637aaa65b707c3e0.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Could you help me, please?": {
+      "url": "./audio/generated/d67cccec4c5cab0e64a609c8.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|would": {
+      "url": "./audio/generated/770c17f531b09ef265214c67.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Would you mind opening the window?": {
+      "url": "./audio/generated/0ded5b5c26b7db6a0d149584.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|would you like": {
+      "url": "./audio/generated/f76fc1a1033739d6ba43d70d.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Would you like to have dinner?": {
+      "url": "./audio/generated/8f7504c219b473444feb271c.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|sounds good": {
+      "url": "./audio/generated/ebee6aba039d66b82198d48e.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Sorry, maybe another time.": {
+      "url": "./audio/generated/3c2e80df3a6311b17c7fded7.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I think": {
+      "url": "./audio/generated/0e529b164f1e2ce2a406e934.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I think it’s a good idea.": {
+      "url": "./audio/generated/cf2ca49b7afae5b04f56aaa5.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|I agree": {
+      "url": "./audio/generated/2ad41662b0cac2a1283a2172.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I’m not sure about that.": {
+      "url": "./audio/generated/f877f3bc9d8659e1ab0ba88c.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|first": {
+      "url": "./audio/generated/c7bbcd55d04df9588dea0c49.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|First, we visited the museum.": {
+      "url": "./audio/generated/add2d536f349a717ccb9ed39.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|then": {
+      "url": "./audio/generated/ba5d2eb19508daee50739102.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Then we had lunch.": {
+      "url": "./audio/generated/265fafb8f9ba69cc8eb70330.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|change": {
+      "url": "./audio/generated/dc8eb66567a138e229d02fce.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I’d like to change my reservation.": {
+      "url": "./audio/generated/1d88d79ac85afd9179b16e08.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|cancel": {
+      "url": "./audio/generated/b703c8842a0ce86a3bc2e50f.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Is another room available?": {
+      "url": "./audio/generated/3f74b79d09d69c5dd9656d64.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|delayed": {
+      "url": "./audio/generated/41ca905dea0fb8202059c501.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|I’m going to miss my connection.": {
+      "url": "./audio/generated/f9016bee0a50c0a1e7bef28d.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|connection": {
+      "url": "./audio/generated/3e53b0887e2372bdb3cc540b.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|When is the next train?": {
+      "url": "./audio/generated/41ed12b3353a742edad4d107.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|not working": {
+      "url": "./audio/generated/909042b18ff4a3d70c327160.mp3",
+      "voice": "bf_isabella",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|The air conditioning isn’t working.": {
+      "url": "./audio/generated/4542fa60e179ce54dd21f0c1.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|noisy": {
+      "url": "./audio/generated/ceb2a1af6d100a141ebcf455.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Could I change rooms?": {
+      "url": "./audio/generated/8851262181898f95862a6a1f.mp3",
+      "voice": "bm_daniel",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
       "engine": "Kokoro-82M",
       "license": "Apache-2.0"
     },
@@ -572,6 +1895,114 @@
     "en-GB|male|Who will take this action?": {
       "url": "./audio/generated/6e3ddffef0f6c0e075a880ed.mp3",
       "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|available": {
+      "url": "./audio/generated/e376c5ce1dc6e4e631150efb.mp3",
+      "voice": "bm_lewis",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Are you available on Tuesday?": {
+      "url": "./audio/generated/43c3733e9791c4548006f9aa.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|appointment": {
+      "url": "./audio/generated/311fd5a4af30c91dcda97756.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Can we reschedule the meeting?": {
+      "url": "./audio/generated/97c691c7ec871569ecdef051.mp3",
+      "voice": "bf_alice",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|send": {
+      "url": "./audio/generated/d8f066705be063766dca786c.mp3",
+      "voice": "bm_george",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Please send the file by Friday.": {
+      "url": "./audio/generated/006018d2b500f19173269e70.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|check": {
+      "url": "./audio/generated/59b99f8f011f20a094ad84dc.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|Check the figures before the meeting.": {
+      "url": "./audio/generated/b8bec80ce657a9460833c4e8.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|How can I help?": {
+      "url": "./audio/generated/1db81eb45fa13940d3d2fd25.mp3",
+      "voice": "bf_emma",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|How can I help you today?": {
+      "url": "./audio/generated/bbd72e7fe37bfbe7b3d91490.mp3",
+      "voice": "bm_fable",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "male",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|female|order": {
+      "url": "./audio/generated/b196ec2e2ffcc997c5bc2a8e.mp3",
+      "voice": "bf_lily",
+      "accent": "British",
+      "locale": "en-GB",
+      "gender": "female",
+      "engine": "Kokoro-82M",
+      "license": "Apache-2.0"
+    },
+    "en-GB|male|Let me confirm your order.": {
+      "url": "./audio/generated/2f8762d3b5380f86741ae99f.mp3",
+      "voice": "bm_fable",
       "accent": "British",
       "locale": "en-GB",
       "gender": "male",
