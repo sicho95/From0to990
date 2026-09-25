@@ -27,3 +27,8 @@ La génération s'effectue gratuitement dans GitHub Actions via `.github/workflo
 3. `SpeechSynthesis` de l'appareil uniquement comme fallback.
 
 Les fichiers ETS ne sont jamais copiés dans ce dossier.
+
+## Banque générée actuelle
+
+- 130 segments MP3 neuronaux disponibles dans `public/audio/generated/`.
+- La PWA les utilise en priorité ; `SpeechSynthesis` reste uniquement un fallback.
