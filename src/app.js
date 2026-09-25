@@ -1,34 +1,100 @@
 import {STORES,getAll,getProfile,saveProfile} from './lib/db.js';
-import {recomputeSkills,priorities,estimatedScores,cefrEstimate,pickAdaptive} from './lib/adaptive.js';
-import {LEVELS,THEMES,LESSONS,lessonQuestions,allGeneralQuestions,nextLessonId} from './lib/curriculum.js';
+import {recomputeSkills,pickAdaptive,estimatedScores,cefrEstimate,priorities} from './lib/adaptive.js';
 import {syncNow,syncStatus} from './lib/sync.js';
-import {shell,onboarding,today,learn,theme,practice,progress,vocab,profile} from './lib/ui.js';
-import {startSession,startPlacement} from './lib/session.js';
+import {allGeneralQuestions,lessonQuestions,PLACEMENT_STAGES,nextLessonId,LESSONS} from './lib/curriculum.js';
+import {shell,onboarding} from './lib/ui-shell.js';
+import {today,practice,profile} from './lib/ui-today.js';
+import {learn,theme,vocab} from './lib/ui-learn.js';
+import {progress} from './lib/ui-progress.js';
+import {beginSession,restoreSession,renderSession} from './lib/session.js';
+import {computeStats,computeGains} from './lib/analytics.js';
 
-const app=document.getElementById('app');
-const state={route:'today',themeId:null,questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{}};
+const root=document.getElementById('app');
+const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null};
 
-init().catch(err=>{console.error(err);app.innerHTML=`<main class="page"><section class="section-block"><h2>Erreur au chargement</h2><pre>${String(err.stack||err)}</pre></section></main>`});
+init().catch(err=>{console.error(err);root.innerHTML=`<main class="fatal"><h1>From0to990</h1><p>Impossible de charger l’application.</p><pre>${String(err.stack||err)}</pre></main>`});
 
 async function init(){
-  state.route=(location.hash.replace('#/','')||'today').split('?')[0];
-  const content=await fetch('./content/content.json').then(r=>r.json());
-  state.questions=[...content.questions,...allGeneralQuestions()];
-  await hydrate();
-  state.sync=await syncStatus();
-  window.addEventListener('hashchange',()=>{const raw=(location.hash.replace('#/','')||'today');const [r,q]=raw.split('?');state.route=r;state.themeId=new URLSearchParams(q||'').get('id');render()});
-  window.addEventListener('online',()=>doSync(true));window.addEventListener('offline',render);
-  if('serviceWorker'in navigator){const reg=await navigator.serviceWorker.register('./sw.js');navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());setInterval(()=>reg.update().catch(()=>{}),60000)}
-  render();
+ routeFromHash();
+ const content=await fetch('./content/content.json').then(r=>r.json());
+ state.toeicQuestions=content.questions.map(q=>({...q,domain:q.domain||'toeic'}));
+ state.questions=[...allGeneralQuestions(),...state.toeicQuestions];
+ await hydrate();await refreshSync();
+ window.addEventListener('hashchange',()=>{routeFromHash();draw()});
+ window.addEventListener('online',()=>sync(true));window.addEventListener('offline',draw);
+ if('serviceWorker'in navigator){const reg=await navigator.serviceWorker.register('./sw.js');navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());setInterval(()=>reg.update().catch(()=>{}),60000)}
+ const restored=await restoreSession(state,{onFinish:sessionFinished,onExit:draw});
+ if(restored)renderSession(root,state,{onFinish:sessionFinished,onExit:draw});else draw();
 }
-async function hydrate(){const [p,a,s,sk,e]=await Promise.all([getProfile(),getAll(STORES.attempts),getAll(STORES.sessions),getAll(STORES.skills),getAll(STORES.errors)]);state.profile=p||{displayName:'',targetScore:990,timePerDay:20,onboardingComplete:false};state.attempts=a;state.sessions=s.sort((x,y)=>String(y.startedAt).localeCompare(String(x.startedAt)));state.skills=sk.length?sk:recomputeSkills(state.questions,a);state.errors=e}
-function routeTitle(){return({today:'Aujourd’hui',learn:'Apprendre',theme:'Thème',practice:'Pratiquer',progress:'Progrès',vocab:'Vocabulaire',profile:'Profil'})[state.route]||'From0to990'}
-function context(){const score=estimatedScores(state.questions,state.attempts),cefr=state.profile.cefrLevel||cefrEstimate(state.questions,state.attempts),next=nextLessonId(state.profile,state.attempts),weekGoal=(state.profile.timePerDay||20)*7,stats=computeStats(),generalP=priorities(state.skills,4,{general:true});return{score,cefr,nextLesson:next,nextProgress:lessonProgress(next),stats,priorities:generalP,weekGoal,gains:computeGains()}}
-function render(){if(!state.profile.onboardingComplete){app.innerHTML=onboarding(state.profile);bind();return}const ctx=context();let body='';switch(state.route){case'today':body=today(state,ctx);break;case'learn':body=learn(state,ctx);break;case'theme':body=theme(state.themeId);break;case'practice':body=practice();break;case'progress':body=progress(state,ctx);break;case'vocab':body=vocab();break;case'profile':body=profile(state);break;default:body=today(state,ctx)}app.innerHTML=shell(state,body,routeTitle(),ctx.score);bind()}
-function bind(){document.querySelectorAll('[data-nav]').forEach(b=>b.onclick=()=>{if(b.dataset.nav==='theme')location.hash=`#/theme?id=${b.dataset.theme}`;else location.hash=`#/${b.dataset.nav}`});document.querySelectorAll('[data-act]').forEach(b=>b.onclick=()=>act(b))}
-async function act(b){const a=b.dataset.act;if(a==='toggle-nav'){localStorage.setItem('navCollapsed',localStorage.getItem('navCollapsed')==='1'?'0':'1');render();return}if(a==='onboard-test'||a==='onboard-zero'){state.profile=await saveProfile({...state.profile,displayName:document.getElementById('on-name').value.trim()||'Moi',targetScore:+document.getElementById('on-target').value||990,timePerDay:+document.getElementById('on-time').value||20,onboardingComplete:a==='onboard-zero',cefrLevel:a==='onboard-zero'?'pre-a1':null});if(a==='onboard-test')return startPlacement(state,{onFinish:afterSession,onExit:render});render();return}if(a==='lesson'){const id=b.dataset.id;return startSession(state,{type:`lesson:${id}`,questions:lessonQuestions(id),onFinish:afterSession,onExit:render})}if(a==='quick-general'){const q=pickAdaptive(allGeneralQuestions(),state.attempts,state.skills,12);return startSession(state,{type:'general-adaptive',questions:q,onFinish:afterSession,onExit:render})}if(a==='timed-general'){const n=Math.max(6,Math.round((+b.dataset.min||20)/2)),q=pickAdaptive(allGeneralQuestions(),state.attempts,state.skills,n);return startSession(state,{type:'general-adaptive',questions:q,onFinish:afterSession,onExit:render})}if(a.startsWith('toeic-')){let q=state.questions.filter(x=>Number.isInteger(x.part));if(a==='toeic-mini')q=pickAdaptive(q,state.attempts,state.skills,20);if(a==='toeic-listening')q=q.filter(x=>x.part<=4);if(a==='toeic-reading')q=q.filter(x=>x.part>=5);return startSession(state,{type:a,questions:q,onFinish:afterSession,onExit:render})}if(a==='save-profile'){state.profile=await saveProfile({...state.profile,displayName:document.getElementById('set-name').value.trim(),targetScore:+document.getElementById('set-target').value||990,timePerDay:+document.getElementById('set-time').value||20});render();return}if(a==='sync')return doSync(false)}
-async function afterSession(){await hydrate();await doSync(true);render()}
-async function doSync(silent){try{await syncNow()}catch{}state.sync=await syncStatus();if(!silent)render()}
-function lessonProgress(id){const qs=lessonQuestions(id),done=new Set(state.attempts.filter(a=>a.correct).map(a=>a.questionId));return qs.length?Math.round(qs.filter(q=>done.has(q.id)).length/qs.length*100):0}
-function computeStats(){const now=Date.now(),week=state.sessions.filter(s=>now-new Date(s.startedAt).getTime()<7*864e5),weekMinutes=Math.round(week.reduce((n,s)=>n+(s.durationSec||0),0)/60),lessons=state.sessions.filter(s=>String(s.type).startsWith('lesson:')).length,xp=state.attempts.filter(a=>a.correct).length*10+lessons*25,words=new Set(state.attempts.flatMap(a=>state.questions.find(q=>q.id===a.questionId)?.vocabulary||[])).size,days=new Set(state.sessions.map(s=>new Date(s.startedAt).toISOString().slice(0,10))).size,weekGoal=(state.profile.timePerDay||20)*7;return{weekMinutes,lessons,xp,words,sessions:state.sessions.length,streak:days,weekGoalPct:Math.min(100,Math.round(weekMinutes/Math.max(1,weekGoal)*100))}}
-function computeGains(){return [...state.skills].filter(s=>s.id.startsWith('general.')&&(s.attempts||0)>=2).sort((a,b)=>(b.mastery||0)-(a.mastery||0)).slice(0,5).map(s=>({...s,delta:Math.max(1,Math.round(((s.mastery||.5)-.5)*100))}))}
+function routeFromHash(){const parts=(location.hash.replace('#/','')||'today').split('/');state.route=parts[0]||'today';state.param=parts[1]||null}
+async function hydrate(){
+ const [p,a,s,sk,e]=await Promise.all([getProfile(),getAll(STORES.attempts),getAll(STORES.sessions),getAll(STORES.skills),getAll(STORES.errors)]);
+ state.profile=p||{id:'me',displayName:'',targetScore:990,timePerDay:20,profileSetupComplete:false,placementComplete:false};
+ state.attempts=a.sort((x,y)=>String(x.createdAt).localeCompare(String(y.createdAt)));
+ state.sessions=s.sort((x,y)=>String(y.startedAt).localeCompare(String(x.startedAt)));
+ state.errors=e.sort((x,y)=>(y.count||0)-(x.count||0));
+ state.skills=sk.length?sk:recomputeSkills(state.questions,state.attempts);
+ if(!state.profile.cefrLevel){const c=cefrEstimate(state.questions,state.attempts);if(c)state.profile.cefrLevel=c}
+}
+async function refreshSync(){state.sync=await syncStatus()}
+function context(){
+ const score=estimatedScores(state.questions,state.attempts),cefr=state.profile.cefrLevel||cefrEstimate(state.questions,state.attempts),stats=computeStats(state);
+ const nextLesson=nextLessonId(state.profile,state.attempts),weekGoal=(state.profile.timePerDay||20)*5;
+ return{score,cefr,stats,nextLesson,nextProgress:lessonProgress(nextLesson),priorities:priorities(state.skills,3,{general:true}),gains:computeGains(state),weekGoal};
+}
+function lessonProgress(id){const qs=lessonQuestions(id),done=new Set(state.attempts.filter(a=>a.correct).map(a=>a.questionId));return Math.round(qs.filter(q=>done.has(q.id)).length/Math.max(1,qs.length)*100)}
+function draw(){
+ if(state.activeSession)return renderSession(root,state,{onFinish:sessionFinished,onExit:draw});
+ if(!state.profile?.profileSetupComplete){root.innerHTML=onboarding(state.profile);bind();return}
+ const c=context();let body,title;
+ switch(state.route){
+  case'learn':body=learn(state,c);title='Apprendre';break;
+  case'theme':body=theme(state.param);title='Thème';break;
+  case'practice':body=practice(state,c);title='Pratiquer';break;
+  case'progress':body=progress(state,c);title='Progrès';break;
+  case'vocab':body=vocab(state);title='Vocabulaire';break;
+  case'profile':body=profile(state);title='Profil';break;
+  default:state.route='today';body=today(state,c);title='Aujourd’hui';
+ }
+ root.innerHTML=shell(state,body,title,c.score);bind();
+}
+function bind(){
+ root.querySelectorAll('[data-nav]').forEach(el=>el.onclick=()=>{if(el.dataset.nav==='theme')location.hash=`#/theme/${el.dataset.theme}`;else location.hash=`#/${el.dataset.nav}`});
+ root.querySelectorAll('[data-act]').forEach(el=>el.onclick=()=>action(el).catch(err=>{console.error(err);toast(err.message||String(err))}));
+}
+async function action(el){
+ const a=el.dataset.act;
+ if(a==='toggle-nav'){localStorage.setItem('navCollapsed',localStorage.getItem('navCollapsed')==='1'?'0':'1');draw();return}
+ if(a==='onboard-test'||a==='onboard-zero'){await saveOnboarding();if(a==='onboard-zero'){state.profile=await saveProfile({...state.profile,cefrLevel:'pre-a1',placementComplete:true});location.hash='#/today';return}return startPlacement(0)}
+ if(a==='lesson')return start(lessonQuestions(el.dataset.id),`lesson:${el.dataset.id}`,LESSONS[el.dataset.id]?.title||'Leçon');
+ if(a==='quick-general')return start(generalPool(12),'adaptive-general','Entraînement');
+ if(a==='timed-general')return start(generalPool(Math.max(6,Math.round(Number(el.dataset.min||20)/2))),'adaptive-general',`${el.dataset.min} minutes`);
+ if(a==='toeic-mini'||a==='toeic-check')return start(toeicPool(3),'toeic-mini','Mini-test TOEIC');
+ if(a==='toeic-listening')return start(state.toeicQuestions.filter(q=>q.part<=4),'mock-listening','Listening complet');
+ if(a==='toeic-reading')return start(state.toeicQuestions.filter(q=>q.part>=5),'mock-reading','Reading complet');
+ if(a==='toeic-full')return start(state.toeicQuestions,'mock-full','TOEIC blanc');
+ if(a==='save-profile'){state.profile=await saveProfile({...state.profile,displayName:document.getElementById('set-name').value.trim(),targetScore:Number(document.getElementById('set-target').value||990),timePerDay:Number(document.getElementById('set-time').value||20)});toast('Profil enregistré');draw();return}
+ if(a==='sync')return sync(false);
+}
+async function saveOnboarding(){
+ state.profile=await saveProfile({...state.profile,displayName:document.getElementById('on-name').value.trim()||'Damien',targetScore:Number(document.getElementById('on-target').value||990),timePerDay:Number(document.getElementById('on-time').value||20),profileSetupComplete:true});
+}
+function generalPool(n){return pickAdaptive(allGeneralQuestions().filter(q=>!q.id.includes('place-')),state.attempts,state.skills,n)}
+function toeicPool(perPart){const out=[];for(let p=1;p<=7;p++)out.push(...state.toeicQuestions.filter(q=>q.part===p).slice(0,perPart));return out}
+async function startPlacement(i){const stage=PLACEMENT_STAGES[i];if(stage)return start(stage.questions,`placement:${i}`,`Test de niveau · ${stage.level.toUpperCase()}`)}
+async function start(qs,type,title){await beginSession(state,{questions:qs,type,title,onFinish:sessionFinished,onExit:draw});renderSession(root,state,{onFinish:sessionFinished,onExit:draw})}
+async function sessionFinished(summary){
+ await hydrate();
+ if(summary.type?.startsWith('placement:')){
+  const i=Number(summary.type.split(':')[1]),passed=summary.accuracy>=.67;
+  if(passed&&i<PLACEMENT_STAGES.length-1)return startPlacement(i+1);
+  const level=passed?PLACEMENT_STAGES[i].level:(i===0?'pre-a1':PLACEMENT_STAGES[i-1].level);
+  state.profile=await saveProfile({...state.profile,cefrLevel:level,placementComplete:true});
+  if(['a2','b1','b2','c1'].includes(level))return start(toeicPool(4),'placement-toeic','Étalonnage TOEIC');
+  location.hash='#/today';return;
+ }
+ if(summary.type==='placement-toeic'){state.profile=await saveProfile({...state.profile,toeicPlacementComplete:true});location.hash='#/progress';return}
+ await sync(true);draw();
+}
+async function sync(silent=false){try{await syncNow();await refreshSync();if(!silent)toast('Progression synchronisée')}catch{if(!silent)toast('Synchronisation différée')}draw()}
+function toast(msg){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.textContent=msg;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2300)}
