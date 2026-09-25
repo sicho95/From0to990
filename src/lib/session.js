@@ -77,7 +77,20 @@ function renderCorrection(root,state,q,selected,correct,timeMs,persistence=Promi
   </article></main></div>`;
 
   const replay=document.getElementById('replay-feedback');
-  if(replay)replay.onclick=()=>playQuestionAudio(q).catch(()=>{});
+  if(replay)replay.onclick=async()=>{
+    clearTimeout(s.advanceTimer);
+    replay.disabled=true;
+    replay.setAttribute('aria-busy','true');
+    try{
+      await playQuestionAudio(q);
+    }catch{}
+    finally{
+      replay.disabled=false;
+      replay.removeAttribute('aria-busy');
+    }
+    if(state.activeSession!==s)return;
+    scheduleAdvance();
+  };
 
   clearTimeout(s.advanceTimer);
 
@@ -87,8 +100,8 @@ function renderCorrection(root,state,q,selected,correct,timeMs,persistence=Promi
     ? playQuestionAudio(q).catch(()=>null)
     : Promise.resolve();
 
-  Promise.allSettled([audioPromise,persistence]).then(()=>{
-    if(state.activeSession!==s)return;
+  const scheduleAdvance=()=>{
+    clearTimeout(s.advanceTimer);
     const wait=correct?1800:3400;
     s.advanceTimer=setTimeout(async()=>{
       if(state.activeSession!==s)return;
@@ -100,6 +113,11 @@ function renderCorrection(root,state,q,selected,correct,timeMs,persistence=Promi
         renderSession(root,state,{onFinish:s.onFinish,onExit:s.onExit});
       }else await finish(root,state);
     },wait);
+  };
+
+  Promise.allSettled([audioPromise,persistence]).then(()=>{
+    if(state.activeSession!==s)return;
+    scheduleAdvance();
   });
 }
 
