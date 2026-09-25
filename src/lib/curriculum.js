@@ -90,6 +90,8 @@ Object.assign(LESSONS,{
 });
 
 const LESSON_META={
+  hello:{meaning:'bonjour / salut',situation:'Tu rencontres quelqu’un le matin et tu veux le saluer.'},
+  contact:{meaning:'numéro de téléphone',situation:'À l’accueil, on te demande ton numéro de téléphone.'},
   repeat:{meaning:'Je ne comprends pas.',situation:'Tu n’as pas compris ce que quelqu’un vient de dire et tu veux qu’il répète.'},
   introduce:{meaning:'Je m’appelle…',situation:'Quelqu’un te demande d’où tu viens.'},
   numbers:{meaning:'un',situation:'Tu annonces un prix de trente livres.'},
@@ -114,6 +116,7 @@ const LESSON_META={
 };
 
 export const LESSON_GUIDES={
+  contact:{intro:'Donner ses coordonnées demande surtout de maîtriser les chiffres, l’alphabet et quelques mots fixes.',rule:'What’s your phone number? / My email address is… sont les structures de base.',tip:'Pour un e-mail, prononce @ comme “at” et le point comme “dot”.',pronunciation:'Dicte lentement les chiffres ou lettres et fais une petite pause entre les groupes.',examples:['What’s your phone number?','My email address is alex@example.com.']},
   hello:{intro:'On commence par les formules qui permettent d’entrer et de sortir d’une interaction sans stress.',rule:'Good morning s’utilise le matin ; hello/hi sont plus généraux ; goodbye/bye servent à prendre congé.',tip:'Dans le doute, “Hello”, “Please” et “Thank you” te rendent déjà compréhensible et poli.',examples:['Good morning!','Thank you very much.','Goodbye, have a nice day!']},
   repeat:{intro:'Quand tu ne comprends pas, le plus utile est de savoir faire ralentir ou répéter ton interlocuteur.',rule:'En anglais naturel, on dit “I don’t understand” et “Can you repeat, please?”.',tip:'Mémorise “Could you speak more slowly?” comme phrase de secours complète.',examples:['I don’t understand.','Can you repeat, please?']},
   introduce:{intro:'Se présenter repose sur quelques structures fixes que tu réutiliseras partout.',rule:'Utilise “My name is… / I’m…” pour te présenter et “Where are you from?” pour demander l’origine.',tip:'Pour l’âge, l’anglais dit “I’m 30”, pas “I have 30 years”.',examples:['My name is Alex.','I’m from France.']},
