@@ -34,7 +34,7 @@ async function hydrate(){
 async function refreshSync(){state.sync=await syncStatus()}
 
 function ctx(){
-  const score=estimatedScores(state.questions,state.attempts),cefr=state.profile.cefrLevel||cefrEstimate(state.questions,state.attempts),stats=computeStats(state),next=nextLessonId(state.profile,state.attempts),lq=lessonQuestions(next),done=new Set(state.attempts.filter(a=>a.correct).map(a=>a.questionId));
+  const score=estimatedScores(state.questions,state.attempts),cefr=state.profile.cefrLevel||cefrEstimate(state.questions,state.attempts),stats=computeStats(state),next=nextLessonId(state.profile,state.attempts,state.sessions),lq=lessonQuestions(next),done=new Set(state.attempts.filter(a=>a.correct).map(a=>a.questionId));
   return{score,cefr,stats,nextLesson:next,nextProgress:Math.round(lq.filter(q=>done.has(q.id)).length/Math.max(1,lq.length)*100),priorities:priorities(state.skills,3,{general:true}),gains:computeGains(state),weekGoal:(state.profile.timePerDay||20)*5}
 }
 function draw(){

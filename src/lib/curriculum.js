@@ -54,12 +54,24 @@ const q=(id,level,prompt,choices,correctIndex,skills,audioText)=>({id:`GEN-${id}
 
 export function lessonQuestions(id){
   const L=LESSONS[id]; if(!L)return[];
+  if(id==='hello'){
+    return [
+      q('hello-1','pre-a1','Tu entres dans un café le matin. Quelle réponse est naturelle ?',
+        ['Good morning!','Good night!','See you yesterday.','I am coffee.'],0,['general.survival'],'Good morning!'),
+      q('hello-2','pre-a1','Quelqu’un te dit « Thank you ». Que peux-tu répondre ?',
+        ["You're welcome.",'Goodbye yesterday.','My name thank you.','Morning please.'],0,['general.survival'],"You're welcome."),
+      q('hello-3','pre-a1','Tu quittes un hôtel. Quelle phrase convient ?',
+        ['Goodbye, have a nice day!','Hello, I arrive yesterday.','Please morning.','Thank you room.'],0,['general.survival'],'Goodbye, have a nice day!'),
+      q('hello-4','pre-a1','Tu veux attirer poliment l’attention de quelqu’un. Que dis-tu ?',
+        ['Excuse me.','Good night.','You please.','I goodbye.'],0,['general.survival'],'Excuse me.')
+    ];
+  }
   const base=L.words;
   const items=[];
-  items.push(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[L.goal, 'Une date', 'Un lieu', 'Une profession'],0,[`general.${L.theme}`],base[0]));
-  if(L.examples[0])items.push(q(`${id}-2`,L.level,'Choisis la phrase anglaise la plus naturelle.',[L.examples[0], 'I wanting please this.', 'Me need that now.', 'Give me.'],0,[`general.${L.theme}`],L.examples[0]));
-  if(base[1])items.push(q(`${id}-3`,L.level,`Écoute et reconnais : « ${base[1]} »`,[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1]));
-  if(L.examples[1])items.push(q(`${id}-4`,L.level,'Quelle phrase convient le mieux dans cette situation ?', [L.examples[1], 'No understand all.', 'English zero.', 'Why you say?'],0,[`general.${L.theme}`],L.examples[1]));
+  items.push(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[L.goal,'Une date','Un lieu','Une profession'],0,[`general.${L.theme}`],base[0]));
+  if(L.examples[0])items.push(q(`${id}-2`,L.level,'Choisis la phrase anglaise la plus naturelle.',[L.examples[0],'I wanting please this.','Me need that now.','Give me.'],0,[`general.${L.theme}`],L.examples[0]));
+  if(base[1])items.push(q(`${id}-3`,L.level,'Écoute et choisis ce que tu entends.',[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1]));
+  if(L.examples[1])items.push(q(`${id}-4`,L.level,'Quelle phrase convient le mieux dans cette situation ?',[L.examples[1],'No understand all.','English zero.','Why you say?'],0,[`general.${L.theme}`],L.examples[1]));
   return items;
 }
 
@@ -96,10 +108,14 @@ export const PLACEMENT_STAGES=[
   ]}
 ];
 
-export function nextLessonId(profile,attempts=[]){
-  const done=new Set(attempts.filter(a=>a.correct).map(a=>a.questionId));
+export function nextLessonId(profile,attempts=[],sessions=[]){
   const order=['hello','repeat','introduce','numbers','colors','food','restaurant','hotel','directions','transport','shopping','smalltalk','phone','email','meetings','idioms-common','phrasal-common','collocations-business','connected-speech','numbers-listening','false-friends'];
-  return order.find(id=>lessonQuestions(id).some(q=>!done.has(q.id)))||order.at(-1);
+  const completed=new Set(
+    sessions
+      .filter(s=>s.type?.startsWith('lesson:') && (s.total||0)>0 && ((s.correct||0)/(s.total||1))>=.75)
+      .map(s=>s.type.slice('lesson:'.length))
+  );
+  return order.find(id=>!completed.has(id))||order.at(-1);
 }
 
 

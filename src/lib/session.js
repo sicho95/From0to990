@@ -29,7 +29,7 @@ export function renderSession(root,state,{onFinish,onExit}){
   root.innerHTML=`<div class="session-shell"><header class="session-topbar"><button class="round-control" id="session-close" aria-label="Quitter">×</button><div class="session-heading"><small>${E(s.title||label(s.type))}</small><strong>${s.index+1} / ${s.questions.length}</strong></div><div class="session-progress"><span style="width:${progress}%"></span></div></header>
   <main class="session-main"><article class="question-panel">
     <div class="question-meta"><span class="level-chip">${q.domain==='general'?(q.level||'English').toUpperCase():`PART ${q.part}`}</span><span>${E(q.title||'Exercice')}</span></div>
-    ${listening?`<button class="listen-control" id="listen">${svg('play')}<span>Écouter</span></button>`:''}
+    ${listening?`<button class="listen-control" id="listen">${svg('play')}<span>Réécouter</span></button>`:''}
     ${q.passage?`<div class="reading-passage">${E(q.passage)}</div>`:''}
     <h2 class="question-prompt">${E(q.prompt)}</h2>
     <div class="choice-list">${q.choices.map((c,i)=>`<button class="choice" data-choice="${i}"><span>${String.fromCharCode(65+i)}</span><strong>${E(c)}</strong></button>`).join('')}</div>
@@ -37,7 +37,7 @@ export function renderSession(root,state,{onFinish,onExit}){
   document.getElementById('session-close').onclick=()=>exit(state);
   const listen=document.getElementById('listen');if(listen)listen.onclick=()=>playQuestionAudio(q).catch(()=>{});
   root.querySelectorAll('[data-choice]').forEach(b=>b.onclick=()=>answer(root,state,Number(b.dataset.choice)));
-  if(listening&&s.index===0)setTimeout(()=>playQuestionAudio(q).catch(()=>{}),250);
+  if(listening)setTimeout(()=>playQuestionAudio(q).catch(()=>{}),300);
 }
 
 async function answer(root,state,selected){
@@ -50,11 +50,23 @@ async function answer(root,state,selected){
 
 function renderCorrection(root,state,q,selected,correct,timeMs){
   const s=state.activeSession;
+  const listening=Boolean(q.audioScript?.length||q.audio?.url||q.audioUrl);
+  const delay=correct?900:2600;
   root.innerHTML=`<div class="session-shell"><header class="session-topbar"><div class="feedback-title ${correct?'good':'bad'}">${correct?'✓ Bonne réponse':'À retenir'}</div><strong>${s.index+1} / ${s.questions.length}</strong></header>
   <main class="session-main"><article class="question-panel correction-panel"><h2 class="question-prompt">${E(q.prompt)}</h2><div class="choice-list review">${q.choices.map((c,i)=>`<div class="choice ${i===q.correctIndex?'correct':''} ${i===selected&&i!==q.correctIndex?'wrong':''}"><span>${String.fromCharCode(65+i)}</span><strong>${E(c)}</strong></div>`).join('')}</div>
-  <div class="explanation"><span class="eyebrow">POURQUOI</span><p>${E(q.explanation||'Revois cette notion puis retrouve-la dans un autre contexte.')}</p>${q.transcript?`<div class="transcript"><small>À l’oral</small><p>${E(q.transcript)}</p></div>`:''}<small>${Math.round(timeMs/1000)} s · ${(q.skills||[]).join(' · ')}</small></div>
-  <button class="primary-action full" id="next-question">${s.index<s.questions.length-1?'Continuer':'Terminer'}</button></article></main></div>`;
-  document.getElementById('next-question').onclick=async()=>{if(s.index<s.questions.length-1){s.index++;s.questionStartedAtMs=Date.now();await persist(s);renderSession(root,state,{onFinish:s.onFinish,onExit:s.onExit})}else await finish(root,state)};
+  ${!correct?`<div class="explanation"><span class="eyebrow">À RETENIR</span><p>${E(q.explanation||'Revois cette notion puis retrouve-la dans un autre contexte.')}</p>${q.transcript?`<div class="transcript"><small>À l’oral</small><p>${E(q.transcript)}</p></div>`:''}</div>`:''}
+  <div class="feedback-actions">${listening?`<button class="listen-control compact" id="replay-feedback">${svg('play')}<span>Réécouter</span></button>`:''}<small>Question suivante automatiquement…</small></div>
+  </article></main></div>`;
+  const replay=document.getElementById('replay-feedback');if(replay)replay.onclick=()=>playQuestionAudio(q).catch(()=>{});
+  clearTimeout(s.advanceTimer);
+  s.advanceTimer=setTimeout(async()=>{
+    if(state.activeSession!==s)return;
+    stopAudio();
+    if(s.index<s.questions.length-1){
+      s.index++;s.questionStartedAtMs=Date.now();await persist(s);
+      renderSession(root,state,{onFinish:s.onFinish,onExit:s.onExit});
+    }else await finish(root,state);
+  },delay);
 }
 
 async function finish(root,state){
@@ -68,5 +80,5 @@ async function finish(root,state){
   document.getElementById('session-done').onclick=()=>s.onFinish?.(summary);
 }
 
-async function exit(state){const s=state.activeSession;stopAudio();state.activeSession=null;await setSetting('activeSession',null);s?.onExit?.()}
+async function exit(state){const s=state.activeSession;if(s?.advanceTimer)clearTimeout(s.advanceTimer);stopAudio();state.activeSession=null;await setSetting('activeSession',null);s?.onExit?.()}
 function label(type){if(type?.startsWith('lesson:'))return'Leçon';if(type?.startsWith('placement'))return'Test de niveau';if(type?.startsWith('mock'))return'TOEIC blanc';if(type==='adaptive-general')return'Entraînement';return'Exercice'}
