@@ -119,7 +119,21 @@ async function finish(root,state){
   }
 
   root.innerHTML=`<div class="session-shell result-screen"><main class="result-card"><div class="result-badge">${correct===record.total?'★':'✓'}</div><span class="eyebrow">SÉANCE TERMINÉE</span><h1>${correct} / ${record.total}</h1><p>${Math.round(summary.accuracy*100)} % de réussite · ${Math.max(1,Math.round(record.durationSec/60))} min</p><button class="primary-action" id="session-done">Continuer</button></main></div>`;
-  document.getElementById('session-done').onclick=()=>s.onFinish?.(summary);
+  const doneBtn=document.getElementById('session-done');
+  doneBtn.onclick=async()=>{
+    if(doneBtn.dataset.busy==='1')return;
+    doneBtn.dataset.busy='1';
+    doneBtn.disabled=true;
+    doneBtn.setAttribute('aria-busy','true');
+    doneBtn.textContent='Chargement…';
+    try{await s.onFinish?.(summary)}catch(e){
+      console.error(e);
+      doneBtn.dataset.busy='0';
+      doneBtn.disabled=false;
+      doneBtn.removeAttribute('aria-busy');
+      doneBtn.textContent='Continuer';
+    }
+  };
 }
 
 async function exit(state){const s=state.activeSession;if(s?.advanceTimer)clearTimeout(s.advanceTimer);stopAudio();state.activeSession=null;await setSetting('activeSession',null);s?.onExit?.()}

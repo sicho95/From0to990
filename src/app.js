@@ -81,7 +81,7 @@ async function sessionFinished(summary){
   await hydrate();
   if(summary.type?.startsWith('placement:')){const idx=Number(summary.type.split(':')[1]),passed=summary.accuracy>=.67;if(passed&&idx<PLACEMENT_STAGES.length-1)return startPlacement(idx+1);const level=passed?PLACEMENT_STAGES[idx].level:(idx===0?'pre-a1':PLACEMENT_STAGES[idx-1].level);state.profile=await saveProfile({...state.profile,cefrLevel:level,placementComplete:true});if(['a2','b1','b2','c1'].includes(level))return start(toeicDiagnosticPool(4),'placement-toeic','Étalonnage TOEIC');location.hash='#/today';return}
   if(summary.type==='placement-toeic'){state.profile=await saveProfile({...state.profile,toeicPlacementComplete:true});location.hash='#/progress';return}
-  await sync(true);draw();
+  draw();sync(true);
 }
 function toeicDiagnosticPool(perPart=4){const out=[];for(let p=1;p<=7;p++)out.push(...state.toeicQuestions.filter(q=>q.part===p).slice(0,perPart));return out}
 
