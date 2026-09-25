@@ -101,3 +101,11 @@ export function nextLessonId(profile,attempts=[]){
   const order=['hello','repeat','introduce','numbers','colors','food','restaurant','hotel','directions','transport','shopping','smalltalk','phone','email','meetings','idioms-common','phrasal-common','collocations-business','connected-speech','numbers-listening','false-friends'];
   return order.find(id=>lessonQuestions(id).some(q=>!done.has(q.id)))||order.at(-1);
 }
+
+
+export function allGeneralQuestions(){
+  const map=new Map();
+  for(const stage of PLACEMENT_STAGES) for(const item of stage.questions) map.set(item.id,item);
+  for(const id of Object.keys(LESSONS)) for(const item of lessonQuestions(id)) map.set(item.id,item);
+  return [...map.values()];
+}
