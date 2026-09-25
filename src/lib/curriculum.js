@@ -1,3 +1,6 @@
+import {EXTRA_THEMES,EXTRA_LESSONS,EXTRA_META} from './curriculum-extra.js';
+import {BASE_TEACHING,fallbackTeaching} from './curriculum-teaching.js';
+
 export const LEVELS=[
   {id:'pre-a1',label:'Pré-A1',title:'Survie',range:'0 → premières phrases',description:'Comprendre et se faire comprendre dans les situations les plus simples.'},
   {id:'a1',label:'A1',title:'Bases',range:'phrases simples',description:'Se présenter, demander, acheter, réserver, parler de sa vie quotidienne.'},
@@ -23,7 +26,8 @@ export const THEMES=[
   {id:'phrasal',title:'Phrasal verbs',icon:'arrows',level:'a2',summary:'Pick up, find out, set up, look forward to… en contexte.',lessons:['phrasal-common']},
   {id:'collocations',title:'Collocations',icon:'link',level:'b1',summary:'Make a decision, meet a deadline, take responsibility…',lessons:['collocations-business']},
   {id:'pronunciation',title:'Comprendre l’anglais naturel',icon:'wave',level:'b1',summary:'Contractions, weak forms, connected speech et accents.',lessons:['connected-speech','numbers-listening']},
-  {id:'falsefriends',title:'Faux amis français',icon:'warning',level:'b1',summary:'Actually, eventually, sensible, comprehensive…',lessons:['false-friends']}
+  {id:'falsefriends',title:'Faux amis français',icon:'warning',level:'b1',summary:'Actually, eventually, sensible, comprehensive…',lessons:['false-friends']},
+  ...EXTRA_THEMES
 ];
 
 export const LESSONS={
@@ -47,7 +51,8 @@ export const LESSONS={
   'collocations-business':{title:'Collocations professionnelles',level:'b1',minutes:12,theme:'collocations',goal:'Parler plus naturellement avec les bonnes associations de mots.',words:['make a decision','meet a deadline','take responsibility','raise a question'],examples:['We need to make a decision today.','Can we meet the deadline?']},
   'connected-speech':{title:'Connected speech',level:'b1',minutes:12,theme:'pronunciation',goal:'Reconnaître les mots quand ils se lient et se réduisent.',words:['gonna','wanna','could you','did you','have to'],examples:['What are you going to do?','Could you send it today?']},
   'numbers-listening':{title:'13 ou 30 ?',level:'b1',minutes:8,theme:'pronunciation',goal:'Éliminer les confusions de nombres à l’oral.',words:['thirteen','thirty','fourteen','forty','fifteen','fifty'],examples:['Room thirteen.','Thirty dollars.','Gate fourteen.']},
-  'false-friends':{title:'Faux amis',level:'b1',minutes:10,theme:'falsefriends',goal:'Éviter les erreurs typiques des francophones.',words:['actually','eventually','sensible','library','attend'],examples:['Actually, I disagree.','She attended the meeting.']}
+  'false-friends':{title:'Faux amis',level:'b1',minutes:10,theme:'falsefriends',goal:'Éviter les erreurs typiques des francophones.',words:['actually','eventually','sensible','library','attend'],examples:['Actually, I disagree.','She attended the meeting.']},
+  ...EXTRA_LESSONS
 };
 
 Object.assign(LESSONS,{
@@ -117,7 +122,8 @@ const LESSON_META={
   'collocations-business':{meaning:'prendre une décision',situation:'Tu veux demander si l’équipe peut respecter la date limite.'},
   'connected-speech':{meaning:'forme orale familière de “going to”',situation:'Tu demandes poliment à quelqu’un d’envoyer quelque chose aujourd’hui.'},
   'numbers-listening':{meaning:'treize',situation:'Tu annonces un prix de trente dollars.'},
-  'false-friends':{meaning:'en fait / en réalité',situation:'Tu veux dire qu’une personne a assisté à une réunion.'}
+  'false-friends':{meaning:'en fait / en réalité',situation:'Tu veux dire qu’une personne a assisté à une réunion.'},
+  ...EXTRA_META
 };
 
 export const LESSON_GUIDES={
@@ -205,14 +211,20 @@ Object.assign(LESSON_META,{
 });
 
 
+export function lessonTeaching(id){
+  const L=LESSONS[id];if(!L)return null;
+  const meta=LESSON_META[id]||{};
+  return BASE_TEACHING[id]||fallbackTeaching(L,meta);
+}
+
 const speechProfile=(id,level)=>{
   const n=[...String(id)].reduce((a,c)=>a+c.charCodeAt(0),0);
   const advanced=['b1','b2','c1'].includes(level);
   return {locale:advanced&&n%4===0?'en-US':'en-GB',gender:n%2?'male':'female'};
 };
-const q=(id,level,prompt,choices,correctIndex,skills,audioText,audioMode='feedback')=>{
+const q=(id,level,prompt,choices,correctIndex,skills,audioText,audioMode='feedback',pedagogy={})=>{
   const voice=speechProfile(id,level);
-  return {id:`GEN-${id}`,domain:'general',level,part:null,title:'English',prompt,choices,correctIndex,skills,timeTargetSec:25,explanation:'Révise la phrase en contexte et réessaie-la plus tard.',audioMode,audioScript:audioText?[{text:audioText,...voice}]:[],transcript:audioText||'',vocabulary:choices.filter(Boolean).slice(0,3)};
+  return {id:`GEN-${id}`,domain:'general',level,part:null,title:'English',prompt,choices,correctIndex,skills,timeTargetSec:25,explanation:pedagogy.explanation||'',tip:pedagogy.tip||'',choiceExplanations:pedagogy.choiceExplanations||[],audioMode,audioScript:audioText?[{text:audioText,...voice}]:[],transcript:audioText||'',vocabulary:choices.filter(Boolean).slice(0,3)};
 };
 
 function enrichLessonQuestion(item,lessonId,kind,{answerText,meaning}={}){
@@ -266,15 +278,35 @@ export function lessonQuestions(id){
         ['Excuse me.','Good night.','You please.','I goodbye.'],0,['general.survival'],'Excuse me.'),'hello','context',{answerText:'Excuse me.'})
     ];
   }
-  const base=L.words,meta=LESSON_META[id]||{};
+  const base=L.words,meta=LESSON_META[id]||{},teach=lessonTeaching(id)||fallbackTeaching(L,meta);
   const items=[];
-  if(meta.meaning)items.push(enrichLessonQuestion(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[meta.meaning,'Une date ou une heure','Un lieu précis','Une profession'],0,[`general.${L.theme}`],base[0]),id,'meaning',{meaning:meta.meaning}));
-  else items.push(q(`${id}-1`,L.level,`Dans quelle leçon utilise-t-on surtout « ${base[0]} » ?`,[L.goal,'Parler uniquement du passé','Donner une adresse e-mail','Épeler un nom de famille'],0,[`general.${L.theme}`],base[0]));
-  if(L.examples[0])items.push(enrichLessonQuestion(q(`${id}-2`,L.level,'Laquelle de ces phrases est correcte et naturelle en anglais ?',[L.examples[0],'I wanting please this.','Me need that now.','Give me.'],0,[`general.${L.theme}`],L.examples[0]),id,'natural',{answerText:L.examples[0]}));
-  if(base[1])items.push(enrichLessonQuestion(q(`${id}-3`,L.level,'Écoute puis choisis exactement ce que tu entends.',[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1],'prompt'),id,'listening',{answerText:base[1]}));
+  const tip=teach.tip||'Apprends cette expression dans une phrase complète.';
+  const genericWrong=[
+    'Cette formulation ne respecte pas la structure naturelle travaillée dans la leçon.',
+    'Cette proposition emploie un ordre des mots incorrect ou une traduction trop littérale.',
+    'Cette formulation est trop abrupte ou grammaticalement incomplète dans ce contexte.'
+  ];
+  if(meta.meaning)items.push(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[meta.meaning,'Une date ou une heure','Un lieu précis','Une profession'],0,[`general.${L.theme}`],base[0],'feedback',{
+    explanation:`« ${base[0]} » signifie « ${meta.meaning} ». ${teach.rule}`,tip,
+    choiceExplanations:[`C’est le sens attendu ici : « ${meta.meaning} ».`,'Ce n’est pas une expression de date ou d’heure.','Ce mot ne désigne pas un lieu ici.','Ce mot ne désigne pas une profession ici.']
+  }));
+  else items.push(q(`${id}-1`,L.level,`À quoi sert surtout « ${base[0]} » dans cette leçon ?`,[L.goal,'Parler uniquement du passé','Donner une adresse e-mail','Épeler un nom de famille'],0,[`general.${L.theme}`],base[0],'feedback',{
+    explanation:`Cette expression sert ici à ${L.goal.toLowerCase()} ${teach.rule}`,tip
+  }));
+  if(L.examples[0])items.push(q(`${id}-2`,L.level,'Laquelle de ces phrases est correcte et naturelle en anglais ?',[L.examples[0],'I wanting please this.','Me need that now.','Give me.'],0,[`general.${L.theme}`],L.examples[0],'feedback',{
+    explanation:`« ${L.examples[0]} » est la formulation naturelle. ${teach.rule}`,tip,
+    choiceExplanations:[`Cette phrase suit la construction naturelle : ${teach.rule}`,...genericWrong]
+  }));
+  if(base[1])items.push(q(`${id}-3`,L.level,'Écoute puis choisis exactement ce que tu entends.',[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1],'prompt',{
+    explanation:`Tu as entendu « ${base[1]} ». ${teach.pronunciation||''}`,tip,
+    choiceExplanations:[`C’est exactement « ${base[1]} ».`,'Le son entendu ne correspond pas à ce choix.','Le son entendu ne correspond pas à ce choix.','Le son entendu ne correspond pas à ce choix.']
+  }));
   if(L.examples[1]){
     const prompt=meta.situation?`${meta.situation} Que peux-tu dire ?`:'Laquelle de ces phrases est correcte et naturelle en anglais ?';
-    items.push(enrichLessonQuestion(q(`${id}-4`,L.level,prompt,[L.examples[1],'No understand all.','English zero.','Why you say?'],0,[`general.${L.theme}`],L.examples[1]),id,'context',{answerText:L.examples[1]}));
+    items.push(q(`${id}-4`,L.level,prompt,[L.examples[1],'No understand all.','English zero.','Why you say?'],0,[`general.${L.theme}`],L.examples[1],'feedback',{
+      explanation:`Dans ce contexte, « ${L.examples[1]} » est une formulation correcte et naturelle. ${teach.rule}`,tip,
+      choiceExplanations:[`Cette réponse correspond à la situation et respecte l’usage naturel.`,...genericWrong]
+    }));
   }
   return items;
 }
@@ -313,7 +345,12 @@ export const PLACEMENT_STAGES=[
 ];
 
 export function nextLessonId(profile,attempts=[],sessions=[]){
-  const order=['hello','repeat','alphabet','spelling','introduce','contact','numbers','time-basic','days-dates','colors','family-basic','basic-verbs','food','restaurant','hotel','emergency','be-have','articles','there-is','present-simple','questions-basic','can-cant','frequency','daily-routine','home','weather','directions','transport','shopping','health','smalltalk','past-simple','future-plans','present-continuous','comparatives','quantities','polite-requests','travel-problems','hotel-problems','social-plans','work-basics','phone','email','meetings','idioms-common','phrasal-common','collocations-business','connected-speech','numbers-listening','false-friends'];
+  const order=[
+    'hello','repeat','introduce','alphabet','spelling','numbers','time','days-dates','colors','family-basic','home-basic','bathroom-basic','food','restaurant','hotel','help','pharmacy',
+    'be-have','present-simple','questions-basic','articles','there-is','routine','frequency','present-continuous','weather','hobbies','directions','transport','taxi','airport-basic','shopping','travel-problems-basic','smalltalk','body-health','doctor-basic',
+    'past-simple','future-plans','comparatives','quantities','modals-basic','polite-requests','invitations','opinions','storytelling-basic','reservation-change','delay-problem','hotel-problem','phone','email','meetings','schedule-work','instructions-work','customers-basic','idioms-common','phrasal-common',
+    'collocations-business','connected-speech','numbers-listening','false-friends'
+  ];
   const completed=new Set(
     sessions
       .filter(s=>s.type?.startsWith('lesson:') && (s.total||0)>0 && ((s.correct||0)/(s.total||1))>=.75)
