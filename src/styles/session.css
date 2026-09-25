@@ -21,3 +21,5 @@
   opacity:.72;
   cursor:default;
 }
+
+.teaching-feedback{display:grid;gap:10px}.teaching-feedback section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 15px}.teaching-feedback section p{margin:5px 0 0;line-height:1.5;color:var(--text)}.feedback-label{display:block;font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.wrong-reason{border-color:color-mix(in srgb,var(--red) 26%,var(--line))!important}.tip-feedback{background:color-mix(in srgb,var(--accent2) 7%,var(--surface))!important}.example-line{font-style:italic}.feedback-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.feedback-actions>small{width:100%;color:var(--muted)}.compact-next{min-height:42px;padding:9px 14px}.listen-control.compact{min-height:42px}

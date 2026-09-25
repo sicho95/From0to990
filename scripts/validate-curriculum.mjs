@@ -1,4 +1,4 @@
-import {allGeneralQuestions} from '../src/lib/curriculum.js';
+import {allGeneralQuestions,LESSONS,LESSON_GUIDES} from '../src/lib/curriculum.js';
 
 const qs=allGeneralQuestions();
 const vague=/\b(cette situation|dans la situation|selon la situation)\b/i;
@@ -9,6 +9,11 @@ for(const q of qs){
   if(!Array.isArray(q.choices)||q.choices.length<2)bad.push(`${q.id}: choix insuffisants`);
   if(new Set(q.choices||[]).size!==(q.choices||[]).length)bad.push(`${q.id}: choix dupliqués`);
   if(!Number.isInteger(q.correctIndex)||q.correctIndex<0||q.correctIndex>=q.choices.length)bad.push(`${q.id}: correctIndex invalide`);
+}
+for(const [id,L] of Object.entries(LESSONS)){
+  const g=LESSON_GUIDES[id];
+  if(!g?.intro||!g?.rule||!g?.tip)bad.push(`${id}: guide pédagogique incomplet`);
+  if(!(L.examples||[]).length)bad.push(`${id}: aucun exemple`);
 }
 if(bad.length){console.error(bad.join('\n'));process.exit(1)}
 console.log(`Curriculum QA OK: ${qs.length} questions générales contrôlées`);

@@ -4,7 +4,7 @@ import {syncNow,syncStatus} from './lib/sync.js';
 import {allGeneralQuestions,lessonQuestions,PLACEMENT_STAGES,nextLessonId,LESSONS} from './lib/curriculum.js';
 import {shell,onboarding} from './lib/ui-shell.js';
 import {today,practice,profile} from './lib/ui-today.js';
-import {learn,theme,vocab} from './lib/ui-learn.js';
+import {learn,theme,vocab,lessonIntro} from './lib/ui-learn.js';
 import {progress} from './lib/ui-progress.js';
 import {beginSession,restoreSession,renderSession} from './lib/session.js';
 import {computeStats,computeGains} from './lib/analytics.js';
@@ -46,6 +46,7 @@ function draw(){
   switch(state.route){
     case'learn':body=learn(state,c);title='Apprendre';break;
     case'theme':body=theme(state.param);title='Thème';break;
+    case'lesson':body=lessonIntro(state.param);title=LESSONS[state.param]?.title||'Leçon';break;
     case'practice':body=practice(state,c);title='Pratiquer';break;
     case'progress':body=progress(state,c);title='Progrès';break;
     case'vocab':body=vocab(state);title='Vocabulaire';break;
@@ -63,7 +64,8 @@ async function action(el){
   const a=el.dataset.act;
   if(a==='toggle-nav'){localStorage.setItem('navCollapsed',localStorage.getItem('navCollapsed')==='1'?'0':'1');draw();return}
   if(a==='onboard-test'||a==='onboard-zero'){if(!await saveOnboarding())return;if(a==='onboard-zero'){state.profile=await saveProfile({...state.profile,cefrLevel:'pre-a1',placementComplete:true});location.hash='#/today';return}return startPlacement(0)}
-  if(a==='lesson')return start(lessonQuestions(el.dataset.id),`lesson:${el.dataset.id}`,LESSONS[el.dataset.id]?.title||'Leçon');
+  if(a==='lesson'){location.hash=`#/lesson/${el.dataset.id}`;return}
+  if(a==='start-lesson')return start(lessonQuestions(el.dataset.id),`lesson:${el.dataset.id}`,LESSONS[el.dataset.id]?.title||'Leçon');
   if(a==='quick-general')return start(pickAdaptive(allGeneralQuestions().filter(q=>!q.id.includes('place-')),state.attempts,state.skills,12),'adaptive-general','Entraînement');
   if(a==='timed-general'){const n=Math.max(6,Math.round(Number(el.dataset.min||20)/2));return start(pickAdaptive(allGeneralQuestions().filter(q=>!q.id.includes('place-')),state.attempts,state.skills,n),'adaptive-general',`${el.dataset.min} minutes`)}
   if(a==='toeic-mini')return start(toeicDiagnosticPool(2),'toeic-mini','Mini-test TOEIC');
