@@ -50,7 +50,7 @@ export const LESSONS={
   'false-friends':{title:'Faux amis',level:'b1',minutes:10,theme:'falsefriends',goal:'Éviter les erreurs typiques des francophones.',words:['actually','eventually','sensible','library','attend'],examples:['Actually, I disagree.','She attended the meeting.']}
 };
 
-const q=(id,level,prompt,choices,correctIndex,skills,audioText)=>({id:`GEN-${id}`,domain:'general',level,part:null,title:'English',prompt,choices,correctIndex,skills,timeTargetSec:25,explanation:'Révise la phrase en contexte et réessaie-la plus tard.',audioScript:audioText?[{text:audioText,locale:'en-GB',gender:'female'}]:[],transcript:audioText||'',vocabulary:choices.filter(Boolean).slice(0,3)});
+const q=(id,level,prompt,choices,correctIndex,skills,audioText,audioMode='feedback')=>({id:`GEN-${id}`,domain:'general',level,part:null,title:'English',prompt,choices,correctIndex,skills,timeTargetSec:25,explanation:'Révise la phrase en contexte et réessaie-la plus tard.',audioMode,audioScript:audioText?[{text:audioText,locale:'en-GB',gender:'female'}]:[],transcript:audioText||'',vocabulary:choices.filter(Boolean).slice(0,3)});
 
 export function lessonQuestions(id){
   const L=LESSONS[id]; if(!L)return[];
@@ -70,7 +70,7 @@ export function lessonQuestions(id){
   const items=[];
   items.push(q(`${id}-1`,L.level,`Que signifie « ${base[0]} » ?`,[L.goal,'Une date','Un lieu','Une profession'],0,[`general.${L.theme}`],base[0]));
   if(L.examples[0])items.push(q(`${id}-2`,L.level,'Choisis la phrase anglaise la plus naturelle.',[L.examples[0],'I wanting please this.','Me need that now.','Give me.'],0,[`general.${L.theme}`],L.examples[0]));
-  if(base[1])items.push(q(`${id}-3`,L.level,'Écoute et choisis ce que tu entends.',[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1]));
+  if(base[1])items.push(q(`${id}-3`,L.level,'Écoute et choisis ce que tu entends.',[base[1],base[0],base[2]||'goodbye','maybe'],0,[`general.${L.theme}`],base[1],'prompt'));
   if(L.examples[1])items.push(q(`${id}-4`,L.level,'Quelle phrase convient le mieux dans cette situation ?',[L.examples[1],'No understand all.','English zero.','Why you say?'],0,[`general.${L.theme}`],L.examples[1]));
   return items;
 }
@@ -79,7 +79,7 @@ export const PLACEMENT_STAGES=[
   {level:'pre-a1',questions:[
     q('place-pre1','pre-a1','Comment dit-on « merci » ?',['Thank you','Tomorrow','Ticket','Room'],0,['general.survival'],'Thank you'),
     q('place-pre2','pre-a1','Quelle phrase demande le nom ?',["What's your name?",'How much is it?','Where is the station?','What time is it?'],0,['general.identity'],"What's your name?"),
-    q('place-pre3','pre-a1','Écoute le nombre.', ['thirteen','thirty','three','fifty'],0,['general.numbers'],'thirteen'),
+    q('place-pre3','pre-a1','Écoute le nombre.', ['thirteen','thirty','three','fifty'],0,['general.numbers'],'thirteen','prompt'),
     q('place-pre4','pre-a1','À l’hôtel, quelle phrase est correcte ?',['I have a reservation.','I am reservation.','Reservation me.','Have room I.'],0,['general.hotel'],'I have a reservation.')
   ]},
   {level:'a1',questions:[

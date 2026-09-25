@@ -25,7 +25,7 @@ async function persist(s){
 
 export function renderSession(root,state,{onFinish,onExit}){
   const s=state.activeSession;if(!s)return; s.onFinish=onFinish||s.onFinish;s.onExit=onExit||s.onExit;
-  const q=s.questions[s.index],progress=Math.round((s.index/s.questions.length)*100),listening=Boolean(q.audioScript?.length||q.audio?.url||q.audioUrl);
+  const q=s.questions[s.index],progress=Math.round((s.index/s.questions.length)*100),hasAudio=Boolean(q.audioScript?.length||q.audio?.url||q.audioUrl),audioMode=q.audioMode||(q.domain==='general'?'feedback':'prompt'),listening=hasAudio&&audioMode==='prompt';
   root.innerHTML=`<div class="session-shell"><header class="session-topbar"><button class="round-control" id="session-close" aria-label="Quitter">×</button><div class="session-heading"><small>${E(s.title||label(s.type))}</small><strong>${s.index+1} / ${s.questions.length}</strong></div><div class="session-progress"><span style="width:${progress}%"></span></div></header>
   <main class="session-main"><article class="question-panel">
     <div class="question-meta"><span class="level-chip">${q.domain==='general'?(q.level||'English').toUpperCase():`PART ${q.part}`}</span><span>${E(q.title||'Exercice')}</span></div>
@@ -50,23 +50,33 @@ async function answer(root,state,selected){
 
 function renderCorrection(root,state,q,selected,correct,timeMs){
   const s=state.activeSession;
-  const listening=Boolean(q.audioScript?.length||q.audio?.url||q.audioUrl);
-  const delay=correct?900:2600;
+  const hasAudio=Boolean(q.audioScript?.length||q.audio?.url||q.audioUrl);
+  const audioMode=q.audioMode||(q.domain==='general'?'feedback':'prompt');
+  const feedbackAudio=hasAudio&&audioMode==='feedback';
   root.innerHTML=`<div class="session-shell"><header class="session-topbar"><div class="feedback-title ${correct?'good':'bad'}">${correct?'✓ Bonne réponse':'À retenir'}</div><strong>${s.index+1} / ${s.questions.length}</strong></header>
   <main class="session-main"><article class="question-panel correction-panel"><h2 class="question-prompt">${E(q.prompt)}</h2><div class="choice-list review">${q.choices.map((c,i)=>`<div class="choice ${i===q.correctIndex?'correct':''} ${i===selected&&i!==q.correctIndex?'wrong':''}"><span>${String.fromCharCode(65+i)}</span><strong>${E(c)}</strong></div>`).join('')}</div>
-  ${!correct?`<div class="explanation"><span class="eyebrow">À RETENIR</span><p>${E(q.explanation||'Revois cette notion puis retrouve-la dans un autre contexte.')}</p>${q.transcript?`<div class="transcript"><small>À l’oral</small><p>${E(q.transcript)}</p></div>`:''}</div>`:''}
-  <div class="feedback-actions">${listening?`<button class="listen-control compact" id="replay-feedback">${svg('play')}<span>Réécouter</span></button>`:''}<small>Question suivante automatiquement…</small></div>
+  ${!correct?`<div class="explanation"><span class="eyebrow">À RETENIR</span><p>${E(q.explanation||'Revois cette notion puis retrouve-la dans un autre contexte.')}</p>${q.transcript?`<div class="transcript"><small>Bonne formulation</small><p>${E(q.transcript)}</p></div>`:''}</div>`:''}
+  <div class="feedback-actions">${hasAudio?`<button class="listen-control compact" id="replay-feedback">${svg('play')}<span>Réécouter</span></button>`:''}<small>${feedbackAudio?'Écoute la bonne formulation…':'Question suivante automatiquement…'}</small></div>
   </article></main></div>`;
   const replay=document.getElementById('replay-feedback');if(replay)replay.onclick=()=>playQuestionAudio(q).catch(()=>{});
   clearTimeout(s.advanceTimer);
-  s.advanceTimer=setTimeout(async()=>{
-    if(state.activeSession!==s)return;
-    stopAudio();
-    if(s.index<s.questions.length-1){
-      s.index++;s.questionStartedAtMs=Date.now();await persist(s);
-      renderSession(root,state,{onFinish:s.onFinish,onExit:s.onExit});
-    }else await finish(root,state);
-  },delay);
+  const advance=()=>{
+    clearTimeout(s.advanceTimer);
+    s.advanceTimer=setTimeout(async()=>{
+      if(state.activeSession!==s)return;
+      stopAudio();
+      if(s.index<s.questions.length-1){
+        s.index++;s.questionStartedAtMs=Date.now();await persist(s);
+        renderSession(root,state,{onFinish:s.onFinish,onExit:s.onExit});
+      }else await finish(root,state);
+    },correct?650:1600);
+  };
+  if(feedbackAudio){
+    setTimeout(async()=>{
+      try{await playQuestionAudio(q)}catch{}
+      if(state.activeSession===s)advance();
+    },180);
+  }else advance();
 }
 
 async function finish(root,state){
