@@ -45,5 +45,7 @@ jobs:
             echo "Audio bank already up to date."
           else
             git commit -m "chore: regenerate natural Kokoro audio bank"
-            git push
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
           fi
