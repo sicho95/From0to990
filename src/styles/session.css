@@ -23,3 +23,31 @@
 }
 
 .teaching-feedback{display:grid;gap:10px}.teaching-feedback section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 15px}.teaching-feedback section p{margin:5px 0 0;line-height:1.5;color:var(--text)}.feedback-label{display:block;font-size:11px;font-weight:750;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}.wrong-reason{border-color:color-mix(in srgb,var(--red) 26%,var(--line))!important}.tip-feedback{background:color-mix(in srgb,var(--accent2) 7%,var(--surface))!important}.example-line{font-style:italic}.feedback-actions{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.feedback-actions>small{width:100%;color:var(--muted)}.compact-next{min-height:42px;padding:9px 14px}.listen-control.compact{min-height:42px}
+
+/* Taught lesson intro */
+.lesson-teaching-card{display:grid;gap:16px;max-width:760px;margin:0 auto}
+.lesson-teaching-card h1{font-size:clamp(32px,6vw,46px);letter-spacing:-.04em;line-height:1.04;margin:2px 0 0}
+.lesson-goal{font-size:17px;line-height:1.5;color:var(--muted);margin:0 0 2px}
+.teach-block{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px}
+.teach-block h3{font-size:13px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 7px}
+.teach-block p{margin:0;line-height:1.55}
+.teach-block.rule{border-left:3px solid var(--accent2)}
+.teach-block.tip{background:color-mix(in srgb,var(--accent) 7%,var(--surface));border-left:3px solid var(--accent)}
+.teach-block.pronunciation{border-left:3px solid var(--blue)}
+.teaching-examples{display:grid;gap:8px}
+.teaching-examples>div{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.vocab-chips{display:flex;flex-wrap:wrap;gap:7px}
+.vocab-chips span{background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:13px}
+.teaching-feedback{display:grid;gap:10px;background:transparent;padding:0}
+.feedback-section{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 15px}
+.feedback-section p{margin:5px 0 0;line-height:1.55}
+.feedback-section.wrong-why{border-color:color-mix(in srgb,var(--red) 28%,var(--line))}
+.feedback-section.tip-box{background:color-mix(in srgb,var(--accent2) 7%,var(--surface));border-color:color-mix(in srgb,var(--accent2) 26%,var(--line))}
+.feedback-title.bad{color:var(--orange)}
+.feedback-next{border:1px solid var(--line);background:var(--surface2);border-radius:999px;padding:10px 15px;font-weight:700}
+@media(max-width:430px){
+  .lesson-teaching-card{gap:13px}
+  .lesson-teaching-card h1{font-size:32px}
+  .teach-block{padding:14px}
+  .feedback-section{padding:13px}
+}
