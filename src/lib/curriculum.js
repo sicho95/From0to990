@@ -218,7 +218,7 @@ Object.assign(LESSON_META,{
 export function lessonTeaching(id){
   const L=LESSONS[id];if(!L)return null;
   const meta=LESSON_META[id]||{};
-  return BASE_TEACHING[id]||fallbackTeaching(L,meta);
+  return {...fallbackTeaching(L,meta),...(BASE_TEACHING[id]||{}),...(LESSON_GUIDES[id]||{})};
 }
 
 const speechProfile=(id,level)=>{
