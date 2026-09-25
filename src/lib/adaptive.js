@@ -5,7 +5,7 @@ export const SKILL_LABELS={
   'general.survival':'Survie','general.identity':'Se présenter','general.numbers':'Nombres','general.hotel':'Hôtel','general.travel':'Voyage',
   'general.grammar':'Grammaire générale','general.politeness':'Politesse','general.collocations':'Collocations','general.paraphrase':'Paraphrases',
   'general.idioms':'Idiomes','general.nuance':'Nuance','general.food':'Restaurant & repas','general.colors':'Couleurs','general.shopping':'Achats',
-  'general.smalltalk':'Small talk','general.work':'Anglais professionnel','general.pronunciation':'Compréhension orale naturelle','general.phrasal':'Phrasal verbs','general.falsefriends':'Faux amis'
+  'general.smalltalk':'Small talk','general.work':'Anglais professionnel','general.pronunciation':'Compréhension orale naturelle','general.phrasal':'Phrasal verbs','general.falsefriends':'Faux amis','general.time-basics':'Heure & dates','general.family-home':'Famille & maison','general.emergency':'Urgences','general.grammar-a1':'Bases grammaticales','general.daily-life':'Vie quotidienne','general.travel-a1':'Voyage A1','general.health-a1':'Santé A1','general.grammar-a2':'Grammaire A2','general.social-a2':'Conversation A2','general.travel-a2':'Voyage A2','general.work-a2':'Travail A2'
 };
 function partKey(part){if(!Number.isInteger(part)||part<1||part>7)return null;return `p${part}-${part===1?'photo':part===2?'response':part===3?'conversation':part===4?'talk':part===5?'grammar':part===6?'text':'reading'}`}
 function label(m,n){if(n<2)return 'À découvrir';if(m<.45)return 'Critique';if(m<.62)return 'À travailler';if(m<.76)return 'En progression';if(m<.9)return 'Solide';return 'Maîtrisé'}
