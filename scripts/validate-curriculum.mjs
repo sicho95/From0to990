@@ -1,6 +1,8 @@
-import {allGeneralQuestions,LESSONS,lessonTeaching} from '../src/lib/curriculum.js';
+import {allGeneralQuestions,LESSONS,lessonTeaching,visibleLessonIds} from '../src/lib/curriculum.js';
 
 const qs=allGeneralQuestions();
+const visibleLessons=visibleLessonIds();
+if(visibleLessons.length<50)throw new Error(`parcours visible trop court: ${visibleLessons.length} leçons`);
 const vague=/\b(cette situation|dans la situation|selon la situation)\b/i;
 const bad=[];
 for(const q of qs){
@@ -17,4 +19,4 @@ for(const [id,L] of Object.entries(LESSONS)){
   if(!(L.examples||[]).length)bad.push(`${id}: aucun exemple`);
 }
 if(bad.length){console.error(bad.join('\n'));process.exit(1)}
-console.log(`Curriculum QA OK: ${qs.length} questions générales contrôlées`);
+console.log(`Curriculum QA OK: ${visibleLessons.length} leçons visibles · ${qs.length} questions générales contrôlées`);

@@ -13,7 +13,7 @@ export const LEVELS=[
 
 export const THEMES=[
   {id:'survival',title:'Premiers secours linguistiques',icon:'spark',level:'pre-a1',summary:'Hello, please, thank you, pardon, répéter, parler plus lentement.',lessons:['hello','repeat']},
-  {id:'identity',title:'Se présenter',icon:'person',level:'pre-a1',summary:'Nom, coordonnées et informations personnelles.',lessons:['introduce','contact']},
+  {id:'identity',title:'Se présenter',icon:'person',level:'pre-a1',summary:'Nom et premières informations personnelles.',lessons:['introduce']},
   {id:'numbers',title:'Nombres, prix & heure',icon:'number',level:'pre-a1',summary:'0–1000, 13/30, prix, téléphone, chambre, quai, heure.',lessons:['numbers']},
   {id:'colors',title:'Couleurs & objets',icon:'palette',level:'pre-a1',summary:'Décrire simplement ce que tu vois et ce que tu cherches.',lessons:['colors']},
   {id:'food',title:'Boire & manger',icon:'cup',level:'pre-a1',summary:'Commander, comprendre une question, demander l’addition.',lessons:['food','restaurant']},
@@ -383,9 +383,15 @@ export const PLACEMENT_STAGES=[
 ];
 
 export function visibleLessonIds(){
-  const levels=['pre-a1','a1','a2','b1','b2','c1'];
-  const seen=new Set(),out=[];
-  for(const level of levels)for(const theme of THEMES.filter(t=>t.level===level))for(const id of theme.lessons||[]){
+  const themeOrder=[
+    'survival','identity','time-basics','numbers','colors','family-home','food','hotel','emergency',
+    'grammar-a1','daily-life','travel','travel-a1','shopping','smalltalk','health-a1',
+    'grammar-a2','social-a2','travel-a2','work','work-a2','idioms','phrasal',
+    'collocations','pronunciation','falsefriends'
+  ];
+  const rank=new Map(themeOrder.map((id,i)=>[id,i])),seen=new Set(),out=[];
+  const sorted=[...THEMES].sort((a,b)=>(rank.get(a.id)??999)-(rank.get(b.id)??999));
+  for(const theme of sorted)for(const id of theme.lessons||[]){
     if(LESSONS[id]&&!seen.has(id)){seen.add(id);out.push(id)}
   }
   return out;

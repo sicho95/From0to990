@@ -1,5 +1,5 @@
 export const EXTRA_THEMES=[
-  {id:'time-basics',title:'Alphabet, heure & dates',icon:'clock',level:'pre-a1',summary:'Épeler, dire l’heure, les jours, les dates et comprendre un numéro.',lessons:['alphabet','spelling','time','days-dates']},
+  {id:'time-basics',title:'Alphabet, heure & dates',icon:'clock',level:'pre-a1',summary:'Épeler, dire l’heure, les jours, les dates et comprendre un numéro.',lessons:['alphabet','spelling','contact','time','days-dates']},
   {id:'family-home',title:'Famille & maison',icon:'home',level:'pre-a1',summary:'Famille proche, pièces, objets essentiels et besoins simples.',lessons:['family-basic','home-basic','bathroom-basic']},
   {id:'emergency',title:'Santé & urgence',icon:'warning',level:'pre-a1',summary:'Demander de l’aide, trouver une pharmacie et expliquer un problème simple.',lessons:['help','pharmacy']},
 
