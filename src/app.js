@@ -68,10 +68,10 @@ async function action(el){
   if(a==='toeic-listening')return start(state.toeicQuestions.filter(q=>q.part<=4),'mock-listening','Listening complet');
   if(a==='toeic-reading')return start(state.toeicQuestions.filter(q=>q.part>=5),'mock-reading','Reading complet');
   if(a==='toeic-full')return start(state.toeicQuestions,'mock-full','TOEIC blanc');
-  if(a==='save-profile'){state.profile=await saveProfile({...state.profile,displayName:document.getElementById('set-name').value.trim(),targetScore:Number(document.getElementById('set-target').value||990),timePerDay:Number(document.getElementById('set-time').value||20)});toast('Profil enregistré');draw();return}
+  if(a==='save-profile'){state.profile=await saveProfile({...state.profile,displayName:document.getElementById('set-name').value.trim(),targetScore:990,timePerDay:Number(document.getElementById('set-time').value||20)});toast('Profil enregistré');draw();return}
   if(a==='sync')return sync(false);
 }
-async function saveOnboarding(){const name=document.getElementById('on-name').value.trim();if(!name){toast('Saisis un prénom ou un pseudo');return false}state.profile=await saveProfile({...state.profile,displayName:name,targetScore:Number(document.getElementById('on-target').value||990),timePerDay:Number(document.getElementById('on-time').value||20),profileSetupComplete:true});return true}
+async function saveOnboarding(){const name=document.getElementById('on-name').value.trim();if(!name){toast('Saisis un prénom ou un pseudo');return false}state.profile=await saveProfile({...state.profile,displayName:name,targetScore:990,timePerDay:Number(document.getElementById('on-time').value||20),profileSetupComplete:true});return true}
 
 async function startPlacement(index){const stage=PLACEMENT_STAGES[index];if(!stage)return;await start(stage.questions,`placement:${index}`,`Test de niveau · ${stage.level.toUpperCase()}`)}
 async function start(questions,type,title){await beginSession(state,{questions,type,title,onFinish:sessionFinished,onExit:draw});renderSession(app,state,{onFinish:sessionFinished,onExit:draw})}
