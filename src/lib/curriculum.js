@@ -232,11 +232,12 @@ const q=(id,level,prompt,choices,correctIndex,skills,audioText,audioMode='feedba
 };
 
 function enrichLessonQuestion(item,lessonId,kind,{answerText,meaning}={}){
-  const L=LESSONS[lessonId],g=LESSON_GUIDES[lessonId]||{};
+  const L=LESSONS[lessonId],g=lessonTeaching(lessonId)||{};
   item.lessonId=lessonId;
   item.rule=g.rule||'Observe la structure de la phrase et son contexte.';
   item.tip=g.tip||'Mémorise la formulation complète plutôt qu’un mot isolé.';
-  item.extraExample=(g.examples||[])[2]||(g.examples||[])[1]||L?.examples?.[0]||'';
+  item.extraExample=(g.examples||[])[2]||(g.examples||[])[1]||L?.examples?.[1]||L?.examples?.[0]||'';
+  item.pronunciation=g.pronunciation||'';
   if(kind==='meaning'){
     item.explanation=`« ${L.words[0]} » signifie ici « ${meaning} ». ${item.rule}`;
     item.choiceExplanations=[
