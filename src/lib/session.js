@@ -8,7 +8,7 @@ const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt
 
 export async function beginSession(state,{questions,type,title,onFinish,onExit}){
   stopAudio();
-  state.activeSession={id:crypto.randomUUID(),type,title:title||label(type),questions,index:0,answers:[],introPending:Boolean(type?.startsWith('lesson:')),startedAt:new Date().toISOString(),startedAtMs:Date.now(),questionStartedAtMs:Date.now(),onFinish,onExit};
+  state.activeSession={id:crypto.randomUUID(),type,title:title||label(type),questions,index:0,answers:[],introPending:false,startedAt:new Date().toISOString(),startedAtMs:Date.now(),questionStartedAtMs:Date.now(),onFinish,onExit};
   await persist(state.activeSession);
 }
 
@@ -102,9 +102,11 @@ function renderCorrection(root,state,q,selected,correct,timeMs,persistence=Promi
       ${!correct?`<div class="feedback-section wrong-why"><span class="eyebrow">POURQUOI TON CHOIX NE VA PAS</span><p>${E(selectedWhy)}</p></div>`:''}
       <div class="feedback-section"><span class="eyebrow">POURQUOI CETTE RÉPONSE</span><p>${E(correctWhy)}</p></div>
       <div class="feedback-section tip-box"><span class="eyebrow">ASTUCE</span><p>${E(tip)}</p></div>
+      ${q.extraExample?`<div class="feedback-section example-feedback"><span class="eyebrow">AUTRE EXEMPLE</span><p>${E(q.extraExample)}</p></div>`:''}
+      ${q.pronunciation?`<div class="feedback-section pronunciation-feedback"><span class="eyebrow">PRONONCIATION</span><p>${E(q.pronunciation)}</p></div>`:''}
       ${q.transcript?`<div class="transcript"><small>À entendre / prononcer</small><p>${E(q.transcript)}</p></div>`:''}
     </div>
-    <div class="feedback-actions">${hasAudio?`<button class="listen-control compact" id="replay-feedback">${svg('play')}<span>Réécouter</span></button>`:''}<button class="feedback-next" id="feedback-next">Suivant</button><small>L’app continue automatiquement si tu ne touches rien.</small></div>
+    <div class="feedback-actions">${hasAudio?`<button class="listen-control compact" id="replay-feedback">${svg('play')}<span>Réécouter</span></button>`:''}<button class="feedback-next" id="feedback-next">Suivant</button><small>Lis l’explication à ton rythme — l’app continuera automatiquement ensuite.</small></div>
   </article></main></div>`;
 
   clearTimeout(sess.advanceTimer);
@@ -124,7 +126,7 @@ function renderCorrection(root,state,q,selected,correct,timeMs,persistence=Promi
   const scheduleAdvance=()=>{
     clearTimeout(sess.advanceTimer);
     const words=(correctWhy+' '+tip+(correct?'':' '+selectedWhy)).trim().split(/\s+/).length;
-    const wait=Math.max(correct?4200:7000,Math.min(correct?8000:12000,words*170));
+    const wait=Math.max(correct?5200:8500,Math.min(correct?9500:14000,words*190));
     sess.advanceTimer=setTimeout(advanceNow,wait);
   };
 
