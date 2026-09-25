@@ -258,11 +258,11 @@ export function lessonQuestions(id){
     return [
       enrichLessonQuestion(q('hello-1','pre-a1','Tu entres dans un café le matin. Quelle réponse est naturelle ?',
         ['Good morning!','Good night!','See you yesterday.','I am coffee.'],0,['general.survival'],'Good morning!'),'hello','context',{answerText:'Good morning!'}),
-      q('hello-2','pre-a1','Quelqu’un te dit « Thank you ». Que peux-tu répondre ?',
+      enrichLessonQuestion(q('hello-2','pre-a1','Quelqu’un te dit « Thank you ». Que peux-tu répondre ?',
         ["You're welcome.",'Goodbye yesterday.','My name thank you.','Morning please.'],0,['general.survival'],"You're welcome."),'hello','context',{answerText:"You're welcome."}),
-      q('hello-3','pre-a1','Tu quittes un hôtel. Quelle phrase convient ?',
+      enrichLessonQuestion(q('hello-3','pre-a1','Tu quittes un hôtel. Quelle phrase convient ?',
         ['Goodbye, have a nice day!','Hello, I arrive yesterday.','Please morning.','Thank you room.'],0,['general.survival'],'Goodbye, have a nice day!'),'hello','context',{answerText:'Goodbye, have a nice day!'}),
-      q('hello-4','pre-a1','Tu veux attirer poliment l’attention de quelqu’un. Que dis-tu ?',
+      enrichLessonQuestion(q('hello-4','pre-a1','Tu veux attirer poliment l’attention de quelqu’un. Que dis-tu ?',
         ['Excuse me.','Good night.','You please.','I goodbye.'],0,['general.survival'],'Excuse me.'),'hello','context',{answerText:'Excuse me.'})
     ];
   }
