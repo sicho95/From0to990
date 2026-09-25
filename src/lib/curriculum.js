@@ -91,7 +91,7 @@ Object.assign(LESSONS,{
 
 const LESSON_META={
   hello:{meaning:'bonjour / salut',situation:'Tu rencontres quelqu’un le matin et tu veux le saluer.'},
-  contact:{meaning:'numéro de téléphone',situation:'À l’accueil, on te demande ton numéro de téléphone.'},
+  contact:{meaning:'numéro de téléphone',situation:'À l’accueil, on te demande ton adresse e-mail.'},
   repeat:{meaning:'Je ne comprends pas.',situation:'Tu n’as pas compris ce que quelqu’un vient de dire et tu veux qu’il répète.'},
   introduce:{meaning:'Je m’appelle…',situation:'Quelqu’un te demande d’où tu viens.'},
   numbers:{meaning:'un',situation:'Tu annonces un prix de trente livres.'},
