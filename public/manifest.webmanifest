@@ -1,0 +1,14 @@
+{
+  "name": "From0to990 — TOEIC Coach",
+  "short_name": "From0to990",
+  "description": "Préparation adaptative local-first au TOEIC Listening & Reading.",
+  "start_url": "./#/today",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#071a2f",
+  "orientation": "any",
+  "icons": [
+    {"src": "./assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable"}
+  ]
+}

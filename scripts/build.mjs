@@ -1,0 +1,21 @@
+import { rm, mkdir, cp, readFile, writeFile } from 'node:fs/promises';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+const exec = promisify(execFile);
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const out = resolve(root, 'docs');
+await rm(out,{recursive:true,force:true});
+await mkdir(out,{recursive:true});
+await exec(process.execPath,[resolve(root,'scripts/generate-content.mjs')]);
+await cp(resolve(root,'src'), out,{recursive:true});
+await cp(resolve(root,'public'), out,{recursive:true});
+let version='dev';
+try { version=(await exec('git',['rev-parse','--short','HEAD'],{cwd:root})).stdout.trim(); } catch {}
+const now=new Date().toISOString();
+await writeFile(resolve(out,'version.json'), JSON.stringify({appVersion:`0.1.0+${version}`,contentVersion:'2026.09.25.1',schemaVersion:1,builtAt:now},null,2));
+let sw=await readFile(resolve(out,'sw.js'),'utf8');
+sw=sw.replace('__BUILD_VERSION__',`0.1.0+${version}`).replace('__CONTENT_VERSION__','2026.09.25.1');
+await writeFile(resolve(out,'sw.js'), sw);
+console.log('Built docs/');
