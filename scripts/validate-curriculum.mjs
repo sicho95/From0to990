@@ -3,6 +3,11 @@ import {allGeneralQuestions,LESSONS,lessonTeaching,visibleLessonIds} from '../sr
 const qs=allGeneralQuestions();
 const visibleLessons=visibleLessonIds();
 if(visibleLessons.length<50)throw new Error(`parcours visible trop court: ${visibleLessons.length} leçons`);
+const minimumByLevel={'b1':18,'b2':18,'c1':18};
+for(const [level,min] of Object.entries(minimumByLevel)){
+  const count=visibleLessons.filter(id=>LESSONS[id]?.level===level).length;
+  if(count<min)throw new Error(`niveau ${level.toUpperCase()} trop court: ${count}/${min} leçons`);
+}
 const vague=/\b(cette situation|dans la situation|selon la situation)\b/i;
 const bad=[];
 for(const q of qs){
