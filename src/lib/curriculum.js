@@ -1,5 +1,6 @@
 import {EXTRA_THEMES,EXTRA_LESSONS,EXTRA_META} from './curriculum-extra.js';
 import {BASE_TEACHING,fallbackTeaching} from './curriculum-teaching.js';
+import {ADVANCED_THEMES,ADVANCED_LESSONS} from './curriculum-advanced.js';
 
 export const LEVELS=[
   {id:'pre-a1',label:'Pré-A1',title:'Survie',range:'0 → premières phrases',description:'Comprendre et se faire comprendre dans les situations les plus simples.'},
@@ -27,7 +28,8 @@ export const THEMES=[
   {id:'collocations',title:'Collocations',icon:'link',level:'b1',summary:'Make a decision, meet a deadline, take responsibility…',lessons:['collocations-business']},
   {id:'pronunciation',title:'Comprendre l’anglais naturel',icon:'wave',level:'b1',summary:'Contractions, weak forms, connected speech et accents.',lessons:['connected-speech','numbers-listening']},
   {id:'falsefriends',title:'Faux amis français',icon:'warning',level:'b1',summary:'Actually, eventually, sensible, comprehensive…',lessons:['false-friends']},
-  ...EXTRA_THEMES
+  ...EXTRA_THEMES,
+  ...ADVANCED_THEMES
 ];
 
 export const LESSONS={
@@ -52,7 +54,8 @@ export const LESSONS={
   'connected-speech':{title:'Connected speech',level:'b1',minutes:12,theme:'pronunciation',goal:'Reconnaître les mots quand ils se lient et se réduisent.',words:['gonna','wanna','could you','did you','have to'],examples:['What are you going to do?','Could you send it today?']},
   'numbers-listening':{title:'13 ou 30 ?',level:'b1',minutes:8,theme:'pronunciation',goal:'Éliminer les confusions de nombres à l’oral.',words:['thirteen','thirty','fourteen','forty','fifteen','fifty'],examples:['Room thirteen.','Thirty dollars.','Gate fourteen.']},
   'false-friends':{title:'Faux amis',level:'b1',minutes:10,theme:'falsefriends',goal:'Éviter les erreurs typiques des francophones.',words:['actually','eventually','sensible','library','attend'],examples:['Actually, I disagree.','She attended the meeting.']},
-  ...EXTRA_LESSONS
+  ...EXTRA_LESSONS,
+  ...ADVANCED_LESSONS
 };
 
 Object.assign(LESSONS,{
@@ -207,7 +210,7 @@ Object.assign(LESSON_META,{
 
 export function lessonTeaching(id){
   const L=LESSONS[id];if(!L)return null;
-  const meta=LESSON_META[id]||{};
+  const meta={...(LESSON_META[id]||{}),...(L.pedagogy||{})};
   return {...fallbackTeaching(L,meta),...(BASE_TEACHING[id]||{}),...(LESSON_GUIDES[id]||{})};
 }
 
@@ -287,11 +290,10 @@ function sentenceDistractors(id,exclude=[],count=3){
 }
 function meaningDistractors(id,correct,count=3){
   const L=LESSONS[id],pool=[];
-  for(const [otherId,meta] of Object.entries(LESSON_META)){
-    if(otherId===id||!meta?.meaning||meta.meaning===correct)continue;
-    const other=LESSONS[otherId];
-    if(!other||other.level!==L.level)continue;
-    if(pool.some(x=>x.text===meta.meaning))continue;
+  for(const [otherId,other] of Object.entries(LESSONS)){
+    if(otherId===id||other.level!==L.level)continue;
+    const meta={...(LESSON_META[otherId]||{}),...(other.pedagogy||{})};
+    if(!meta.meaning||meta.meaning===correct||pool.some(x=>x.text===meta.meaning))continue;
     pool.push({text:meta.meaning,reason:`« ${meta.meaning} » correspond plutôt à « ${other.words?.[0]||other.title} ».`});
   }
   const fallback=[
@@ -306,7 +308,7 @@ function meaningDistractors(id,correct,count=3){
 
 export function lessonQuestions(id){
   const L=LESSONS[id]; if(!L)return[];
-  const meta=LESSON_META[id]||{},teach=lessonTeaching(id)||fallbackTeaching(L,meta);
+  const meta={...(LESSON_META[id]||{}),...(L.pedagogy||{})},teach=lessonTeaching(id)||fallbackTeaching(L,meta);
   const base=L.words||[],items=[],tip=teach.tip||'Mémorise la formulation complète plutôt qu’un mot isolé.';
   const extraExample=(teach.examples||[])[2]||(teach.examples||[])[1]||L.examples?.[2]||L.examples?.[1]||'';
   const pronunciation=teach.pronunciation||'';
@@ -390,7 +392,10 @@ export function visibleLessonIds(){
     'survival','identity','time-basics','numbers','colors','family-home','food','hotel','emergency',
     'grammar-a1','daily-life','travel','travel-a1','shopping','smalltalk','health-a1',
     'grammar-a2','social-a2','travel-a2','work','work-a2','idioms','phrasal',
-    'collocations','pronunciation','falsefriends'
+    'collocations','pronunciation','falsefriends',
+    'grammar-b1','communication-b1','work-b1','listening-b1',
+    'grammar-b2','discourse-b2','professional-b2','listening-b2',
+    'grammar-c1','discourse-c1','professional-c1','listening-c1','lexis-c1'
   ];
   const rank=new Map(themeOrder.map((id,i)=>[id,i])),seen=new Set(),out=[];
   const sorted=[...THEMES].sort((a,b)=>(rank.get(a.id)??999)-(rank.get(b.id)??999));
