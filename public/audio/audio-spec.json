@@ -2307,6 +2307,646 @@
       "engine": "Kokoro-82M"
     },
     {
+      "key": "en-GB|male|have finished",
+      "text": "have finished",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "aa558fc5e6d9d2efc423d1dd.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|I’ve already finished the report.",
+      "text": "I’ve already finished the report.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "5b9b17f564d44e7f0726aca7.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|already",
+      "text": "already",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "a653346a05b87a8dcdf6ef83.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|Have you sent the email yet?",
+      "text": "Have you sent the email yet?",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "2748345c4a6a40390daa43dd.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|ever",
+      "text": "ever",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "1e85cf0c96db3c9cb1ff6810.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I’ve been to Dublin twice.",
+      "text": "I’ve been to Dublin twice.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "6cc0fbd02962be34b6054818.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|last year",
+      "text": "last year",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "732179892e7e3df5b30ed419.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I went there last year.",
+      "text": "I went there last year.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "e8be72aa533919810f92278d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|if",
+      "text": "if",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "5871a1d09cd224aea6afa756.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|If the train is late, I’ll call you.",
+      "text": "If the train is late, I’ll call you.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "3e593aa8e0a50967bcb23f36.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|will",
+      "text": "will",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "a7db4b37fe79f9701f31eb47.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|If it rains, we’ll stay inside.",
+      "text": "If it rains, we’ll stay inside.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "a1da0d290e9ab56a31c46ae1.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|if I had",
+      "text": "if I had",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "f288a73a192875510b5efc86.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|If I had more time, I’d learn Spanish.",
+      "text": "If I had more time, I’d learn Spanish.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "a87abf1c3aef621ce33737c1.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|would",
+      "text": "would",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "ffdc318835aa9f2ba3088de8.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|What would you do if you lost your passport?",
+      "text": "What would you do if you lost your passport?",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "eb357bc87c13bc1f69a57998.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|who",
+      "text": "who",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "7291dea1cec48bb7324c3ef0.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|The colleague who called you is in London.",
+      "text": "The colleague who called you is in London.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "24382c6671e4af8493a2ffc4.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|which",
+      "text": "which",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "e121d0053c3ff9a375c53dc8.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|This is the hotel where we stayed.",
+      "text": "This is the hotel where we stayed.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "176e8dfd986c0a5e58d7ba8a.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|said",
+      "text": "said",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "c9ebb8e5f28068fe11f4bea6.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|She said that the meeting was cancelled.",
+      "text": "She said that the meeting was cancelled.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "02d3cfaf3ba281376fed7d33.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|told",
+      "text": "told",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "60a995902be6dd43edea0827.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|He told me he was running late.",
+      "text": "He told me he was running late.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "bf2828fce38b5c1b73b3ca0c.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|is made",
+      "text": "is made",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "c9ff690e719c094b416154a5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|The report was sent yesterday.",
+      "text": "The report was sent yesterday.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "b399e473223e3e3c256dd48d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|was sent",
+      "text": "was sent",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "0f39d3f7dd2d6e4aa960f00d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|This product is made in Italy.",
+      "text": "This product is made in Italy.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_nova",
+      "supported": true,
+      "file": "d4c10d9bc57442fb5886503b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|enjoy doing",
+      "text": "enjoy doing",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "23a65ddb70aef5a5ac3a4b44.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|I enjoy working from home.",
+      "text": "I enjoy working from home.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "74aa85dad85a0bfd8396f152.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|want to do",
+      "text": "want to do",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "a1c2dde084e0343a61d16093.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|We decided to postpone the meeting.",
+      "text": "We decided to postpone the meeting.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "9c0d0dbd601fcf87fc8c1e00.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|at first",
+      "text": "at first",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "c9de9ebe44dafa23d1095c1b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|At first, everything went well.",
+      "text": "At first, everything went well.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "e8343793918741f6e27c5647.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|then",
+      "text": "then",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "b8ff33e17511b38a832dae83.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|While we were waiting, the lights went out.",
+      "text": "While we were waiting, the lights went out.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "b19ea491a93e5b742e7b6543.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|because",
+      "text": "because",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "e09b829a8a68adf1d0639970.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I chose the train because it was cheaper.",
+      "text": "I chose the train because it was cheaper.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "0dc9e8c0abb66cd78fcc22b8.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|so",
+      "text": "so",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "294906d8c98084930bdc2da9.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The flight was cancelled, so we stayed another night.",
+      "text": "The flight was cancelled, so we stayed another night.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "df48b0773b2747fab119e1a3.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|I see your point",
+      "text": "I see your point",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "f6a128ec648f2cdc681bbf04.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I see your point, but I’m not sure I agree.",
+      "text": "I see your point, but I’m not sure I agree.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "3b22028b4540833cfffa3bd3.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|I’m not sure",
+      "text": "I’m not sure",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "43426bb80e1f6450171541b4.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I understand what you mean; however, there is another option.",
+      "text": "I understand what you mean; however, there is another option.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "62be3b75ace2fef1f457ff8e.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|complaint",
+      "text": "complaint",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "34f4a8d414ae5f65f1272d95.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|I’m afraid there’s a problem with my room.",
+      "text": "I’m afraid there’s a problem with my room.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "f2140abafb692384ad01521f.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|refund",
+      "text": "refund",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "804ffa479f6b6410682842c5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|Could you replace this item, please?",
+      "text": "Could you replace this item, please?",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "4c44d8f5f077862fb0c7fa76.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|on track",
+      "text": "on track",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "756784c82dd22f397ab60ec2.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|We’ve completed the first stage.",
+      "text": "We’ve completed the first stage.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "edb2faf6b654e055b5618a35.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|completed",
+      "text": "completed",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "4f9fd7926eb61705430e1577.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|The project is still on track.",
+      "text": "The project is still on track.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "5188cf638ac6d01cd880a488.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|arrangement",
+      "text": "arrangement",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "f2d3834cc20c3cbff354beb4.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I’ve booked the 8:30 train.",
+      "text": "I’ve booked the 8:30 train.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "b90e720960f431011075bda9.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|departure",
+      "text": "departure",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "51c60b52903c457aa65b4e3f.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Our connection leaves at 14:10.",
+      "text": "Our connection leaves at 14:10.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "08b2e3bf83b26745213cc136.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|main point",
+      "text": "main point",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "5391d94f85b19fd6dfaa1b7b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|The main point is that the schedule has changed.",
+      "text": "The main point is that the schedule has changed.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "0128e3de9b51a05da4a8394a.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|detail",
+      "text": "detail",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "104da28bb764944d4c90af5f.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|The speaker gives two reasons for the delay.",
+      "text": "The speaker gives two reasons for the delay.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "3f3468a8b370dc36a1c99d5c.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|firstly",
+      "text": "firstly",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "d35a5245853b44c2d6fadb74.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|First of all, let’s look at the problem.",
+      "text": "First of all, let’s look at the problem.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "b29582db81060e3a8ba9c0f1.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|however",
+      "text": "however",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "7aa4113a2a527334bfe72f17.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|However, there is one important exception.",
+      "text": "However, there is one important exception.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_nova",
+      "supported": true,
+      "file": "00228acf131db12fa8e1b126.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
       "key": "en-GB|male|make a decision",
       "text": "make a decision",
       "locale": "en-GB",
@@ -2454,6 +3094,1446 @@
       "voice": "af_heart",
       "supported": true,
       "file": "d3c81c0c41a84d7c274d3944.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|have been working",
+      "text": "have been working",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "ac9471ae2a3fbffac141765a.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|I’ve been working on this since Monday.",
+      "text": "I’ve been working on this since Monday.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "5c681e44082fc88e5852a590.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|for",
+      "text": "for",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "721381a79701cd8f3e84ce92.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|She has been waiting for over an hour.",
+      "text": "She has been waiting for over an hour.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "e071fd3c45c904a311425ace.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|must be",
+      "text": "must be",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "63209a57e09a88b3f09047af.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|She must be in a meeting.",
+      "text": "She must be in a meeting.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "6dd823767a49cc7e8abda7c2.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|might be",
+      "text": "might be",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "3e60bb95c5cb9a576191d92e.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|They might have missed the train.",
+      "text": "They might have missed the train.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "a4e810aa004458d39d100914.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|if I had known",
+      "text": "if I had known",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "7b8713eff43e858d10f98582.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|If I had known, I would have called you.",
+      "text": "If I had known, I would have called you.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "b5cff0afa98c1188e6ec49ad.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|would have",
+      "text": "would have",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "fbfe49cd0d89be1fd1e1924b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|We could have avoided the delay if we had left earlier.",
+      "text": "We could have avoided the delay if we had left earlier.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "b9d5fdaff6524023abb6dae9.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|I wish",
+      "text": "I wish",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "bdde6926d8db66f5649bd05b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I wish I had more time.",
+      "text": "I wish I had more time.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "2ba6c2f89a45e01e61ac25b7.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|if only",
+      "text": "if only",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "7c9cd484f646bc1942a45cb0.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|If only we had booked earlier.",
+      "text": "If only we had booked earlier.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "de8f2c82b0088af64710a22e.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|is expected to",
+      "text": "is expected to",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "b3c73adc18e3fff048139b48.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The company is expected to announce the results tomorrow.",
+      "text": "The company is expected to announce the results tomorrow.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "3d570af09faec806e628d6cc.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|is believed to",
+      "text": "is believed to",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "23c88882f31f3ca7a102358a.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The device is believed to be safe.",
+      "text": "The device is believed to be safe.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "1c50aea61d0f6bb0fc43798e.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|asked whether",
+      "text": "asked whether",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "588896e0a545a7b9c6eef53f.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|She asked whether I was available.",
+      "text": "She asked whether I was available.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "d6ac36eed5a601563d64fdbb.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|told me to",
+      "text": "told me to",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "20e80b27e71dbd7ff7b5b0a3.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|He told me to send the file.",
+      "text": "He told me to send the file.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "adbe68bc9b3c823be53f0b98.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|stop doing",
+      "text": "stop doing",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "a6b88b80a0af6e12a8a5974c.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I stopped smoking last year.",
+      "text": "I stopped smoking last year.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "692537fd04ea86746062ae5b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|stop to do",
+      "text": "stop to do",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "e446d7dcdef7e80424522a22.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I stopped to answer the phone.",
+      "text": "I stopped to answer the phone.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "80639859c84f1f7aae461c54.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|very cold",
+      "text": "very cold",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "30ab177270a6a70e1519adf6.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|It’s very cold today.",
+      "text": "It’s very cold today.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_nova",
+      "supported": true,
+      "file": "11cc8587665791e0e1f58187.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|absolutely freezing",
+      "text": "absolutely freezing",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "81f8e9e6350a09c104583899.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|The room was absolutely freezing.",
+      "text": "The room was absolutely freezing.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "d283f6a8524d979baefa2754.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|in my view",
+      "text": "in my view",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "ef938ddd63a63096e39e9d8f.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|In my view, the benefits outweigh the risks.",
+      "text": "In my view, the benefits outweigh the risks.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "c06eb4acd82f77a7bec3e5ae.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|firstly",
+      "text": "firstly",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "7469bceab0376da2f2a3312d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|On the other hand, the cost is significantly higher.",
+      "text": "On the other hand, the cost is significantly higher.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "fb702b9bd22e396e25634024.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|seems to",
+      "text": "seems to",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "847e788010f0ebae03850875.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|This approach seems to work well.",
+      "text": "This approach seems to work well.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "6d9c91dce46d8188fe005496.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|tends to",
+      "text": "tends to",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "da11ac838204c1e8bb946360.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|Prices tend to rise in summer.",
+      "text": "Prices tend to rise in summer.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "e48082b843bd3fcc794dacc9.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|proposal",
+      "text": "proposal",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "1d88b4ecab5fdf1888b349b5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|We could agree to that, provided that the deadline is extended.",
+      "text": "We could agree to that, provided that the deadline is extended.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "42ca10722cd72e7af244aee2.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|compromise",
+      "text": "compromise",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "e550cd353f2beb34f6d83334.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Would you be open to an alternative?",
+      "text": "Would you be open to an alternative?",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "3e26d9f4f508580c711b7db1.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|outline",
+      "text": "outline",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "f169baeea0e57fd67ce464ab.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|First, I’ll outline the main findings.",
+      "text": "First, I’ll outline the main findings.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "0baf21fe327563db6b595862.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|key point",
+      "text": "key point",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_nova",
+      "supported": true,
+      "file": "ed16833bc55b8ae173e8420d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Let’s move on to the next point.",
+      "text": "Let’s move on to the next point.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "e62ce2a1f4b2ca1f5971f6a1.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|regarding",
+      "text": "regarding",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "5dc0333cb9b197d07e11e6dd.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|Further to our meeting, I’m writing to confirm the next steps.",
+      "text": "Further to our meeting, I’m writing to confirm the next steps.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "9f5f240d5200892c6b9af431.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|further to",
+      "text": "further to",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "698e390e7153470141e0f5fe.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|Please note that the deadline has changed.",
+      "text": "Please note that the deadline has changed.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "58ec9b58fbee697ddb33d6ac.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|request",
+      "text": "request",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_nova",
+      "supported": true,
+      "file": "75ccc78740a14ed8f656cbd5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Could you assist me with this issue?",
+      "text": "Could you assist me with this issue?",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "c239a93e3f202b77b7a7c614.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|ask for",
+      "text": "ask for",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "e5170d0ff9f29b931c2556dd.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Can you help me with this?",
+      "text": "Can you help me with this?",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "4fe0871ed88bcb4cb6486a87.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|raise concerns",
+      "text": "raise concerns",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "871db54767a4a0fdc7c708e7.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|The results raise serious concerns.",
+      "text": "The results raise serious concerns.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "65592d58d42b25f54a5d36b8.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|reach an agreement",
+      "text": "reach an agreement",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "ef030fb6881c28785d3fc6a0.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|We finally reached an agreement.",
+      "text": "We finally reached an agreement.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "5e1ef4aa21f5744d7ee30c71.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|attitude",
+      "text": "attitude",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "6509cc1aa92dcad0e1e28508.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|She sounds rather doubtful about the proposal.",
+      "text": "She sounds rather doubtful about the proposal.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "b6a63784065a073c6db642da.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|enthusiastic",
+      "text": "enthusiastic",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "18ed2581eb215fb7afafaf77.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|He seems enthusiastic about the new plan.",
+      "text": "He seems enthusiastic about the new plan.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "2e75debd75f78f7121c9673b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|imply",
+      "text": "imply",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "ba935006a0982e9f700ebe70.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|“It’s a bit expensive” may imply that the speaker does not want to buy it.",
+      "text": "“It’s a bit expensive” may imply that the speaker does not want to buy it.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "698e8a084a5333cedaf7241a.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|suggest",
+      "text": "suggest",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "56d512cb476bd13e7455b3b8.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|“I’ll think about it” can signal hesitation.",
+      "text": "“I’ll think about it” can signal hesitation.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "3f7037a12c0e5018afdfa9ae.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|weak forms",
+      "text": "weak forms",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "753192b2f65e8262f3025429.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|What are you going to do next?",
+      "text": "What are you going to do next?",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "204590be4c9b0bf6dda1dd09.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|linking",
+      "text": "linking",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "bb7422313ee2cdd3d6f998c5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Could you send it when you get a chance?",
+      "text": "Could you send it when you get a chance?",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "00bd1a4ad1cf417b80ef486a.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|is thought to",
+      "text": "is thought to",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "d64e3626cc185667d7e393e6.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|The treatment has been shown to reduce costs.",
+      "text": "The treatment has been shown to reduce costs.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "bdfff769603c6c3cd958c2ef.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|has been shown to",
+      "text": "has been shown to",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "ceeb6e145ca525b4febf3633.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|The policy is widely regarded as ineffective.",
+      "text": "The policy is widely regarded as ineffective.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "46fe1f36cae68ffcaf86953d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|rarely have I",
+      "text": "rarely have I",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "2a392db9609f4a34306006b8.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Rarely have I seen such a clear result.",
+      "text": "Rarely have I seen such a clear result.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "5b545b385729fe26b99a2773.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|not only",
+      "text": "not only",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "f507d5eca5a28b0f8e1c269a.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Not only did costs fall, but quality also improved.",
+      "text": "Not only did costs fall, but quality also improved.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "af5c594bdc19904438f9ab2c.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|what matters is",
+      "text": "what matters is",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "79d145032531e3d5caaa6adc.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|What matters is the final outcome.",
+      "text": "What matters is the final outcome.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "6cb7c92025620bf15202cb67.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|it was… that",
+      "text": "it was… that",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "694646f149c412c71308017b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|It was the timing that caused the problem.",
+      "text": "It was the timing that caused the problem.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "ff989c2ef8c5db1955454d14.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|having reviewed",
+      "text": "having reviewed",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "f8697949c8cda42a1b2c1966.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Having reviewed the data, we changed our recommendation.",
+      "text": "Having reviewed the data, we changed our recommendation.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "53ecbd093d831f578a75374e.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|considering",
+      "text": "considering",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "cb88e3e41af9a2873ea0c738.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Given the circumstances, the delay was understandable.",
+      "text": "Given the circumstances, the delay was understandable.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "24c469909d186cbeb4489e95.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|had it not been",
+      "text": "had it not been",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "13b04becf71fdacbe736b58f.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Had it not been for the delay, we would have arrived on time.",
+      "text": "Had it not been for the delay, we would have arrived on time.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "7c2ff5706db87e842e9c55d5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|were it to",
+      "text": "were it to",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "33bceb4115943fe60667f0a2.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Should you need any assistance, please contact us.",
+      "text": "Should you need any assistance, please contact us.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "a10618d075590c9d1b65cf1d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|needn’t have",
+      "text": "needn’t have",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "39dc17b884c34c8ef878c19b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|You needn’t have sent a printed copy.",
+      "text": "You needn’t have sent a printed copy.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "5bb56e087950bda9a1f5de2b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|should have",
+      "text": "should have",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "645235bdc3c5b618f6e9e144.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|They should have checked the figures first.",
+      "text": "They should have checked the figures first.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "b64ff91a3b173fa509e4eebc.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|implementation",
+      "text": "implementation",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_heart",
+      "supported": true,
+      "file": "c36c607cb335117b7c922dd9.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The implementation of the policy was delayed.",
+      "text": "The implementation of the policy was delayed.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "76467d0f201df5acabc4261b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|assessment",
+      "text": "assessment",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "7035fe56bcf434e659f440dd.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|A thorough assessment is required.",
+      "text": "A thorough assessment is required.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "97a13d188b2568977922ed2b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|nevertheless",
+      "text": "nevertheless",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_isabella",
+      "supported": true,
+      "file": "422efac1a7265af30a6d5275.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The plan is costly; nevertheless, it remains viable.",
+      "text": "The plan is costly; nevertheless, it remains viable.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "c3f98e46b9f039e63f6462d7.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|whereas",
+      "text": "whereas",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "0143958edbb0a23dd068db9d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Whereas demand increased, supply remained stable.",
+      "text": "Whereas demand increased, supply remained stable.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "bc61212173d972b13216d7e0.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|arguably",
+      "text": "arguably",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "f4d6f1b70201d164060b435a.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Arguably, this is the strongest option.",
+      "text": "Arguably, this is the strongest option.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "8c154373f101bb941bdeeff9.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|apparently",
+      "text": "apparently",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "7598284163328cc55459e135.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The change appears to have had little effect.",
+      "text": "The change appears to have had little effect.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "d8e3666f9f0fe1f0df60e1a1.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|admittedly",
+      "text": "admittedly",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "fa46a9dea71d315fce14d521.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|Admittedly, the solution is expensive; even so, it may save money long term.",
+      "text": "Admittedly, the solution is expensive; even so, it may save money long term.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "9bb789d150845262387d7327.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|even so",
+      "text": "even so",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "f2e07e48d9c70182aa556a23.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|While it is true that demand fell, the decline was temporary.",
+      "text": "While it is true that demand fell, the decline was temporary.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "fb10129457c496d2a7f487f8.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|overall",
+      "text": "overall",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "242a25fa928d32574be1a9cc.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Taken together, the findings suggest a gradual improvement.",
+      "text": "Taken together, the findings suggest a gradual improvement.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "3e660ee2d436eaf8ac7cddd5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|taken together",
+      "text": "taken together",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "a8ba9a74e723f9c9ebf51559.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|Overall, the two reports point to the same conclusion.",
+      "text": "Overall, the two reports point to the same conclusion.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "7a8024a76e774773b38d0ff4.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|I wonder if",
+      "text": "I wonder if",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_lewis",
+      "supported": true,
+      "file": "50165ba69cbd3bbb50269efb.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|I wonder if we could revisit the timeline.",
+      "text": "I wonder if we could revisit the timeline.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_emma",
+      "supported": true,
+      "file": "c6c518bc76dbcafe67d72a27.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|perhaps we could",
+      "text": "perhaps we could",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "2b2b476838d97144718311ad.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|I’m afraid the current proposal doesn’t address the main concern.",
+      "text": "I’m afraid the current proposal doesn’t address the main concern.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "94178d9556614d31aed60c6e.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|benefit",
+      "text": "benefit",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_nova",
+      "supported": true,
+      "file": "86b5c71758ed1566098078f3.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The main benefit is greater reliability.",
+      "text": "The main benefit is greater reliability.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "3a6deb3d5cc4fb70a74514fe.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|trade-off",
+      "text": "trade-off",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "b934769ea0fb3d24c42b39f4.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The trade-off is a higher initial cost.",
+      "text": "The trade-off is a higher initial cost.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "b8fd9f416ca1d306635a6d51.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|framework",
+      "text": "framework",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "6a05fcb84c0cdf16b1f6eb1d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|Let me start with the underlying assumption.",
+      "text": "Let me start with the underlying assumption.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_sarah",
+      "supported": true,
+      "file": "b36c3f9e29bb4d9950a8b5ae.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|assumption",
+      "text": "assumption",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "4c57841bd0aea7200e5269e5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|The key implication is that demand may shift rapidly.",
+      "text": "The key implication is that demand may shift rapidly.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "94789b22bb781abfa47cbe0f.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|implication",
+      "text": "implication",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "e55c03c653f33371cfaaba71.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|“That might be difficult” can function as a polite refusal.",
+      "text": "“That might be difficult” can function as a polite refusal.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "a130d247f04cdc0683cee95c.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|reservation",
+      "text": "reservation",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "04f7b4d555fa8dfa4fda30fd.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|“Not ideal” may express strong criticism in context.",
+      "text": "“Not ideal” may express strong criticism in context.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "9f2d3184c19a34493628df88.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|ironic",
+      "text": "ironic",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "c37a1b88c174df1b278dbc62.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|“Well, that went brilliantly” can be ironic after a failure.",
+      "text": "“Well, that went brilliantly” can be ironic after a failure.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "8c0b487905c35cdd5a2a03d0.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|skeptical",
+      "text": "skeptical",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "c4d7ee789a4cfb1caf36d291.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|Her tone sounds skeptical rather than convinced.",
+      "text": "Her tone sounds skeptical rather than convinced.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "52fca08f5b856a3496d74c0d.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|accent",
+      "text": "accent",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_daniel",
+      "supported": true,
+      "file": "44e0d0b516a782932d91bc3b.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|The pronunciation varies, but the key words remain recognisable.",
+      "text": "The pronunciation varies, but the key words remain recognisable.",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_nova",
+      "supported": true,
+      "file": "eea224dbb739560c8e84e0b8.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|variety",
+      "text": "variety",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "708edfc8e1d0632d9e7b4dbf.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|Focus on rhythm and stressed words before individual sounds.",
+      "text": "Focus on rhythm and stressed words before individual sounds.",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_lily",
+      "supported": true,
+      "file": "1ec1f0927b47c4fa73197f42.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|female|concise",
+      "text": "concise",
+      "locale": "en-GB",
+      "gender": "female",
+      "voice": "bf_alice",
+      "supported": true,
+      "file": "5024978f5ca4b9b9ecf0c148.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|The report is concise without being superficial.",
+      "text": "The report is concise without being superficial.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_george",
+      "supported": true,
+      "file": "4a57e630ffc833fea64c06f5.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-US|female|blunt",
+      "text": "blunt",
+      "locale": "en-US",
+      "gender": "female",
+      "voice": "af_bella",
+      "supported": true,
+      "file": "fcd7668192fdd1eb0e181e67.mp3",
+      "engine": "Kokoro-82M"
+    },
+    {
+      "key": "en-GB|male|His reply was rather blunt.",
+      "text": "His reply was rather blunt.",
+      "locale": "en-GB",
+      "gender": "male",
+      "voice": "bm_fable",
+      "supported": true,
+      "file": "6a36dd23d76e7e7829cf7a36.mp3",
       "engine": "Kokoro-82M"
     },
     {
