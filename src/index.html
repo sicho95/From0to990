@@ -11,6 +11,9 @@
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./assets/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="./assets/icon.svg" />
+  <script>
+    (()=>{try{const t=localStorage.getItem('themePreference');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t}catch{}})();
+  </script>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>

@@ -42,3 +42,15 @@ export async function saveError(error,{queue=true}={}){await put(STORES.errors,e
 export async function exportLocalBackup(){const data={format:'from0to990-backup',exportVersion:1,schemaVersion:DB_VERSION,exportedAt:new Date().toISOString(),stores:{}};for(const name of Object.values(STORES)) data.stores[name]=await getAll(name);return data;}
 export async function importLocalBackup(data,{replace=false}={}){if(data?.format!=='from0to990-backup') throw new Error('Format de sauvegarde invalide');if(replace) for(const n of Object.values(STORES)) await clear(n);for(const [name,rows] of Object.entries(data.stores||{})){if(!Object.values(STORES).includes(name)) continue;for(const row of rows||[]) await put(name,row);}}
 export async function snapshot(){const out={};for(const name of Object.values(STORES)) out[name]=await getAll(name);return out;}
+
+export async function clearUserData(){
+  for(const name of [STORES.profile,STORES.attempts,STORES.sessions,STORES.skills,STORES.vocab,STORES.syncQueue,STORES.errors])await clear(name);
+  for(const key of ['syncCursor','lastSyncAt','activeSession'])await del(STORES.settings,key);
+}
+export async function enqueueCurrentSnapshot(){
+  const p=await getProfile();if(p)await enqueue('profile.upsert',p);
+  for(const x of await getAll(STORES.attempts))await enqueue('attempt.upsert',x);
+  for(const x of await getAll(STORES.sessions))await enqueue('session.upsert',x);
+  for(const x of await getAll(STORES.skills))await enqueue('skill.upsert',x);
+  for(const x of await getAll(STORES.errors))await enqueue('error.upsert',x);
+}
