@@ -31,7 +31,7 @@ async function init(){
     try{await syncNow();await hydrate();initTheme(state.profile)}catch(e){console.warn('Initial account sync deferred',e)}
   }
   await refreshSync();
-  window.addEventListener('hashchange',()=>{routeFromHash();draw()});window.addEventListener('online',()=>sync(true));window.addEventListener('offline',draw);
+  window.addEventListener('hashchange',()=>{routeFromHash();draw()});window.addEventListener('online',handleOnline);window.addEventListener('offline',draw);
   if('serviceWorker'in navigator){const reg=await navigator.serviceWorker.register('./sw.js');navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());setInterval(()=>reg.update().catch(()=>{}),60000)}
   const restored=await restoreSession(state,{onFinish:sessionFinished,onExit:draw});if(restored)renderSession(app,state,{onFinish:sessionFinished,onExit:draw});else draw();
 }
@@ -84,6 +84,12 @@ async function action(el){
   const a=el.dataset.act;
   if(a==='toggle-nav'){localStorage.setItem('navCollapsed',localStorage.getItem('navCollapsed')==='1'?'0':'1');draw();return}
   if(a==='set-theme'){const pref=applyTheme(el.dataset.theme);state.profile=await saveProfile({...state.profile,themePreference:pref});draw();return}
+  if(a==='auth-refresh'){
+    const next=await loadAuthState();state.auth=next;
+    if(next.enabled&&!next.user){state.authView='login';draw();return}
+    if(next.enabled&&next.user){try{await syncNow();await hydrate();await refreshSync()}catch{}}
+    toast(next.enabled?'Comptes activés':'Service de comptes pas encore activé');draw();return
+  }
   if(a==='auth-show-login'){state.authView='login';draw();return}
   if(a==='auth-show-register'){state.authView='register';draw();return}
   if(a==='auth-show-forgot'){state.authView='forgot';draw();return}
@@ -162,6 +168,14 @@ function toeicDiagnosticPool(perPart=4){
   return out
 }
 
+async function handleOnline(){
+  try{
+    state.auth=await loadAuthState();
+    if(state.auth.enabled&&state.auth.user){await syncNow();await hydrate();await refreshSync()}
+    else await refreshSync();
+  }catch(e){console.warn('Online auth refresh deferred',e)}
+  draw();
+}
 async function loadAdminUsers(query=''){
   if(state.auth?.user?.role!=='admin')return;
   state.adminLoading=true;draw();

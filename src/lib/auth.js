@@ -47,6 +47,7 @@ export async function saveAuthSession(data){
 }
 export async function clearAuthSession(){
   await setSetting('authSessionToken',null);
+  await setSetting('authUserId',null);
   await setSetting('syncCursor',null);
   await setSetting('lastSyncAt',null);
 }
