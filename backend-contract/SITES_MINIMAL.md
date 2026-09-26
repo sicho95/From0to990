@@ -65,7 +65,7 @@ Do not place values in GitHub or frontend code.
 ## Acceptance tests before setting auth_version=2
 
 - register a user;
-- when zero admins exist, registering the configured initial admin identity creates it directly with `role=admin`;
+- bootstrap the configured initial admin identity after its normal registration;
 - reject duplicate normalized email and username;
 - login by email and username;
 - bad password returns generic 401;
@@ -74,8 +74,9 @@ Do not place values in GitHub or frontend code.
 - logout revokes only that session;
 - unauthenticated `/api/v1/sync` returns 401 and never exposes legacy `owner` events;
 - login on a second device and pull only that account's progression with cursor null;
-- password forgot actually sends/queues the reset mail and always returns identical 202;
-- reset link changes password and revokes all sessions;
+- password forgot queues a manual admin request and always returns identical 202;
+- admin-issued temporary password expires in 24 hours and revokes all sessions;
+- temporary login requires an immediate password change before sync;
 - admin list/search works only for role admin;
 - block/unblock works and is audited;
 - delete cascades pedagogical data and is audited;

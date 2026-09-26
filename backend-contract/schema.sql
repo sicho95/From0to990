@@ -99,6 +99,9 @@ CREATE TABLE IF NOT EXISTS accounts (
   password_salt TEXT NOT NULL,
   password_algo TEXT NOT NULL DEFAULT 'pbkdf2-sha256',
   password_params_json TEXT NOT NULL DEFAULT '{"iterations":600000,"hash":"SHA-256"}',
+  password_temporary INTEGER NOT NULL DEFAULT 0,
+  temporary_password_expires_at TEXT,
+  must_change_password INTEGER NOT NULL DEFAULT 0,
   password_changed_at TEXT NOT NULL,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
@@ -130,6 +133,13 @@ CREATE TABLE IF NOT EXISTS password_reset_tokens (
 );
 CREATE INDEX IF NOT EXISTS idx_password_reset_token_hash ON password_reset_tokens(token_hash);
 CREATE INDEX IF NOT EXISTS idx_password_reset_expiry ON password_reset_tokens(expires_at);
+CREATE TABLE IF NOT EXISTS reset_requests (
+  id TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  status TEXT NOT NULL CHECK(status IN ('pending','issued','completed','expired','cancelled')),
+  created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_reset_requests_status ON reset_requests(status,created_at);
+CREATE INDEX IF NOT EXISTS idx_reset_requests_user ON reset_requests(user_id);
 CREATE TABLE IF NOT EXISTS auth_rate_limits (
   subject TEXT PRIMARY KEY,
   count INTEGER NOT NULL DEFAULT 0,

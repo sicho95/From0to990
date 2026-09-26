@@ -96,7 +96,7 @@ paths:
 
   /api/v1/auth/password/forgot:
     post:
-      summary: Request a reset e-mail
+      summary: Request a manually administered password reset
       description: Always returns the same 202 response whether the e-mail exists or not.
       security: []
       requestBody:
@@ -110,26 +110,25 @@ paths:
                 email: {type: string, format: email}
       responses:
         '202': {description: Request accepted}
-        '429': {description: Rate limited}
 
-  /api/v1/auth/password/reset:
+  /api/v1/auth/password/change:
     post:
-      summary: Consume a single-use password-reset token
-      security: []
+      summary: Set a personal password after temporary login or change it voluntarily
+      security: [{sessionBearer: []}]
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [token, newPassword]
+              required: [newPassword]
               properties:
-                token: {type: string}
+                currentPassword: {type: string, description: Required for voluntary changes}
                 newPassword: {type: string, minLength: 12, maxLength: 128}
       responses:
-        '204': {description: Password changed and all sessions revoked}
-        '400': {description: Invalid or expired token}
-        '429': {description: Rate limited}
+        '200': {description: Password changed; current session retained}
+        '401': {description: Invalid credentials}
+        '403': {description: Blocked account or expired temporary password}
 
   /api/v1/sync:
     options:

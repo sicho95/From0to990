@@ -12,7 +12,7 @@ A user can:
 - sign in with either e-mail or username;
 - use several devices with the same account;
 - synchronize profile, settings, attempts, lessons, skills and errors;
-- request a password-reset link by e-mail;
+- request a manually administered password reset;
 - remain usable offline after a successful sign-in on the device.
 
 An administrator can:
@@ -29,12 +29,12 @@ An administrator can:
 - Portable Workers fallback: PBKDF2-HMAC-SHA-256, 600,000 iterations, unique random 16+ byte salt per account.
 - Add a server-only pepper before PBKDF2 using HMAC-SHA-256. The pepper is never stored in D1.
 - Password length: 12–128 Unicode characters. Do not impose arbitrary composition rules.
-- Session tokens and password-reset tokens are 32 cryptographically random bytes encoded base64url.
-- Store only SHA-256 hashes of session/reset tokens in D1; return the raw token only once to the client.
+- Session tokens and administrator-issued temporary passwords are cryptographically random.
+- Store only SHA-256 hashes of session tokens and salted password hashes in D1; return raw values only once.
 - Browser admin uses the authenticated user role, never `ADMIN_EXPORT_TOKEN`.
 - `ADMIN_EXPORT_TOKEN` remains server-only for database export/import only.
 - Authentication and reset responses must use `Cache-Control: no-store`.
-- Rate-limit register/login/forgot/reset.
+- Rate-limit registration and login; suppress repeated pending reset requests.
 - Login and forgot-password must not reveal whether an e-mail exists.
 - Blocked users cannot login or sync. Blocking immediately revokes all sessions.
 - Password reset revokes all existing sessions.
@@ -82,26 +82,19 @@ On activation of account v2, legacy/local `owner` progress is deliberately disca
 
 Never mix local IndexedDB data from two authenticated users. The PWA clears pedagogical stores before registration/login hydration and after a safe logout. There is no legacy merge path.
 
-## Password reset e-mail
+## Manually administered password reset
 
 Required server settings/secrets:
 
-- `APP_PUBLIC_URL=https://sicho95.github.io/From0to990/`
 - `PASSWORD_PEPPER`
-- `PASSWORD_RESET_FROM`
-- `RESEND_API_KEY` (or replace the mail adapter with an equivalent transactional provider)
 - `ADMIN_BOOTSTRAP_TOKEN`
 - existing `ADMIN_EXPORT_TOKEN`
 
 `POST /auth/password/forgot` always returns HTTP 202 with the same body.
 
-For an existing active account:
-1. invalidate older unused reset tokens;
-2. create a random token, store only its hash, expiry 30 minutes;
-3. send `${APP_PUBLIC_URL}#/reset/<raw-token>`;
-4. do not put the raw token in logs.
+For an existing active account, create one pending `reset_requests` row. Unknown e-mails receive the same 202 response and create no row. No server-side mail provider is used.
 
-`POST /auth/password/reset` validates the token, replaces the password hash/salt, marks the token used and revokes all sessions.
+The administrator sees pending requests, issues a cryptographically random temporary password, and receives its plaintext only in that response. D1 stores only the salted PBKDF2 hash. The temporary password expires after 24 hours, revokes all old sessions, and forces `POST /auth/password/change` before any sync or normal app access. The administrator may copy it or open a `mailto:` composer in the browser. A completed change clears the temporary flags and keeps the current session, revoking other sessions. Personal passwords have no expiration.
 
 ## First administrator
 
@@ -117,10 +110,9 @@ The intended initial administrator username is `Sicho`; the administrator e-mail
 First-admin behavior:
 1. Configure `INITIAL_ADMIN_EMAIL` privately on the server and `INITIAL_ADMIN_USERNAME=Sicho`.
 2. While zero administrators exist, reserve both normalized values so another account cannot claim either identity.
-3. When the first registration matches **both** configured values, create that account directly with `role=admin` in the same transaction as account creation.
-4. Record `initial_admin_promoted` in `admin_audit_log`.
-5. `POST /api/v1/admin/bootstrap` remains only as an operator recovery path if the matching account already existed before this rule was deployed.
-6. Once one administrator exists, automatic promotion is permanently disabled.
+3. Register the matching identity as a normal account.
+4. Invoke `POST /api/v1/admin/bootstrap` with the server-only bearer secret to promote that exact account and audit the action.
+5. Once one administrator exists, bootstrap refuses further promotion.
 
 Browser administration then uses the normal authenticated session and requires `role=admin`.
 

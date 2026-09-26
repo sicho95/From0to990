@@ -58,9 +58,11 @@ export async function logoutAccount(){
 export async function forgotPassword(email){
   return request('/api/v1/auth/password/forgot',{method:'POST',auth:false,body:{email}});
 }
-export async function resetPassword(token,newPassword){
-  return request('/api/v1/auth/password/reset',{method:'POST',auth:false,body:{token,newPassword}});
+export async function changePassword(newPassword,currentPassword){
+  return request('/api/v1/auth/password/change',{method:'POST',body:{newPassword,...(currentPassword?{currentPassword}:{})}});
 }
+export async function adminResetRequests(){return request('/api/v1/admin/reset-requests')}
+export async function adminTemporaryPassword(userId){return request(`/api/v1/admin/users/${encodeURIComponent(userId)}/password/temporary`,{method:'POST'})}
 export async function adminListUsers(query=''){
   const q=query?`?q=${encodeURIComponent(query)}`:'';
   return request(`/api/v1/admin/users${q}`);

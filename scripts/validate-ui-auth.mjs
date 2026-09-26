@@ -13,7 +13,8 @@ const [css,shell,app,authUi]=await Promise.all([
 if(!css.includes('background:var(--glass-strong)'))throw new Error('Bottom tab bar must use theme glass variable');
 if(css.includes('.bottom-tabs{')&&css.includes('background:rgba(25,28,35,.78)'))throw new Error('Hard-coded dark bottom tab background reintroduced');
 if(!css.includes(':root[data-theme="light"] .bottom-tabs'))throw new Error('Light bottom tab treatment missing');
-if(!shell.includes("navItems(active,state,{admin:false})"))throw new Error('iPhone bottom tabs must stay at five items');
+if(!shell.includes("state.auth?.user?.role==='admin'?6:5")||!shell.includes('navItems(active,state)}</nav>'))throw new Error('iPhone administration tab must be visible to admins');
+if(!authUi.includes('change-required')||!app.includes('state.auth.user?.mustChangePassword'))throw new Error('Temporary password change gate missing');
 if(authUi.includes('auth-merge-local')||authUi.includes('Fusionner'))throw new Error('Legacy local-account merge UI must stay removed');
 if(!app.includes("await clearUserData();\n    await saveAuthSession(data)"))throw new Error('Account switch must clear pedagogical local data before hydration');
 console.log('UI/auth regression checks OK');

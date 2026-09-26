@@ -11,12 +11,12 @@ import {computeStats,computeGains} from './lib/analytics.js';
 import {initAudioBank} from './lib/audio.js';
 import {randomSample} from './lib/randomize.js';
 import {applyTheme,initTheme,storedTheme} from './lib/theme.js';
-import {loadAuthState,registerAccount,loginAccount,saveAuthSession,logoutAccount,forgotPassword,resetPassword,adminListUsers,adminSetUserStatus,adminDeleteUser} from './lib/auth.js';
-import {authScreen,resetTokenFromRoute} from './lib/ui-auth.js';
+import {loadAuthState,registerAccount,loginAccount,saveAuthSession,logoutAccount,forgotPassword,changePassword,adminListUsers,adminResetRequests,adminTemporaryPassword,adminSetUserStatus,adminDeleteUser} from './lib/auth.js';
+import {authScreen} from './lib/ui-auth.js';
 import {admin} from './lib/ui-admin.js';
 
 const app=document.getElementById('app');
-const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null,auth:{enabled:false,user:null},authView:'login',adminUsers:null,adminLoading:false,adminQuery:'',adminConfirmId:null};
+const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null,auth:{enabled:false,user:null},authView:'login',adminUsers:null,adminRequests:[],adminPendingCount:0,adminLoading:false,adminQuery:'',adminConfirmId:null,temporaryDisplay:null};
 
 init().catch(err=>{console.error(err);app.innerHTML=`<main class="fatal"><h1>From0to990</h1><p>Impossible de charger l’application.</p><pre>${String(err.stack||err)}</pre></main>`});
 
@@ -27,15 +27,17 @@ async function init(){
   state.questions=[...allGeneralQuestions(),...state.toeicQuestions];
   await hydrate();initTheme(state.profile);
   state.auth=await loadAuthState();
-  if(state.auth.enabled&&state.auth.user&&navigator.onLine){
+  if(state.auth.user?.role==='admin')await refreshAdminNotifications();
+  if(state.auth.enabled&&state.auth.user&&!state.auth.user.mustChangePassword&&navigator.onLine){
     try{await syncNow();await hydrate();initTheme(state.profile)}catch(e){console.warn('Initial account sync deferred',e)}
   }
   await refreshSync();
   window.addEventListener('hashchange',()=>{routeFromHash();draw()});window.addEventListener('online',handleOnline);window.addEventListener('offline',draw);
+  setInterval(()=>{if(state.auth.user?.role==='admin'&&navigator.onLine)refreshAdminNotifications().then(draw).catch(()=>{})},60000);
   if('serviceWorker'in navigator){const reg=await navigator.serviceWorker.register('./sw.js');navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());setInterval(()=>reg.update().catch(()=>{}),60000)}
   const restored=await restoreSession(state,{onFinish:sessionFinished,onExit:draw});if(restored)renderSession(app,state,{onFinish:sessionFinished,onExit:draw});else draw();
 }
-function routeFromHash(){const raw=(location.hash.replace('#/','')||'today').split('/');state.route=raw[0]||'today';state.param=raw[1]||null;if(state.route==='reset')state.authView='reset'}
+function routeFromHash(){const raw=(location.hash.replace('#/','')||'today').split('/');state.route=raw[0]||'today';state.param=raw[1]||null}
 async function hydrate(){
   const [p,a,s,sk,e]=await Promise.all([getProfile(),getAll(STORES.attempts),getAll(STORES.sessions),getAll(STORES.skills),getAll(STORES.errors)]);
   state.profile=p||{id:'me',displayName:'',targetScore:990,timePerDay:20,profileSetupComplete:false,placementComplete:false};if(state.profile.displayName==='Damien'&&!state.profile.profileSetupComplete){state.profile={...state.profile,displayName:''};await saveProfile(state.profile,{queue:false})}
@@ -52,9 +54,10 @@ function ctx(){
 }
 function draw(){
   if(state.auth.enabled&&!state.auth.user){
-    if(state.route==='reset')state.authView='reset';
     app.innerHTML=authScreen(state);bind();return;
   }
+  if(state.auth.user?.mustChangePassword){state.authView='change-required';app.innerHTML=authScreen(state);bind();return}
+  if(state.authView==='change-voluntary'){app.innerHTML=authScreen(state);bind();return}
   if(state.activeSession)return renderSession(app,state,{onFinish:sessionFinished,onExit:draw});
   if(!state.profile?.profileSetupComplete){app.innerHTML=onboarding(state.profile);bind();return}
   const c=ctx();let body,title;
@@ -101,6 +104,7 @@ async function action(el){
     const themePreference=storedTheme();
     await clearUserData();
     await saveAuthSession(data);state.auth={...state.auth,enabled:true,user:data.user};
+    if(data.user.role==='admin')await refreshAdminNotifications();
     state.profile=await saveProfile({id:'me',displayName:data.user.username||'',targetScore:990,timePerDay:20,profileSetupComplete:false,placementComplete:false,themePreference},{queue:true});
     try{await syncNow()}catch(e){console.warn('First account sync deferred',e)}
     await hydrate();await refreshSync();state.authView='login';location.hash='#/today';draw();return
@@ -110,20 +114,20 @@ async function action(el){
     const data=await loginAccount({identifier,password,deviceId:await deviceId()});
     await clearUserData();
     await saveAuthSession(data);state.auth={...state.auth,enabled:true,user:data.user};
-    try{await syncNow()}catch(e){console.warn('Account sync deferred',e)}
+    if(data.user.role==='admin')await refreshAdminNotifications();
+    if(!data.user.mustChangePassword)try{await syncNow()}catch(e){console.warn('Account sync deferred',e)}
     await hydrate();await refreshSync();state.authView='login';location.hash='#/today';draw();return
   }
-  if(a==='auth-send-reset'){
-    const email=state.auth?.user?.email;if(!email)throw new Error('Aucune adresse e-mail associée au compte');
-    await forgotPassword(email);toast('E-mail de réinitialisation envoyé');return
-  }
   if(a==='auth-forgot'){const email=document.getElementById('auth-email').value.trim();if(!email)throw new Error('Entre ton adresse e-mail');await forgotPassword(email);state.authView='forgot-sent';draw();return}
-  if(a==='auth-reset'){
-    const p=document.getElementById('auth-password').value,p2=document.getElementById('auth-password2').value,token=resetTokenFromRoute(state);
+  if(a==='auth-show-change'){state.authView='change-voluntary';draw();return}
+  if(a==='auth-change-cancel'){state.authView='login';draw();return}
+  if(a==='auth-change-password'){
+    const p=document.getElementById('auth-password').value,p2=document.getElementById('auth-password2').value,currentPassword=document.getElementById('auth-current-password')?.value;
     if(p.length<12)throw new Error('Le mot de passe doit contenir au moins 12 caractères');
     if(p!==p2)throw new Error('Les deux mots de passe ne correspondent pas');
-    if(!token)throw new Error('Lien de réinitialisation invalide');
-    await resetPassword(token,p);state.authView='login';location.hash='#/today';toast('Mot de passe réinitialisé');draw();return
+    const result=await changePassword(p,currentPassword);state.auth.user=result.user;state.authView='login';
+    if(navigator.onLine){await syncNow();await hydrate();await refreshSync()}
+    location.hash='#/today';toast('Mot de passe changé');draw();return
   }
   if(a==='auth-logout'){
     await refreshSync();
@@ -132,8 +136,13 @@ async function action(el){
     await logoutAccount();await clearUserData();state.auth={...state.auth,user:null};state.adminUsers=null;state.authView='login';await hydrate();draw();return
   }
   if(a==='admin-refresh'||a==='admin-search'){state.adminQuery=document.getElementById('admin-query')?.value.trim()||'';await loadAdminUsers(state.adminQuery);return}
+  if(a==='admin-focus-user'){const u=state.adminUsers?.find(x=>x.id===el.dataset.userId);if(!u){state.adminQuery=state.adminRequests?.find(x=>x.userId===el.dataset.userId)?.email||'';await loadAdminUsers(state.adminQuery)}document.getElementById(`user-${el.dataset.userId}`)?.scrollIntoView({behavior:'smooth'});return}
   if(a==='admin-block'||a==='admin-unblock'){await adminSetUserStatus(el.dataset.userId,a==='admin-block'?'blocked':'active');await loadAdminUsers(state.adminQuery);return}
   if(a==='admin-delete'){const id=el.dataset.userId;if(state.adminConfirmId!==id){state.adminConfirmId=id;draw();return}await adminDeleteUser(id);state.adminConfirmId=null;await loadAdminUsers(state.adminQuery);return}
+  if(a==='admin-temporary'){const id=el.dataset.userId,u=state.adminUsers?.find(x=>x.id===id);if(!u)return;const result=await adminTemporaryPassword(id);state.temporaryDisplay={password:result.temporaryPassword,email:u.email,username:u.username};await loadAdminUsers(state.adminQuery);return}
+  if(a==='temporary-copy'){await navigator.clipboard.writeText(state.temporaryDisplay?.password||'');toast('Mot de passe provisoire copié');return}
+  if(a==='temporary-email'){const t=state.temporaryDisplay;if(!t)return;const subject='From0to990 — Réinitialisation de votre mot de passe',body=`Bonjour,\n\nUne réinitialisation du mot de passe de votre compte From0to990 a été effectuée.\n\nPseudo : ${t.username}\n\nMot de passe provisoire :\n${t.password}\n\nCe mot de passe est valable pendant 24 heures. Lors de votre prochaine connexion, vous devrez choisir immédiatement un nouveau mot de passe personnel, sans date d’expiration.\n\nSi vous n’êtes pas à l’origine de cette demande, contactez l’administrateur.\n\nFrom0to990`;location.href=`mailto:${encodeURIComponent(t.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;return}
+  if(a==='temporary-close'){state.temporaryDisplay=null;draw();return}
   if(a==='onboard-test'||a==='onboard-zero'){if(!await saveOnboarding())return;if(a==='onboard-zero'){state.profile=await saveProfile({...state.profile,cefrLevel:'pre-a1',placementComplete:true});location.hash='#/today';return}return startPlacement(0)}
   if(a==='lesson'){location.hash=`#/lesson/${el.dataset.id}`;return}
   if(a==='start-lesson')return start(lessonQuestions(el.dataset.id),`lesson:${el.dataset.id}`,LESSONS[el.dataset.id]?.title||'Leçon');
@@ -183,10 +192,11 @@ async function handleOnline(){
 async function loadAdminUsers(query=''){
   if(state.auth?.user?.role!=='admin')return;
   state.adminLoading=true;draw();
-  try{const data=await adminListUsers(query);state.adminUsers=data.users||[]}
+  try{const [data,requests]=await Promise.all([adminListUsers(query),adminResetRequests()]);state.adminUsers=data.users||[];state.adminRequests=requests.requests||[];state.adminPendingCount=requests.pendingCount||0}
   catch(e){toast(e.message||'Impossible de charger les utilisateurs')}
   finally{state.adminLoading=false;draw()}
 }
+async function refreshAdminNotifications(){const data=await adminResetRequests();state.adminRequests=data.requests||[];state.adminPendingCount=data.pendingCount||0}
 async function sync(silent=false){
   if(state.auth.enabled&&!state.auth.user)return;
   try{await syncNow();await refreshSync();if(!silent)toast('Progression synchronisée')}
