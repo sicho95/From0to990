@@ -392,8 +392,7 @@ export function visibleLessonIds(){
     'survival','identity','time-basics','numbers','colors','family-home','food','hotel','emergency',
     'grammar-a1','daily-life','travel','travel-a1','shopping','smalltalk','health-a1',
     'grammar-a2','social-a2','travel-a2','work','work-a2','idioms','phrasal',
-    'collocations','pronunciation','falsefriends',
-    'grammar-b1','communication-b1','work-b1','listening-b1',
+    'grammar-b1','communication-b1','work-b1','listening-b1','collocations','pronunciation','falsefriends',
     'grammar-b2','discourse-b2','professional-b2','listening-b2',
     'grammar-c1','discourse-c1','professional-c1','listening-c1','lexis-c1'
   ];
