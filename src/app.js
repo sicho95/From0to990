@@ -113,6 +113,10 @@ async function action(el){
     try{await syncNow()}catch(e){console.warn('Account sync deferred',e)}
     await hydrate();await refreshSync();state.authView='login';location.hash='#/today';draw();return
   }
+  if(a==='auth-send-reset'){
+    const email=state.auth?.user?.email;if(!email)throw new Error('Aucune adresse e-mail associée au compte');
+    await forgotPassword(email);toast('E-mail de réinitialisation envoyé');return
+  }
   if(a==='auth-forgot'){const email=document.getElementById('auth-email').value.trim();if(!email)throw new Error('Entre ton adresse e-mail');await forgotPassword(email);state.authView='forgot-sent';draw();return}
   if(a==='auth-reset'){
     const p=document.getElementById('auth-password').value,p2=document.getElementById('auth-password2').value,token=resetTokenFromRoute(state);
