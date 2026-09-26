@@ -1,18 +1,143 @@
 openapi: 3.1.0
 info:
-  title: From0to990 Sync API
-  version: 1.0.0
+  title: From0to990 API
+  version: 2.0.0
 paths:
   /api/v1/health:
     get:
-      summary: Health + CORS test
-      responses: {'200': {description: OK}}
+      summary: Health, schema and auth capability
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [status, database, schema_version, auth_version]
+                properties:
+                  status: {type: string, const: ok}
+                  database: {type: string, const: ok}
+                  schema_version: {type: integer, minimum: 2}
+                  auth_version: {type: integer, const: 2}
+
+  /api/v1/auth/register:
+    post:
+      summary: Create an account and one device session
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, username, password, deviceId]
+              properties:
+                email: {type: string, format: email}
+                username: {type: string, minLength: 3, maxLength: 32}
+                password: {type: string, minLength: 12, maxLength: 128}
+                deviceId: {type: string}
+      responses:
+        '201':
+          description: Account created
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AuthSession'}
+        '409': {description: E-mail or username unavailable}
+        '429': {description: Rate limited}
+
+  /api/v1/auth/login:
+    post:
+      summary: Sign in with username or e-mail
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [identifier, password, deviceId]
+              properties:
+                identifier: {type: string}
+                password: {type: string, minLength: 1, maxLength: 128}
+                deviceId: {type: string}
+      responses:
+        '200':
+          description: Signed in
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/AuthSession'}
+        '401': {description: Generic invalid credentials}
+        '403': {description: Account blocked}
+        '429': {description: Rate limited}
+
+  /api/v1/auth/me:
+    get:
+      summary: Current account
+      security: [{sessionBearer: []}]
+      responses:
+        '200':
+          description: Account
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [user]
+                properties:
+                  user: {$ref: '#/components/schemas/User'}
+        '401': {description: Invalid or expired session}
+        '403': {description: Blocked account}
+
+  /api/v1/auth/logout:
+    post:
+      summary: Revoke the current session
+      security: [{sessionBearer: []}]
+      responses:
+        '204': {description: Logged out}
+
+  /api/v1/auth/password/forgot:
+    post:
+      summary: Request a reset e-mail
+      description: Always returns the same 202 response whether the e-mail exists or not.
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: {type: string, format: email}
+      responses:
+        '202': {description: Request accepted}
+        '429': {description: Rate limited}
+
+  /api/v1/auth/password/reset:
+    post:
+      summary: Consume a single-use password-reset token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, newPassword]
+              properties:
+                token: {type: string}
+                newPassword: {type: string, minLength: 12, maxLength: 128}
+      responses:
+        '204': {description: Password changed and all sessions revoked}
+        '400': {description: Invalid or expired token}
+        '429': {description: Rate limited}
+
   /api/v1/sync:
     options:
       summary: CORS preflight
       responses: {'204': {description: No content}}
     post:
-      summary: Push local events and pull newer remote events
+      summary: Push local events and pull account events
+      security: [{sessionBearer: []}]
       requestBody:
         required: true
         content:
@@ -24,12 +149,99 @@ paths:
                 deviceId: {type: string}
                 cursor: {type: [string, 'null']}
                 events: {type: array, items: {type: object}}
-      responses: {'200': {description: Sync result}}
+      responses:
+        '200': {description: Sync result}
+        '401': {description: Authentication required}
+        '403': {description: Blocked account}
+
+  /api/v1/admin/users:
+    get:
+      summary: Search/list users
+      security: [{sessionBearer: []}]
+      parameters:
+        - in: query
+          name: q
+          schema: {type: string}
+        - in: query
+          name: status
+          schema: {type: string, enum: [active, blocked]}
+        - in: query
+          name: cursor
+          schema: {type: string}
+      responses:
+        '200':
+          description: User page
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [users]
+                properties:
+                  users:
+                    type: array
+                    items: {$ref: '#/components/schemas/AdminUser'}
+                  nextCursor: {type: [string, 'null']}
+        '403': {description: Administrator role required}
+
+  /api/v1/admin/users/{userId}:
+    patch:
+      summary: Block or unblock a user
+      security: [{sessionBearer: []}]
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema: {type: string}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [status]
+              properties:
+                status: {type: string, enum: [active, blocked]}
+      responses:
+        '200': {description: Updated}
+        '403': {description: Administrator role required}
+        '409': {description: Cannot modify self/last administrator}
+    delete:
+      summary: Permanently delete a user and all pedagogical data
+      security: [{sessionBearer: []}]
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema: {type: string}
+      responses:
+        '204': {description: Deleted}
+        '403': {description: Administrator role required}
+        '409': {description: Cannot delete self/last administrator}
+
+  /api/v1/admin/bootstrap:
+    post:
+      summary: One-time promotion of the first administrator
+      description: Server/operator use only. Never called from the PWA.
+      security: [{bootstrapBearer: []}]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email: {type: string, format: email}
+      responses:
+        '204': {description: First administrator promoted}
+        '409': {description: An administrator already exists}
+
   /api/v1/admin/export:
     get:
       summary: Complete portable database export
-      security: [{bearerAuth: []}]
+      security: [{serverAdminBearer: []}]
       responses: {'200': {description: Complete JSON dump}}
+
   /api/v1/admin/import:
     post:
       summary: Validate or import a portable dump
@@ -37,10 +249,44 @@ paths:
         - in: query
           name: mode
           schema: {type: string, enum: [validate, merge, replace]}
-      security: [{bearerAuth: []}]
+      security: [{serverAdminBearer: []}]
       responses: {'200': {description: Import report}}
+
 components:
   securitySchemes:
-    bearerAuth:
+    sessionBearer:
       type: http
       scheme: bearer
+      description: Opaque per-device user session token.
+    serverAdminBearer:
+      type: http
+      scheme: bearer
+      description: Server-only ADMIN_EXPORT_TOKEN. Never exposed to the PWA.
+    bootstrapBearer:
+      type: http
+      scheme: bearer
+      description: Server-only ADMIN_BOOTSTRAP_TOKEN, accepted only while no admin exists.
+  schemas:
+    User:
+      type: object
+      required: [id, email, username, role, status]
+      properties:
+        id: {type: string}
+        email: {type: string, format: email}
+        username: {type: string}
+        role: {type: string, enum: [user, admin]}
+        status: {type: string, enum: [active, blocked]}
+    AdminUser:
+      allOf:
+        - {$ref: '#/components/schemas/User'}
+        - type: object
+          properties:
+            createdAt: {type: string, format: date-time}
+            lastSeenAt: {type: [string, 'null'], format: date-time}
+    AuthSession:
+      type: object
+      required: [sessionToken, user]
+      properties:
+        sessionToken: {type: string}
+        expiresAt: {type: string, format: date-time}
+        user: {$ref: '#/components/schemas/User'}
