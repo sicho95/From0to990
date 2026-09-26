@@ -11,7 +11,7 @@ import {computeStats,computeGains} from './lib/analytics.js';
 import {initAudioBank} from './lib/audio.js';
 import {randomSample} from './lib/randomize.js';
 import {applyTheme,initTheme,storedTheme} from './lib/theme.js';
-import {loadAuthState,registerAccount,loginAccount,saveAuthSession,logoutAccount,forgotPassword,changePassword,adminListUsers,adminResetRequests,adminTemporaryPassword,adminSetUserStatus,adminDeleteUser} from './lib/auth.js';
+import {loadAuthState,registerAccount,loginAccount,saveAuthSession,updateCachedAuthUser,logoutAccount,forgotPassword,changePassword,adminListUsers,adminResetRequests,adminTemporaryPassword,adminSetUserStatus,adminDeleteUser} from './lib/auth.js';
 import {authScreen} from './lib/ui-auth.js';
 import {admin} from './lib/ui-admin.js';
 
@@ -27,7 +27,7 @@ async function init(){
   state.questions=[...allGeneralQuestions(),...state.toeicQuestions];
   await hydrate();initTheme(state.profile);
   state.auth=await loadAuthState();
-  if(state.auth.user?.role==='admin')await refreshAdminNotifications();
+  if(state.auth.user?.role==='admin'&&!state.auth.offline)await refreshAdminNotifications().catch(()=>{});
   if(state.auth.enabled&&state.auth.user&&!state.auth.user.mustChangePassword&&navigator.onLine){
     try{await syncNow();await hydrate();initTheme(state.profile)}catch(e){console.warn('Initial account sync deferred',e)}
   }
@@ -35,7 +35,7 @@ async function init(){
   window.addEventListener('hashchange',()=>{routeFromHash();draw()});window.addEventListener('online',handleOnline);window.addEventListener('offline',draw);
   setInterval(()=>{if(state.auth.user?.role==='admin'&&navigator.onLine)refreshAdminNotifications().then(draw).catch(()=>{})},60000);
   if('serviceWorker'in navigator){const reg=await navigator.serviceWorker.register('./sw.js');navigator.serviceWorker.addEventListener('controllerchange',()=>location.reload());setInterval(()=>reg.update().catch(()=>{}),60000)}
-  const restored=await restoreSession(state,{onFinish:sessionFinished,onExit:draw});if(restored)renderSession(app,state,{onFinish:sessionFinished,onExit:draw});else draw();
+  const restored=(!state.auth.enabled||state.auth.user&&!state.auth.user.mustChangePassword)&&await restoreSession(state,{onFinish:sessionFinished,onExit:draw});if(restored)renderSession(app,state,{onFinish:sessionFinished,onExit:draw});else draw();
 }
 function routeFromHash(){const raw=(location.hash.replace('#/','')||'today').split('/');state.route=raw[0]||'today';state.param=raw[1]||null}
 async function hydrate(){
@@ -125,7 +125,7 @@ async function action(el){
     const p=document.getElementById('auth-password').value,p2=document.getElementById('auth-password2').value,currentPassword=document.getElementById('auth-current-password')?.value;
     if(p.length<12)throw new Error('Le mot de passe doit contenir au moins 12 caractères');
     if(p!==p2)throw new Error('Les deux mots de passe ne correspondent pas');
-    const result=await changePassword(p,currentPassword);state.auth.user=result.user;state.authView='login';
+    const result=await changePassword(p,currentPassword);state.auth.user=result.user;await updateCachedAuthUser(result.user);state.authView='login';
     if(navigator.onLine){await syncNow();await hydrate();await refreshSync()}
     location.hash='#/today';toast('Mot de passe changé');draw();return
   }

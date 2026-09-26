@@ -20,16 +20,20 @@ export async function authCapabilities(){
   try{
     const res=await fetch(`${await endpoint()}/api/v1/health`,{headers:{accept:'application/json'},cache:'no-store'});
     const data=await res.json().catch(()=>({}));
-    return {enabled:Number(data.auth_version||0)>=2,authVersion:Number(data.auth_version||0),schemaVersion:Number(data.schema_version||0)};
-  }catch{return {enabled:false,authVersion:0,schemaVersion:0}}
+    const activated=Number(data.auth_version||0)>=2;
+    if(activated)await setSetting('authV2Seen',true);
+    const enabled=activated||!!(await setting('authV2Seen',false));
+    return {enabled,authVersion:Number(data.auth_version||0),schemaVersion:Number(data.schema_version||0)};
+  }catch{return {enabled:!!(await setting('authV2Seen',false)),authVersion:0,schemaVersion:0,offline:true}}
 }
 export async function loadAuthState(){
   const caps=await authCapabilities();
   if(!caps.enabled)return {...caps,user:null};
   const token=await authToken();
   if(!token)return {...caps,user:null};
-  try{const data=await request('/api/v1/auth/me');return {...caps,user:data.user||null}}
-  catch(e){if(e.status===401||e.status===403){await clearAuthSession();return {...caps,user:null,expired:true}}throw e}
+  if(caps.offline)return {...caps,user:await setting('authUserInfo',null)};
+  try{const data=await request('/api/v1/auth/me');if(data.user)await setSetting('authUserInfo',data.user);return {...caps,user:data.user||null}}
+  catch(e){if(e.status===401||e.status===403){await clearAuthSession();return {...caps,user:null,expired:true}}return {...caps,user:await setting('authUserInfo',null),offline:true}}
 }
 export async function registerAccount({email,username,password,deviceId}){
   return request('/api/v1/auth/register',{method:'POST',auth:false,body:{email,username,password,deviceId}});
@@ -41,13 +45,16 @@ export async function saveAuthSession(data){
   if(!data?.sessionToken||!data?.user?.id)throw new Error('Réponse de connexion invalide');
   await setSetting('authSessionToken',data.sessionToken);
   await setSetting('authUserId',data.user.id);
+  await setSetting('authUserInfo',data.user);
   await setSetting('syncCursor',null);
   await setSetting('lastSyncAt',null);
   return data.user;
 }
+export async function updateCachedAuthUser(user){await setSetting('authUserInfo',user)}
 export async function clearAuthSession(){
   await setSetting('authSessionToken',null);
   await setSetting('authUserId',null);
+  await setSetting('authUserInfo',null);
   await setSetting('syncCursor',null);
   await setSetting('lastSyncAt',null);
 }
