@@ -5,7 +5,7 @@ export const API_ENDPOINT='https://from0to990-api.sicho95.chatgpt.site';
 async function endpoint(){return String(await setting('apiEndpoint',API_ENDPOINT)).replace(/\/$/,'')}
 async function parse(res){
   let data=null;try{data=await res.json()}catch{}
-  if(!res.ok){const e=new Error(data?.error||data?.message||`HTTP ${res.status}`);e.status=res.status;e.code=data?.code;throw e}
+  if(!res.ok){const message=data?.error==='Temporary password expired'?'Mot de passe provisoire expiré. Fais une nouvelle demande ou contacte l’administration.':data?.error==='Account unavailable'?'Ce compte est indisponible. Contacte l’administration.':data?.error||data?.message||`HTTP ${res.status}`;const e=new Error(message);e.status=res.status;e.code=data?.code;throw e}
   return data||{};
 }
 async function request(path,{method='GET',body,auth=true}={}){
