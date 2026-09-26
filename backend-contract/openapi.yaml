@@ -217,6 +217,28 @@ paths:
         '403': {description: Administrator role required}
         '409': {description: Cannot delete self/last administrator}
 
+  /api/v1/admin/reset-requests:
+    get:
+      summary: List pending, issued and expired reset requests
+      security: [{sessionBearer: []}]
+      responses:
+        '200': {description: Requests and pending count}
+        '403': {description: Administrator role required}
+
+  /api/v1/admin/users/{userId}/password/temporary:
+    post:
+      summary: Issue a one-time visible temporary password valid for 24 hours
+      security: [{sessionBearer: []}]
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema: {type: string}
+      responses:
+        '200': {description: Temporary password returned once to the administrator}
+        '403': {description: Administrator role required}
+        '409': {description: Self reset or blocked account}
+
   /api/v1/admin/bootstrap:
     post:
       summary: One-time promotion of the first administrator
