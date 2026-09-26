@@ -12,15 +12,15 @@ Lis dans le dépôt et considère comme **source de vérité obligatoire** :
 - `backend-contract/schema.sql`
 - `backend-contract/migrations/002_auth.sql`
 
-Migre le backend existant `https://from0to990-api.sicho95.chatgpt.site` de v1 vers v2 sans perdre les données existantes.
+Migre le backend existant `https://from0to990-api.sicho95.chatgpt.site` de v1 vers v2. La conservation de l'ancien utilisateur logique `owner` et de son historique n'est plus requise.
 
 Exigences essentielles :
 - appliquer la migration D1 v1→v2 ;
 - comptes avec e-mail unique + pseudo unique + mot de passe hashé conformément à `AUTH_V2.md` ;
 - sessions opaques multi-appareils ;
-- `POST /api/v1/sync` authentifié, `user_id` dérivé exclusivement de la session ;
+- `POST /api/v1/sync` strictement authentifié : sans Bearer valide => 401, aucun fallback `owner`, `user_id` dérivé exclusivement de la session ;
 - inscription, connexion, déconnexion, `/auth/me` ;
-- mot de passe oublié et reset par e-mail ;
+- mot de passe oublié et reset par e-mail réellement opérationnels : `/forgot` doit envoyer/mettre en file le mail puis répondre 202 ;
 - routes admin utilisateurs : liste/recherche, blocage, déblocage, suppression ;
 - bootstrap sécurisé du premier admin ;
 - audit des actions admin ;
@@ -37,6 +37,8 @@ Secrets/configuration à créer côté serveur sans jamais les afficher dans le 
 - `APP_PUBLIC_URL=https://sicho95.github.io/From0to990/`
 - `PASSWORD_RESET_FROM`
 - `RESEND_API_KEY` ou un fournisseur transactionnel équivalent.
+- `INITIAL_ADMIN_EMAIL` : valeur fournie privément par l'opérateur au déploiement, ne jamais la committer ;
+- `INITIAL_ADMIN_USERNAME=Sicho`.
 
 Important : n'annonce `auth_version: 2` dans `GET /api/v1/health` **qu'après** réussite de tous les tests d'acceptation de `SITES_MINIMAL.md`. Avant cela, laisse la capacité auth désactivée pour ne pas verrouiller la PWA.
 
@@ -55,3 +57,27 @@ Teste réellement en priorité :
 - le JSON de `GET /api/v1/health` ;
 - le résultat synthétique des tests ci-dessus ;
 - la confirmation que les secrets ont été créés côté serveur sans révéler leur valeur.
+
+
+## État live constaté à corriger avant activation
+
+Les tests externes ont déjà confirmé :
+- D1 répond `schema_version: 2` ;
+- les routes auth/admin existent ;
+- CORS GitHub Pages + Authorization est correct ;
+- origine étrangère refusée ;
+- `/auth/me` et `/admin/users` sans session renvoient 401 ;
+- login invalide renvoie 401.
+
+Blocages live restants :
+1. `GET /api/v1/health` n'annonce pas encore `auth_version: 2`.
+2. **CRITIQUE** : `POST /api/v1/sync` sans Authorization renvoie encore 200 et expose les événements legacy `owner`. Supprimer entièrement ce chemin legacy : sans session v2 valide => 401.
+3. `POST /api/v1/auth/password/forgot` renvoie actuellement 503 `Unavailable`. Configurer le fournisseur mail et obtenir 202 avec envoi/queue réel.
+
+Ne définir `auth_version:2` qu'après correction et tests de ces trois points.
+
+## Administrateur initial
+
+Le propriétaire utilisera le pseudo `Sicho`.
+La valeur de `INITIAL_ADMIN_EMAIL` doit être fournie **privément dans l'environnement @Sites**, jamais ajoutée au dépôt public.
+Après création du compte correspondant, le promouvoir `role=admin` via le bootstrap sécurisé, puis vérifier que `/api/v1/admin/users` fonctionne avec sa session normale.

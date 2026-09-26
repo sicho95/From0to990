@@ -58,6 +58,8 @@ Do not place values in GitHub or frontend code.
 - `APP_PUBLIC_URL=https://sicho95.github.io/From0to990/`
 - `PASSWORD_RESET_FROM`
 - `RESEND_API_KEY` (or an equivalent transactional-mail adapter)
+- `INITIAL_ADMIN_EMAIL` (server-only configuration, not committed)
+- `INITIAL_ADMIN_USERNAME=Sicho`
 
 ## Acceptance tests before setting auth_version=2
 
@@ -68,8 +70,9 @@ Do not place values in GitHub or frontend code.
 - blocked user cannot login or sync;
 - `/auth/me` works with a valid bearer token;
 - logout revokes only that session;
-- login on a second device and pull the first device's progression with cursor null;
-- password forgot always returns identical 202;
+- unauthenticated `/api/v1/sync` returns 401 and never exposes legacy `owner` events;
+- login on a second device and pull only that account's progression with cursor null;
+- password forgot actually sends/queues the reset mail and always returns identical 202;
 - reset link changes password and revokes all sessions;
 - admin list/search works only for role admin;
 - block/unblock works and is audited;

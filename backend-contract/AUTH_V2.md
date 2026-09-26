@@ -105,21 +105,36 @@ For an existing active account:
 
 ## First administrator
 
-Do not hardcode an admin password or token in the PWA.
+Do not hardcode an admin password, e-mail or bootstrap token in the public PWA/repository.
 
-After creating the owner's normal account, call `POST /api/v1/admin/bootstrap` out-of-band with `Authorization: Bearer <ADMIN_BOOTSTRAP_TOKEN>` and the account e-mail. This endpoint:
-- works only while zero administrators exist;
-- promotes that one account to `role=admin`;
-- records an audit event;
-- must never be callable from the browser UI.
+Server-only deployment settings:
+- `INITIAL_ADMIN_EMAIL`
+- `INITIAL_ADMIN_USERNAME`
+- `ADMIN_BOOTSTRAP_TOKEN`
 
-After bootstrap, browser administration uses the normal user session and requires `role=admin`.
+The intended initial administrator username is `Sicho`; the administrator e-mail is supplied privately at deployment time and must remain server-side.
 
-## Existing logical `owner`
+Bootstrap behavior:
+1. If an account already exists whose normalized e-mail and username match the configured initial administrator identity, `POST /api/v1/admin/bootstrap` promotes it to `role=admin`.
+2. If it does not exist yet, reserve that normalized e-mail/username so no other account can claim either one.
+3. Once the matching account is created, the server may promote it atomically if the bootstrap reservation is still unused, or the operator can call the bootstrap endpoint.
+4. Bootstrap works only while zero administrators exist.
+5. Record the action in `admin_audit_log`.
 
-Do not delete the legacy owner automatically during migration.
+After bootstrap, browser administration uses the normal authenticated session and requires `role=admin`.
 
-The current device can seed its local data into the new account on registration. Keep the legacy owner data in D1 until the migration is verified. A later one-time server-side merge may archive/delete the old owner after comparing counts and IDs.
+## Legacy logical `owner`
+
+Legacy `owner` data does **not** need to be preserved for account v2 activation.
+
+Rules:
+- never use `owner` as an authentication fallback;
+- unauthenticated `POST /api/v1/sync` must return HTTP 401;
+- authenticated sync derives the account exclusively from the bearer session;
+- old legacy rows may remain temporarily in D1, but they are unreachable through the v2 API;
+- the operator may archive/delete them later.
+
+This deliberately prioritizes clean account isolation over migration of previous test progress.
 
 ## CORS
 
