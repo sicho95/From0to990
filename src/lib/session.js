@@ -3,25 +3,29 @@ import {recomputeSkills} from './adaptive.js';
 import {playQuestionAudio,stopAudio} from './audio.js';
 import {svg} from './icons.js';
 import {LESSONS,lessonTeaching} from './curriculum.js';
+import {applyChoiceOrder} from './randomize.js';
 
 const E=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 export async function beginSession(state,{questions,type,title,onFinish,onExit}){
   stopAudio();
-  state.activeSession={id:crypto.randomUUID(),type,title:title||label(type),questions,index:0,answers:[],introPending:false,startedAt:new Date().toISOString(),startedAtMs:Date.now(),questionStartedAtMs:Date.now(),onFinish,onExit};
+  const randomized=questions.map(q=>applyChoiceOrder(q));
+  state.activeSession={id:crypto.randomUUID(),type,title:title||label(type),questions:randomized,index:0,answers:[],introPending:false,startedAt:new Date().toISOString(),startedAtMs:Date.now(),questionStartedAtMs:Date.now(),onFinish,onExit};
   await persist(state.activeSession);
 }
 
 export async function restoreSession(state,handlers={}){
   const saved=await setting('activeSession',null);if(!saved?.questionIds?.length)return false;
-  const qmap=new Map(state.questions.map(q=>[q.id,q]));const questions=saved.questionIds.map(id=>qmap.get(id)).filter(Boolean);if(!questions.length){await setSetting('activeSession',null);return false}
+  const qmap=new Map(state.questions.map(q=>[q.id,q]));
+  const questions=saved.questionIds.map(id=>{const q=qmap.get(id);return q?applyChoiceOrder(q,saved.choiceOrders?.[id]):null}).filter(Boolean);
+  if(!questions.length){await setSetting('activeSession',null);return false}
   state.activeSession={...saved,questions,startedAtMs:Date.now()-Math.max(0,saved.elapsedMs||0),questionStartedAtMs:Date.now(),onFinish:handlers.onFinish,onExit:handlers.onExit};
   return true;
 }
 
 async function persist(s){
   if(!s)return setSetting('activeSession',null);
-  await setSetting('activeSession',{id:s.id,type:s.type,title:s.title,questionIds:s.questions.map(q=>q.id),index:s.index,answers:s.answers,introPending:Boolean(s.introPending),startedAt:s.startedAt,elapsedMs:Date.now()-s.startedAtMs});
+  await setSetting('activeSession',{id:s.id,type:s.type,title:s.title,questionIds:s.questions.map(q=>q.id),choiceOrders:Object.fromEntries(s.questions.map(q=>[q.id,q._choiceOrder||q.choices.map((_,i)=>i)])),index:s.index,answers:s.answers,introPending:Boolean(s.introPending),startedAt:s.startedAt,elapsedMs:Date.now()-s.startedAtMs});
 }
 
 function renderLessonIntro(root,state){
@@ -63,7 +67,7 @@ export function renderSession(root,state,{onFinish,onExit}){
 
 function answer(root,state,selected){
   const s=state.activeSession,q=s.questions[s.index],correct=selected===q.correctIndex,timeMs=Date.now()-s.questionStartedAtMs;
-  const attempt={id:crypto.randomUUID(),questionId:q.id,sessionId:s.id,part:q.part??null,correct,selected,timeMs,createdAt:new Date().toISOString(),payload_json:{domain:q.domain||'toeic',level:q.level||null}};
+  const attempt={id:crypto.randomUUID(),questionId:q.id,sessionId:s.id,part:q.part??null,correct,selected,timeMs,createdAt:new Date().toISOString(),payload_json:{domain:q.domain||'toeic',level:q.level||null,selectedText:q.choices[selected]??null,correctText:q.choices[q.correctIndex]??null,displayOrder:q._choiceOrder||null,originalSelectedIndex:q._choiceOrder?.[selected]??selected}};
   state.attempts.push(attempt);
   s.answers.push({questionId:q.id,selected,correct,timeMs});
 

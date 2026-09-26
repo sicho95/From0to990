@@ -9,6 +9,7 @@ import {progress} from './lib/ui-progress.js';
 import {beginSession,restoreSession,renderSession} from './lib/session.js';
 import {computeStats,computeGains} from './lib/analytics.js';
 import {initAudioBank} from './lib/audio.js';
+import {randomSample} from './lib/randomize.js';
 
 const app=document.getElementById('app');
 const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null};
@@ -85,7 +86,21 @@ async function sessionFinished(summary){
   if(summary.type==='placement-toeic'){state.profile=await saveProfile({...state.profile,toeicPlacementComplete:true});location.hash='#/progress';return}
   draw();sync(true);
 }
-function toeicDiagnosticPool(perPart=4){const out=[];for(let p=1;p<=7;p++)out.push(...state.toeicQuestions.filter(q=>q.part===p).slice(0,perPart));return out}
+function toeicDiagnosticPool(perPart=4){
+  const out=[],recentIds=new Set(state.attempts.slice(-120).map(a=>a.questionId));
+  for(let p=1;p<=7;p++){
+    const pool=state.toeicQuestions.filter(q=>q.part===p);
+    const fresh=pool.filter(q=>!recentIds.has(q.id));
+    const old=pool.filter(q=>recentIds.has(q.id));
+    const chosen=[...randomSample(fresh,Math.min(perPart,fresh.length))];
+    if(chosen.length<perPart){
+      const used=new Set(chosen.map(q=>q.id));
+      chosen.push(...randomSample(old.filter(q=>!used.has(q.id)),perPart-chosen.length));
+    }
+    out.push(...chosen);
+  }
+  return out
+}
 
 async function sync(silent=false){try{await syncNow();await refreshSync();if(!silent)toast('Progression synchronisée')}catch(e){if(!silent)toast('Synchronisation différée')}draw()}
 function toast(message){let t=document.getElementById('toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';document.body.appendChild(t)}t.textContent=message;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2400)}
