@@ -1,7 +1,7 @@
 export const THEME_VALUES=['system','light','dark'];
 
-function valid(value){return THEME_VALUES.includes(value)?value:'system'}
-export function storedTheme(){return valid(localStorage.getItem('themePreference')||'system')}
+function valid(value){return THEME_VALUES.includes(value)?value:'dark'}
+export function storedTheme(){return valid(localStorage.getItem('themePreference')||'dark')}
 export function resolvedTheme(pref=storedTheme()){
   const p=valid(pref);
   if(p==='system')return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
