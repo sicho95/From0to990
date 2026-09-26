@@ -60,10 +60,12 @@ Do not place values in GitHub or frontend code.
 - `RESEND_API_KEY` (or an equivalent transactional-mail adapter)
 - `INITIAL_ADMIN_EMAIL` (server-only configuration, not committed)
 - `INITIAL_ADMIN_USERNAME=Sicho`
+- `INITIAL_ADMIN_EMAIL` (valeur privée configurée côté serveur)
 
 ## Acceptance tests before setting auth_version=2
 
 - register a user;
+- when zero admins exist, registering the configured initial admin identity creates it directly with `role=admin`;
 - reject duplicate normalized email and username;
 - login by email and username;
 - bad password returns generic 401;

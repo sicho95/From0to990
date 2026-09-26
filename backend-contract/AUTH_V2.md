@@ -78,9 +78,9 @@ On a new device:
 3. `/sync` with `cursor=null` returns that account's complete event history;
 4. the PWA reconstructs profile/progress locally.
 
-On registration from an existing legacy/local device, the PWA re-enqueues the current local snapshot once so the new account keeps that progress.
+On activation of account v2, legacy/local `owner` progress is deliberately discarded. Registration starts a clean account dataset.
 
-Never mix local IndexedDB data from two authenticated users. The PWA clears pedagogical stores after a safe logout and before switching to a different account unless the user explicitly requests a local merge.
+Never mix local IndexedDB data from two authenticated users. The PWA clears pedagogical stores before registration/login hydration and after a safe logout. There is no legacy merge path.
 
 ## Password reset e-mail
 
@@ -114,14 +114,15 @@ Server-only deployment settings:
 
 The intended initial administrator username is `Sicho`; the administrator e-mail is supplied privately at deployment time and must remain server-side.
 
-Bootstrap behavior:
-1. If an account already exists whose normalized e-mail and username match the configured initial administrator identity, `POST /api/v1/admin/bootstrap` promotes it to `role=admin`.
-2. If it does not exist yet, reserve that normalized e-mail/username so no other account can claim either one.
-3. Once the matching account is created, the server may promote it atomically if the bootstrap reservation is still unused, or the operator can call the bootstrap endpoint.
-4. Bootstrap works only while zero administrators exist.
-5. Record the action in `admin_audit_log`.
+First-admin behavior:
+1. Configure `INITIAL_ADMIN_EMAIL` privately on the server and `INITIAL_ADMIN_USERNAME=Sicho`.
+2. While zero administrators exist, reserve both normalized values so another account cannot claim either identity.
+3. When the first registration matches **both** configured values, create that account directly with `role=admin` in the same transaction as account creation.
+4. Record `initial_admin_promoted` in `admin_audit_log`.
+5. `POST /api/v1/admin/bootstrap` remains only as an operator recovery path if the matching account already existed before this rule was deployed.
+6. Once one administrator exists, automatic promotion is permanently disabled.
 
-After bootstrap, browser administration uses the normal authenticated session and requires `role=admin`.
+Browser administration then uses the normal authenticated session and requires `role=admin`.
 
 ## Legacy logical `owner`
 

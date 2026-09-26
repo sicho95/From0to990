@@ -1,4 +1,4 @@
-import {STORES,getAll,getProfile,saveProfile,deviceId,setting,clearUserData,enqueueCurrentSnapshot} from './lib/db.js';
+import {STORES,getAll,getProfile,saveProfile,deviceId,setting,clearUserData} from './lib/db.js';
 import {recomputeSkills,pickAdaptive,estimatedScores,cefrEstimate,priorities,SKILL_LABELS} from './lib/adaptive.js';
 import {syncNow,syncStatus} from './lib/sync.js';
 import {allGeneralQuestions,lessonQuestions,PLACEMENT_STAGES,nextLessonId,LESSONS} from './lib/curriculum.js';
@@ -92,20 +92,18 @@ async function action(el){
     if(username.length<3)throw new Error('Le pseudo doit contenir au moins 3 caractères');
     if(password.length<12)throw new Error('Le mot de passe doit contenir au moins 12 caractères');
     const data=await registerAccount({username,email,password,deviceId:await deviceId()});
+    const themePreference=storedTheme();
+    await clearUserData();
     await saveAuthSession(data);state.auth={...state.auth,enabled:true,user:data.user};
-    const existing=await getProfile();
-    if(!existing)state.profile=await saveProfile({id:'me',displayName:data.user.username||'',targetScore:990,timePerDay:20,profileSetupComplete:false,placementComplete:false,themePreference:storedTheme()});
-    await enqueueCurrentSnapshot();
+    state.profile=await saveProfile({id:'me',displayName:data.user.username||'',targetScore:990,timePerDay:20,profileSetupComplete:false,placementComplete:false,themePreference},{queue:true});
     try{await syncNow()}catch(e){console.warn('First account sync deferred',e)}
     await hydrate();await refreshSync();state.authView='login';location.hash='#/today';draw();return
   }
   if(a==='auth-login'){
-    const identifier=document.getElementById('auth-identifier').value.trim(),password=document.getElementById('auth-password').value,mergeLocal=Boolean(document.getElementById('auth-merge-local')?.checked);
+    const identifier=document.getElementById('auth-identifier').value.trim(),password=document.getElementById('auth-password').value;
     const data=await loginAccount({identifier,password,deviceId:await deviceId()});
-    const previous=await setting('authUserId',null);
-    if(previous!==data.user.id&&!mergeLocal)await clearUserData();
+    await clearUserData();
     await saveAuthSession(data);state.auth={...state.auth,enabled:true,user:data.user};
-    if(mergeLocal)await enqueueCurrentSnapshot();
     try{await syncNow()}catch(e){console.warn('Account sync deferred',e)}
     await hydrate();await refreshSync();state.authView='login';location.hash='#/today';draw();return
   }

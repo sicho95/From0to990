@@ -14,7 +14,6 @@ export function authScreen(state){
       ${register?`<label><span>Pseudo</span><input id="auth-username" autocomplete="username" minlength="3" maxlength="32" placeholder="Ton pseudo"></label><label><span>E-mail</span><input id="auth-email" type="email" autocomplete="email" inputmode="email"></label>`:`<label><span>Pseudo ou e-mail</span><input id="auth-identifier" autocomplete="username"></label>`}
       <label><span>Mot de passe</span><input id="auth-password" type="password" autocomplete="${register?'new-password':'current-password'}" minlength="12" maxlength="128"></label>
     </div>
-    ${!register?`<label class="merge-local"><input id="auth-merge-local" type="checkbox"><span>Fusionner une éventuelle progression locale de cet appareil</span></label>`:''}
     <button class="primary-action full" data-act="${register?'auth-register':'auth-login'}">${register?'Créer mon compte':'Se connecter'}</button>
     ${!register?`<button class="text-action auth-forgot-link" data-act="auth-show-forgot">Mot de passe oublié ?</button>`:''}
     <small class="privacy">Le mot de passe n’est jamais enregistré dans la PWA. Seul un jeton de session est conservé sur cet appareil.</small>

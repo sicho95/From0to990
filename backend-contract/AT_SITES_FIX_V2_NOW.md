@@ -10,6 +10,7 @@ Lis d'abord :
 ## À corriger maintenant
 
 1. **Supprimer totalement le fallback legacy owner dans /api/v1/sync**
+   - les anciennes données `owner` peuvent rester en D1 ou être supprimées : elles ne doivent plus être accessibles par l'API ;
    - sans `Authorization: Bearer <session>` valide => HTTP 401 ;
    - ne jamais retourner d'événements `owner` à une requête non authentifiée ;
    - avec session valide, déduire `user_id` uniquement depuis `auth_sessions`.
@@ -25,7 +26,8 @@ Lis d'abord :
    - configuration serveur privée : `INITIAL_ADMIN_EMAIL=<fourni par l'opérateur>` ;
    - `INITIAL_ADMIN_USERNAME=Sicho` ;
    - réserver cette identité pour le premier admin ;
-   - après création du compte correspondant, le promouvoir `role=admin` via le bootstrap sécurisé ;
+   - tant qu'aucun admin n'existe, si une inscription correspond exactement à l'e-mail configuré **et** au pseudo `Sicho`, créer directement ce compte avec `role=admin` dans la même transaction ;
+   - garder `/admin/bootstrap` seulement comme voie de secours opérateur ;
    - ne jamais exposer l'e-mail admin, le token bootstrap ou un mot de passe dans GitHub/frontend/logs.
 
 4. **Health**
