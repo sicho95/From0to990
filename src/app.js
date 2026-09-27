@@ -16,7 +16,7 @@ import {authScreen} from './lib/ui-auth.js';
 import {admin} from './lib/ui-admin.js';
 
 const app=document.getElementById('app');
-const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null,auth:{enabled:false,user:null},authView:'login',adminUsers:null,adminRequests:[],adminPendingCount:0,adminLoading:false,adminQuery:'',adminConfirmId:null,adminRolePendingId:null,temporaryDisplay:null};
+const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null,auth:{enabled:false,user:null},authView:'login',adminUsers:null,adminRequests:[],adminPendingCount:0,adminActiveCount:0,adminLoading:false,adminQuery:'',adminConfirmId:null,adminRolePendingId:null,temporaryDisplay:null};
 const actionLocks=new Set();
 const BUSY_LABELS={
   'auth-login':'Connexion…','auth-register':'Création…','auth-forgot':'Envoi…','auth-change-password':'Enregistrement…','auth-logout':'Déconnexion…',
@@ -284,7 +284,7 @@ async function handleOnline(){
 async function loadAdminUsers(query=''){
   if(state.auth?.user?.role!=='admin')return;
   state.adminLoading=true;draw();
-  try{const [data,requests]=await Promise.all([adminListUsers(query),adminResetRequests()]);state.adminUsers=data.users||[];state.adminRequests=requests.requests||[];state.adminPendingCount=requests.pendingCount||0}
+  try{const [data,requests]=await Promise.all([adminListUsers(query),adminResetRequests()]);state.adminUsers=data.users||[];state.adminActiveCount=data.activeAdminCount||0;state.adminRequests=requests.requests||[];state.adminPendingCount=requests.pendingCount||0}
   catch(e){toast(e.message||'Impossible de charger les utilisateurs')}
   finally{state.adminLoading=false;draw()}
 }

@@ -10,7 +10,7 @@ export function admin(state){
       <div class="admin-search"><input id="admin-query" type="search" placeholder="Pseudo ou e-mail" value="${esc(state.adminQuery||'')}"><button class="secondary-action" data-act="admin-search">Rechercher</button></div>
     </section>
     <section class="admin-user-list">
-      ${users.length?users.map(u=>userCard(u,state.adminConfirmId===u.id,state.auth?.user?.id===u.id,users.filter(a=>a.role==='admin'&&a.status==='active').length,state.adminRolePendingId===u.id)).join(''):'<div class="section-block empty-state">Aucun utilisateur à afficher.</div>'}
+      ${users.length?users.map(u=>userCard(u,state.adminConfirmId===u.id,state.auth?.user?.id===u.id,state.adminActiveCount,state.adminRolePendingId===u.id)).join(''):'<div class="section-block empty-state">Aucun utilisateur à afficher.</div>'}
     </section>
     ${state.temporaryDisplay?`<div class="temporary-overlay" role="dialog" aria-modal="true" aria-label="Mot de passe provisoire"><section class="section-block temporary-dialog"><h3>Mot de passe provisoire</h3><p>Cette valeur ne sera plus affichée après la fermeture.</p><code>${esc(state.temporaryDisplay.password)}</code><div class="admin-actions"><button class="secondary-action" data-act="temporary-copy">Copier</button><button class="primary-action" data-act="temporary-email">Envoyer par e-mail</button><button class="secondary-action" data-act="temporary-close">Fermer</button></div></section></div>`:''}
   </div>`;
