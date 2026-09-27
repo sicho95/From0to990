@@ -143,7 +143,18 @@ async function action(el){
   if(a==='temporary-copy'){await navigator.clipboard.writeText(state.temporaryDisplay?.password||'');toast('Mot de passe provisoire copié');return}
   if(a==='temporary-email'){const t=state.temporaryDisplay;if(!t)return;const subject='From0to990 — Réinitialisation de votre mot de passe',body=`Bonjour,\n\nUne réinitialisation du mot de passe de votre compte From0to990 a été effectuée.\n\nPseudo : ${t.username}\n\nMot de passe provisoire :\n${t.password}\n\nCe mot de passe est valable pendant 24 heures. Lors de votre prochaine connexion, vous devrez choisir immédiatement un nouveau mot de passe personnel, sans date d’expiration.\n\nSi vous n’êtes pas à l’origine de cette demande, contactez l’administrateur.\n\nFrom0to990`;location.href=`mailto:${encodeURIComponent(t.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;return}
   if(a==='temporary-close'){state.temporaryDisplay=null;draw();return}
-  if(a==='onboard-test'||a==='onboard-zero'){if(!await saveOnboarding())return;if(a==='onboard-zero'){state.profile=await saveProfile({...state.profile,cefrLevel:'pre-a1',placementComplete:true});location.hash='#/today';return}return startPlacement(0)}
+  if(a==='onboard-test'||a==='onboard-zero'){
+    if(!await saveOnboarding())return;
+    if(a==='onboard-zero'){
+      state.profile=await saveProfile({...state.profile,cefrLevel:'pre-a1',placementComplete:true,profileSetupComplete:true});
+      state.route='today';state.param=null;
+      if(location.hash!=='#/today')location.hash='#/today';
+      draw();
+      sync(true);
+      return;
+    }
+    return startPlacement(0)
+  }
   if(a==='lesson'){location.hash=`#/lesson/${el.dataset.id}`;return}
   if(a==='start-lesson')return start(lessonQuestions(el.dataset.id),`lesson:${el.dataset.id}`,LESSONS[el.dataset.id]?.title||'Leçon');
   if(a==='quick-general')return start(pickAdaptive(allGeneralQuestions().filter(q=>!q.id.includes('place-')),state.attempts,state.skills,12),'adaptive-general','Entraînement');
