@@ -1,0 +1,50 @@
+name: Verify auth v2 safe
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-auth-v2-safe.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check public auth contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://from0to990-api.sicho95.chatgpt.site'
+          ORIGIN='https://sicho95.github.io'
+          H="$(mktemp)"
+          B="$(mktemp)"
+          trap 'rm -f "$H" "$B"' EXIT
+          code=$(curl -sS -D "$H" -o "$B" -w '%{http_code}' "$BASE/api/v1/health")
+          echo "health_status=$code"
+          node - "$B" <<'NODE'
+          const fs=require('fs'); const j=JSON.parse(fs.readFileSync(process.argv[2],'utf8'));
+          console.log('health_ok='+(j.status==='ok'&&j.database==='ok'));
+          console.log('schema_version='+j.schema_version);
+          console.log('auth_version='+j.auth_version);
+          if(j.status!=='ok'||j.database!=='ok'||Number(j.schema_version)!==2||Number(j.auth_version)!==2)process.exit(1);
+          NODE
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$BASE/api/v1/sync" -H "Origin: $ORIGIN" -H 'content-type: application/json' --data '{"deviceId":"safe-check","events":[]}')
+          echo "sync_without_bearer=$code"
+          test "$code" = "401"
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' "$BASE/api/v1/admin/users" -H "Origin: $ORIGIN")
+          echo "admin_without_bearer=$code"
+          test "$code" = "401" -o "$code" = "403"
+
+          code=$(curl -sS -o /dev/null -D "$H" -w '%{http_code}' -X OPTIONS "$BASE/api/v1/auth/login" -H "Origin: $ORIGIN" -H 'Access-Control-Request-Method: POST' -H 'Access-Control-Request-Headers: content-type,authorization')
+          echo "cors_preflight=$code"
+          grep -qi '^access-control-allow-origin: https://sicho95.github.io' "$H"
+          grep -qi '^access-control-allow-headers:.*authorization' "$H"
+
+          code=$(curl -sS -o /dev/null -w '%{http_code}' -X POST "$BASE/api/v1/auth/password/forgot" -H "Origin: $ORIGIN" -H 'content-type: application/json' --data '{"email":"from0to990-safe-verification-nonexistent@example.com"}')
+          echo "forgot_unknown_email=$code"
+          test "$code" = "202"
+
+          echo "SAFE_AUTH_V2_CHECKS_OK"
