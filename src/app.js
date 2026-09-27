@@ -66,7 +66,7 @@ function draw(){
   if(state.auth.user?.mustChangePassword){state.authView='change-required';app.innerHTML=authScreen(state);bind();return}
   if(state.authView==='change-voluntary'){app.innerHTML=authScreen(state);bind();return}
   if(state.activeSession)return renderSession(app,state,{onFinish:sessionFinished,onExit:draw});
-  if(!state.profile?.profileSetupComplete){app.innerHTML=onboarding(state.profile);bind();return}
+  if(!state.profile?.profileSetupComplete&&state.auth?.user?.role!=='admin'){app.innerHTML=onboarding(state.profile);bind();return}
   const c=ctx();let body,title;
   switch(state.route){
     case'learn':body=learn(state,c);title='Apprendre';break;
@@ -81,7 +81,7 @@ function draw(){
       body=admin(state);title='Administration';
       if(state.adminUsers===null&&!state.adminLoading)loadAdminUsers(state.adminQuery);
       break;
-    default:state.route='today';body=today(state,c);title='Aujourd’hui';
+    default:state.route='today';body=state.profile?.profileSetupComplete?today(state,c):onboarding(state.profile);title='Aujourd’hui';
   }
   app.innerHTML=shell(state,body,title,c.score);bind();
 }

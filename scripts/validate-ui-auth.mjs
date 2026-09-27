@@ -28,6 +28,7 @@ if(!app.includes("mailto:"))throw new Error('Admin mailto temporary-password han
 if(!app.includes("app.dataset.interactionsBound==='1'"))throw new Error('Persistent delegated interaction handler missing');
 if(!app.includes('const actionLocks=new Set()'))throw new Error('Duplicate-action lock missing');
 if(!adminUi.includes('Donner les droits administrateur')||!adminUi.includes('Retirer les droits administrateur')||!app.includes('adminSetUserRole'))throw new Error('Admin role controls missing');
+if(!app.includes("state.auth?.user?.role!=='admin'"))throw new Error('New administrator must be able to open administration before onboarding');
 if(/sicho95@gmail\.com|if\s*\(\s*email\s*===/.test([app,shell,authUi,adminUi,authClient].join('\n')))throw new Error('Client-side admin identity shortcut detected');
 if(!app.includes("'auth-login':'Connexion…'")||!app.includes("'auth-logout':'Déconnexion…'"))throw new Error('Auth busy feedback missing');
 if(!css.includes('touch-action:manipulation'))throw new Error('Mobile touch-action reliability rule missing');
