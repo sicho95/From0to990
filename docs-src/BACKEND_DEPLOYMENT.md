@@ -28,7 +28,7 @@ La v2 ajoute :
 - comptes e-mail + pseudo + mot de passe ;
 - sessions multi-appareils ;
 - synchronisation par utilisateur authentifié ;
-- récupération de mot de passe par e-mail ;
+- demande de réinitialisation administrée avec mot de passe provisoire 24 h ;
 - rôles `user/admin` ;
 - blocage/déblocage/suppression d'utilisateurs ;
 - journal d'audit administrateur.
@@ -53,7 +53,7 @@ Ne définir/annoncer `auth_version: 2` dans `GET /api/v1/health` qu'après :
 1. migration D1 réussie ;
 2. routes auth/sync/admin déployées ;
 3. CORS `Authorization` validé depuis GitHub Pages ;
-4. fournisseur e-mail de reset fonctionnel ;
+4. workflow manuel admin de reset fonctionnel ;
 5. tests d'acceptation de `SITES_MINIMAL.md` réussis.
 
 Une fois la v2 activée, la PWA bascule automatiquement sur les écrans de création de compte / connexion.

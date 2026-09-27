@@ -21,7 +21,7 @@ Source of truth:
 
 ## Capability switch
 
-Do not advertise auth until the migration, mail configuration and endpoints are ready.
+Do not advertise auth until the migrations and endpoints are ready.
 
 Before activation:
 `GET /api/v1/health` keeps `auth_version` absent or `<2`.
@@ -55,12 +55,10 @@ Do not place values in GitHub or frontend code.
 - `PASSWORD_PEPPER`
 - `ADMIN_BOOTSTRAP_TOKEN`
 - `ADMIN_EXPORT_TOKEN`
-- `APP_PUBLIC_URL=https://sicho95.github.io/From0to990/`
-- `PASSWORD_RESET_FROM`
-- `RESEND_API_KEY` (or an equivalent transactional-mail adapter)
-- `INITIAL_ADMIN_EMAIL` (server-only configuration, not committed)
+- `INITIAL_ADMIN_EMAIL` (server-only configuration)
 - `INITIAL_ADMIN_USERNAME=Sicho`
-- `INITIAL_ADMIN_EMAIL` (valeur privée configurée côté serveur)
+
+No transactional mail provider is used. Password-reset communication is initiated manually by the administrator through the browser's `mailto:` handler after generating a temporary password.
 
 ## Acceptance tests before setting auth_version=2
 
@@ -75,8 +73,8 @@ Do not place values in GitHub or frontend code.
 - unauthenticated `/api/v1/sync` returns 401 and never exposes legacy `owner` events;
 - login on a second device and pull only that account's progression with cursor null;
 - password forgot queues a manual admin request and always returns identical 202;
-- admin-issued temporary password expires in 24 hours and revokes all sessions;
-- temporary login requires an immediate password change before sync;
+- admin-issued temporary password expires in 24 hours, is returned in plaintext only once to the authenticated admin, and revokes all sessions;
+- temporary login creates a password-change-only session: no sync or normal app access before a permanent password is chosen;
 - admin list/search works only for role admin;
 - block/unblock works and is audited;
 - delete cascades pedagogical data and is audited;
@@ -84,4 +82,4 @@ Do not place values in GitHub or frontend code.
 - export/import still requires only the server-side export token;
 - cross-origin preflight from GitHub Pages accepts Authorization;
 - a different browser Origin is refused;
-- no password, pepper, session raw token or reset raw token appears in logs/export payloads.
+- no permanent password, temporary plaintext password, pepper or raw session token appears in logs/export payloads.
