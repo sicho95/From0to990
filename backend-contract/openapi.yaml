@@ -17,7 +17,7 @@ paths:
                 properties:
                   status: {type: string, const: ok}
                   database: {type: string, const: ok}
-                  schema_version: {type: integer, minimum: 2}
+                  schema_version: {type: integer, minimum: 3}
                   auth_version: {type: integer, const: 2}
 
   /api/v1/auth/register:

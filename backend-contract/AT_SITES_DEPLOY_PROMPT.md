@@ -15,7 +15,7 @@ Lis dans le dépôt et considère comme **source de vérité obligatoire** :
 Migre le backend existant `https://from0to990-api.sicho95.chatgpt.site` de v1 vers v2. La conservation de l'ancien utilisateur logique `owner` et de son historique n'est plus requise.
 
 Exigences essentielles :
-- appliquer la migration D1 v1→v2 ;
+- appliquer les migrations D1 `002_auth.sql` puis `003_manual_reset.sql` si elles ne sont pas déjà présentes ;
 - comptes avec e-mail unique + pseudo unique + mot de passe hashé conformément à `AUTH_V2.md` ;
 - sessions opaques multi-appareils ;
 - `POST /api/v1/sync` strictement authentifié : sans Bearer valide => 401, aucun fallback `owner`, `user_id` dérivé exclusivement de la session ;
@@ -56,7 +56,7 @@ Teste réellement en priorité :
 
 À la fin, retourne uniquement :
 - l'URL API ;
-- le JSON de `GET /api/v1/health` ;
+- le JSON réel de `GET /api/v1/health` (attendu schema_version 3 + auth_version 2) ;
 - le résultat synthétique des tests ci-dessus ;
 - la confirmation que les secrets ont été créés côté serveur sans révéler leur valeur.
 

@@ -149,5 +149,5 @@ CREATE TABLE IF NOT EXISTS schema_meta (
   key TEXT PRIMARY KEY,
   value TEXT NOT NULL
 );
-INSERT OR REPLACE INTO schema_meta(key,value) VALUES ('schema_version','2');
+INSERT OR REPLACE INTO schema_meta(key,value) VALUES ('schema_version','3');
 INSERT OR REPLACE INTO schema_meta(key,value) VALUES ('auth_version','2');

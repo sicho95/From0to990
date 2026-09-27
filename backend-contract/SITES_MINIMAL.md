@@ -30,7 +30,7 @@ After activation:
 `GET /api/v1/health` returns at least:
 
 ```json
-{"status":"ok","database":"ok","schema_version":2,"auth_version":2}
+{"status":"ok","database":"ok","schema_version":3,"auth_version":2}
 ```
 
 The PWA detects this automatically. This prevents a half-deployed backend from locking existing users out.
