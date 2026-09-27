@@ -17,6 +17,13 @@ import {admin} from './lib/ui-admin.js';
 
 const app=document.getElementById('app');
 const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null,auth:{enabled:false,user:null},authView:'login',adminUsers:null,adminRequests:[],adminPendingCount:0,adminLoading:false,adminQuery:'',adminConfirmId:null,temporaryDisplay:null};
+const actionLocks=new Set();
+const BUSY_LABELS={
+  'auth-login':'Connexion…','auth-register':'Création…','auth-forgot':'Envoi…','auth-change-password':'Enregistrement…','auth-logout':'Déconnexion…',
+  'sync':'Synchronisation…','admin-refresh':'Actualisation…','admin-search':'Recherche…','admin-block':'Traitement…','admin-unblock':'Traitement…','admin-delete':'Suppression…','admin-temporary':'Génération…',
+  'onboard-test':'Préparation…','onboard-zero':'Préparation…','start-lesson':'Ouverture…'
+};
+const PASSIVE_ACTIONS=new Set(['toggle-nav','set-theme','auth-refresh','auth-show-login','auth-show-register','auth-show-forgot','auth-change-cancel','temporary-close']);
 
 init().catch(err=>{console.error(err);app.innerHTML=`<main class="fatal"><h1>From0to990</h1><p>Impossible de charger l’application.</p><pre>${String(err.stack||err)}</pre></main>`});
 
@@ -80,8 +87,61 @@ function draw(){
 }
 
 function bind(){
-  app.querySelectorAll('[data-nav]').forEach(el=>el.onclick=()=>{const r=el.dataset.nav;if(r==='theme')location.hash=`#/theme/${el.dataset.theme}`;else location.hash=`#/${r}`});
-  app.querySelectorAll('[data-act]').forEach(el=>el.onclick=()=>action(el).catch(e=>{console.error(e);toast(e.message||String(e))}));
+  if(app.dataset.interactionsBound==='1')return;
+  app.dataset.interactionsBound='1';
+  app.addEventListener('click',event=>{
+    const el=event.target.closest?.('[data-nav],[data-act]');
+    if(!el||!app.contains(el))return;
+    event.preventDefault();
+    if(el.dataset.nav){navigate(el);return}
+    void runAction(el);
+  });
+  app.addEventListener('keydown',event=>{
+    if(event.key!=='Enter'||event.isComposing||!event.target.closest?.('input'))return;
+    const act=authSubmitAction();
+    if(!act)return;
+    const el=app.querySelector(`[data-act="${act}"]`);
+    if(!el)return;
+    event.preventDefault();
+    void runAction(el);
+  });
+}
+function navigate(el){
+  const r=el.dataset.nav;
+  if(r==='theme')location.hash=`#/theme/${el.dataset.theme}`;
+  else location.hash=`#/${r}`;
+}
+function authSubmitAction(){
+  if(state.authView==='register')return'auth-register';
+  if(state.authView==='forgot')return'auth-forgot';
+  if(state.authView==='change-required'||state.authView==='change-voluntary')return'auth-change-password';
+  if(state.auth.enabled&&!state.auth.user)return'auth-login';
+  return null;
+}
+function actionKey(el){return[el.dataset.act,el.dataset.userId,el.dataset.id,el.dataset.min,el.dataset.theme].filter(Boolean).join(':')}
+function setActionBusy(el,busy,act){
+  if(busy){
+    el.dataset.busy='1';el.disabled=true;el.setAttribute('aria-busy','true');
+    if(BUSY_LABELS[act]){el.dataset.busyHtml=el.innerHTML;el.textContent=BUSY_LABELS[act]}
+  }else{
+    el.dataset.busy='0';el.disabled=false;el.removeAttribute('aria-busy');
+    if(el.dataset.busyHtml!==undefined){el.innerHTML=el.dataset.busyHtml;delete el.dataset.busyHtml}
+  }
+}
+async function runAction(el){
+  const act=el.dataset.act;
+  if(!act||el.disabled)return;
+  const key=actionKey(el);
+  if(actionLocks.has(key))return;
+  actionLocks.add(key);
+  const busy=!PASSIVE_ACTIONS.has(act);
+  if(busy)setActionBusy(el,true,act);
+  try{await action(el)}
+  catch(e){console.error(e);toast(e.message||String(e))}
+  finally{
+    actionLocks.delete(key);
+    if(busy&&el.isConnected)setActionBusy(el,false,act);
+  }
 }
 async function action(el){
   const a=el.dataset.act;
