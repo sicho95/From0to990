@@ -3,13 +3,15 @@ import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-const [css,shell,app,authUi,sites,prompt]=await Promise.all([
+const [css,shell,app,authUi,sites,prompt,adminUi,authClient]=await Promise.all([
   readFile(resolve(root,'src/styles/base.css'),'utf8'),
   readFile(resolve(root,'src/lib/ui-shell.js'),'utf8'),
   readFile(resolve(root,'src/app.js'),'utf8'),
   readFile(resolve(root,'src/lib/ui-auth.js'),'utf8'),
   readFile(resolve(root,'backend-contract/SITES_MINIMAL.md'),'utf8'),
-  readFile(resolve(root,'backend-contract/AT_SITES_DEPLOY_PROMPT.md'),'utf8')
+  readFile(resolve(root,'backend-contract/AT_SITES_DEPLOY_PROMPT.md'),'utf8'),
+  readFile(resolve(root,'src/lib/ui-admin.js'),'utf8'),
+  readFile(resolve(root,'src/lib/auth.js'),'utf8')
 ]);
 
 if(!css.includes('background:var(--glass-strong)'))throw new Error('Bottom tab bar must use theme glass variable');
@@ -25,6 +27,8 @@ if(/RESEND_API_KEY|PASSWORD_RESET_FROM|SendGrid|Mailgun/i.test(backendText))thro
 if(!app.includes("mailto:"))throw new Error('Admin mailto temporary-password handoff missing');
 if(!app.includes("app.dataset.interactionsBound==='1'"))throw new Error('Persistent delegated interaction handler missing');
 if(!app.includes('const actionLocks=new Set()'))throw new Error('Duplicate-action lock missing');
+if(!adminUi.includes('Donner les droits administrateur')||!adminUi.includes('Retirer les droits administrateur')||!app.includes('adminSetUserRole'))throw new Error('Admin role controls missing');
+if(/sicho95@gmail\.com|if\s*\(\s*email\s*===/.test([app,shell,authUi,adminUi,authClient].join('\n')))throw new Error('Client-side admin identity shortcut detected');
 if(!app.includes("'auth-login':'Connexion…'")||!app.includes("'auth-logout':'Déconnexion…'"))throw new Error('Auth busy feedback missing');
 if(!css.includes('touch-action:manipulation'))throw new Error('Mobile touch-action reliability rule missing');
 if(!css.includes('button[aria-busy="true"]{pointer-events:none}'))throw new Error('Busy button pointer lock missing');

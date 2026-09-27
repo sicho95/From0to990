@@ -76,6 +76,7 @@ No transactional mail provider is used. Password-reset communication is initiate
 - admin-issued temporary password expires in 24 hours, is returned in plaintext only once to the authenticated admin, and revokes all sessions;
 - temporary login creates a password-change-only session: no sync or normal app access before a permanent password is chosen;
 - admin list/search works only for role admin;
+- admin can grant or revoke the role through `PATCH /admin/users/{userId}`;
 - block/unblock works and is audited;
 - delete cascades pedagogical data and is audited;
 - admin cannot block/delete itself or the last admin;

@@ -77,6 +77,9 @@ export async function adminListUsers(query=''){
 export async function adminSetUserStatus(userId,status){
   return request(`/api/v1/admin/users/${encodeURIComponent(userId)}`,{method:'PATCH',body:{status}});
 }
+export async function adminSetUserRole(userId,role){
+  return request(`/api/v1/admin/users/${encodeURIComponent(userId)}`,{method:'PATCH',body:{role}});
+}
 export async function adminDeleteUser(userId){
   return request(`/api/v1/admin/users/${encodeURIComponent(userId)}`,{method:'DELETE'});
 }

@@ -11,16 +11,16 @@ import {computeStats,computeGains} from './lib/analytics.js';
 import {initAudioBank} from './lib/audio.js';
 import {randomSample} from './lib/randomize.js';
 import {applyTheme,initTheme,storedTheme} from './lib/theme.js';
-import {loadAuthState,registerAccount,loginAccount,saveAuthSession,updateCachedAuthUser,logoutAccount,forgotPassword,changePassword,adminListUsers,adminResetRequests,adminTemporaryPassword,adminSetUserStatus,adminDeleteUser} from './lib/auth.js';
+import {loadAuthState,registerAccount,loginAccount,saveAuthSession,updateCachedAuthUser,logoutAccount,forgotPassword,changePassword,adminListUsers,adminResetRequests,adminTemporaryPassword,adminSetUserStatus,adminSetUserRole,adminDeleteUser} from './lib/auth.js';
 import {authScreen} from './lib/ui-auth.js';
 import {admin} from './lib/ui-admin.js';
 
 const app=document.getElementById('app');
-const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null,auth:{enabled:false,user:null},authView:'login',adminUsers:null,adminRequests:[],adminPendingCount:0,adminLoading:false,adminQuery:'',adminConfirmId:null,temporaryDisplay:null};
+const state={route:'today',param:null,toeicQuestions:[],questions:[],profile:null,attempts:[],sessions:[],skills:[],errors:[],sync:{},activeSession:null,auth:{enabled:false,user:null},authView:'login',adminUsers:null,adminRequests:[],adminPendingCount:0,adminLoading:false,adminQuery:'',adminConfirmId:null,adminRolePendingId:null,temporaryDisplay:null};
 const actionLocks=new Set();
 const BUSY_LABELS={
   'auth-login':'Connexion…','auth-register':'Création…','auth-forgot':'Envoi…','auth-change-password':'Enregistrement…','auth-logout':'Déconnexion…',
-  'sync':'Synchronisation…','admin-refresh':'Actualisation…','admin-search':'Recherche…','admin-block':'Traitement…','admin-unblock':'Traitement…','admin-delete':'Suppression…','admin-temporary':'Génération…',
+  'sync':'Synchronisation…','admin-refresh':'Actualisation…','admin-search':'Recherche…','admin-block':'Traitement…','admin-unblock':'Traitement…','admin-role':'Modification…','admin-delete':'Suppression…','admin-temporary':'Génération…',
   'onboard-test':'Préparation…','onboard-zero':'Préparation…','start-lesson':'Ouverture…'
 };
 const PASSIVE_ACTIONS=new Set(['toggle-nav','set-theme','auth-refresh','auth-show-login','auth-show-register','auth-show-forgot','auth-change-cancel','temporary-close']);
@@ -198,6 +198,16 @@ async function action(el){
   if(a==='admin-refresh'||a==='admin-search'){state.adminQuery=document.getElementById('admin-query')?.value.trim()||'';await loadAdminUsers(state.adminQuery);return}
   if(a==='admin-focus-user'){const u=state.adminUsers?.find(x=>x.id===el.dataset.userId);if(!u){state.adminQuery=state.adminRequests?.find(x=>x.userId===el.dataset.userId)?.email||'';await loadAdminUsers(state.adminQuery)}document.getElementById(`user-${el.dataset.userId}`)?.scrollIntoView({behavior:'smooth'});return}
   if(a==='admin-block'||a==='admin-unblock'){await adminSetUserStatus(el.dataset.userId,a==='admin-block'?'blocked':'active');await loadAdminUsers(state.adminQuery);return}
+  if(a==='admin-role'){
+    const id=el.dataset.userId,role=el.dataset.role,u=state.adminUsers?.find(x=>x.id===id);
+    if(!u||!['admin','user'].includes(role))return;
+    const verb=role==='admin'?'Donner les droits administrateur à':'Retirer les droits administrateur à';
+    if(!window.confirm(`${verb} ${u.username} ?`))return;
+    state.adminRolePendingId=id;draw();
+    try{await adminSetUserRole(id,role);if(id===state.auth.user?.id)state.auth=await loadAuthState();await loadAdminUsers(state.adminQuery);toast('Droits mis à jour')}
+    finally{state.adminRolePendingId=null;draw()}
+    return;
+  }
   if(a==='admin-delete'){const id=el.dataset.userId;if(state.adminConfirmId!==id){state.adminConfirmId=id;draw();return}await adminDeleteUser(id);state.adminConfirmId=null;await loadAdminUsers(state.adminQuery);return}
   if(a==='admin-temporary'){const id=el.dataset.userId,u=state.adminUsers?.find(x=>x.id===id);if(!u)return;const result=await adminTemporaryPassword(id);state.temporaryDisplay={password:result.temporaryPassword,email:u.email,username:u.username};await loadAdminUsers(state.adminQuery);return}
   if(a==='temporary-copy'){await navigator.clipboard.writeText(state.temporaryDisplay?.password||'');toast('Mot de passe provisoire copié');return}

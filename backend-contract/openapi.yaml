@@ -184,7 +184,7 @@ paths:
 
   /api/v1/admin/users/{userId}:
     patch:
-      summary: Block or unblock a user
+      summary: Change a user's role or block/unblock the account
       security: [{sessionBearer: []}]
       parameters:
         - in: path
@@ -197,13 +197,14 @@ paths:
           application/json:
             schema:
               type: object
-              required: [status]
+              minProperties: 1
               properties:
                 status: {type: string, enum: [active, blocked]}
+                role: {type: string, enum: [user, admin]}
       responses:
         '200': {description: Updated}
         '403': {description: Administrator role required}
-        '409': {description: Cannot modify self/last administrator}
+        '409': {description: Cannot block self or remove the last active administrator}
     delete:
       summary: Permanently delete a user and all pedagogical data
       security: [{sessionBearer: []}]

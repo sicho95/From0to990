@@ -151,3 +151,12 @@ Server-enforced baseline:
 - reset: 10 attempts / IP / hour.
 
 Return 429 with a generic message and `Retry-After` where appropriate.
+# Administration déléguée
+
+`PATCH /api/v1/admin/users/{userId}` accepte `role: "admin" | "user"` et/ou
+`status: "active" | "blocked"` avec la session d'un administrateur actif.
+Le backend recharge le rôle de l'acteur dans D1 à chaque requête. Il refuse
+toute opération qui retirerait le dernier administrateur actif. Un changement
+de rôle conserve la progression et les sessions existantes ; le rôle est
+rechargé par `/auth/me` et vérifié sur chaque action sensible. Chaque mutation
+de rôle est inscrite dans `admin_audit_log` avec les deux rôles et les IDs.
