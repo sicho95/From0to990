@@ -59,3 +59,6 @@
   .feedback-actions{align-items:stretch}
   .feedback-actions .feedback-next,.feedback-actions .listen-control{flex:1;justify-content:center}
 }
+
+.onboard-zero-btn{touch-action:manipulation;pointer-events:auto;position:relative;z-index:1}
+.onboard-zero-btn:active{transform:scale(.995)}

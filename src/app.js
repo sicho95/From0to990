@@ -143,17 +143,28 @@ async function action(el){
   if(a==='temporary-copy'){await navigator.clipboard.writeText(state.temporaryDisplay?.password||'');toast('Mot de passe provisoire copié');return}
   if(a==='temporary-email'){const t=state.temporaryDisplay;if(!t)return;const subject='From0to990 — Réinitialisation de votre mot de passe',body=`Bonjour,\n\nUne réinitialisation du mot de passe de votre compte From0to990 a été effectuée.\n\nPseudo : ${t.username}\n\nMot de passe provisoire :\n${t.password}\n\nCe mot de passe est valable pendant 24 heures. Lors de votre prochaine connexion, vous devrez choisir immédiatement un nouveau mot de passe personnel, sans date d’expiration.\n\nSi vous n’êtes pas à l’origine de cette demande, contactez l’administrateur.\n\nFrom0to990`;location.href=`mailto:${encodeURIComponent(t.email)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;return}
   if(a==='temporary-close'){state.temporaryDisplay=null;draw();return}
-  if(a==='onboard-test'||a==='onboard-zero'){
+  if(a==='onboard-test'){
     if(!await saveOnboarding())return;
-    if(a==='onboard-zero'){
-      state.profile=await saveProfile({...state.profile,cefrLevel:'pre-a1',placementComplete:true,profileSetupComplete:true});
-      state.route='today';state.param=null;
-      if(location.hash!=='#/today')location.hash='#/today';
-      draw();
-      sync(true);
-      return;
-    }
     return startPlacement(0)
+  }
+  if(a==='onboard-zero'){
+    const name=document.getElementById('on-name')?.value.trim()||state.auth?.user?.username||state.profile?.displayName||'';
+    if(!name){toast('Saisis un prénom ou un pseudo');return}
+    const timePerDay=Number(document.getElementById('on-time')?.value||state.profile?.timePerDay||20);
+    state.profile=await saveProfile({
+      ...state.profile,
+      displayName:name,
+      targetScore:990,
+      timePerDay,
+      cefrLevel:'pre-a1',
+      placementComplete:true,
+      profileSetupComplete:true
+    });
+    state.route='today';state.param=null;
+    history.replaceState(null,'',location.pathname+location.search+'#/today');
+    draw();
+    sync(true);
+    return
   }
   if(a==='lesson'){location.hash=`#/lesson/${el.dataset.id}`;return}
   if(a==='start-lesson')return start(lessonQuestions(el.dataset.id),`lesson:${el.dataset.id}`,LESSONS[el.dataset.id]?.title||'Leçon');
