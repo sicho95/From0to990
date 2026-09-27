@@ -23,4 +23,9 @@ if(!app.includes("await clearUserData();\n    await saveAuthSession(data)"))thro
 const backendText=`${sites}\n${prompt}`;
 if(/RESEND_API_KEY|PASSWORD_RESET_FROM|SendGrid|Mailgun/i.test(backendText))throw new Error('Server mail provider dependency must stay removed');
 if(!app.includes("mailto:"))throw new Error('Admin mailto temporary-password handoff missing');
+if(!app.includes("app.dataset.interactionsBound==='1'"))throw new Error('Persistent delegated interaction handler missing');
+if(!app.includes('const actionLocks=new Set()'))throw new Error('Duplicate-action lock missing');
+if(!app.includes("'auth-login':'Connexion…'")||!app.includes("'auth-logout':'Déconnexion…'"))throw new Error('Auth busy feedback missing');
+if(!css.includes('touch-action:manipulation'))throw new Error('Mobile touch-action reliability rule missing');
+if(!css.includes('button[aria-busy="true"]{pointer-events:none}'))throw new Error('Busy button pointer lock missing');
 console.log('UI/auth regression checks OK');
