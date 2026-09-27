@@ -23,7 +23,7 @@ Exigences essentielles :
 - mot de passe oublié SANS fournisseur mail : `/forgot` crée une demande admin et répond toujours 202 ;
 - l'admin voit les demandes dans `GET /api/v1/admin/reset-requests` ;
 - `POST /api/v1/admin/users/{userId}/password/temporary` génère un mot de passe provisoire aléatoire valable 24 h, n'en stocke que le hash et retourne le clair UNE SEULE FOIS à l'admin ;
-- la PWA ouvre ensuite un `mailto:` local prérempli pour que l'admin l'envoie manuellement ; aucun Resend/SendGrid/Mailgun/service mail serveur ;
+- la PWA ouvre ensuite un `mailto:` local prérempli pour que l'admin l'envoie manuellement ; aucun service mail serveur ;
 - le login avec mot de passe provisoire ne donne accès qu'à `POST /api/v1/auth/password/change` jusqu'au choix d'un mot de passe permanent ;
 - un mot de passe permanent choisi par l'utilisateur n'expire pas ;
 - routes admin utilisateurs : liste/recherche, blocage, déblocage, suppression ;
